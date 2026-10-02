@@ -1,9 +1,8 @@
 import 'package:cine_vault/core/error/exceptions.dart';
-import 'package:cine_vault/core/error/failures.dart';
-import 'package:cine_vault/core/result/result.dart';
 import 'package:cine_vault/features/settings/data/datasources/local/settings_local_data_source.dart';
 import 'package:cine_vault/features/settings/domain/entities/app_settings.dart';
 import 'package:cine_vault/features/settings/domain/repositories/settings_repository.dart';
+import 'package:core_result/core_result.dart';
 import 'package:flutter/material.dart';
 
 class SettingsRepositoryImpl implements SettingsRepository {

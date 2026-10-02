@@ -1,4 +1,3 @@
-import 'package:cine_vault/core/result/result.dart';
 import 'package:cine_vault/features/movies/domain/entities/cast_member.dart';
 import 'package:cine_vault/features/movies/domain/entities/movie.dart';
 import 'package:cine_vault/features/movies/domain/entities/video.dart';
@@ -6,6 +5,7 @@ import 'package:cine_vault/features/movies/domain/usecases/get_movie_credits.dar
 import 'package:cine_vault/features/movies/domain/usecases/get_movie_details.dart';
 import 'package:cine_vault/features/movies/domain/usecases/get_movie_videos.dart';
 import 'package:cine_vault/features/movies/domain/usecases/get_similar_movies.dart';
+import 'package:core_result/core_result.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

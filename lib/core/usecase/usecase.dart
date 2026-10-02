@@ -1,4 +1,4 @@
-import 'package:cine_vault/core/result/result.dart';
+import 'package:core_result/core_result.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class UseCase<T, Params> {

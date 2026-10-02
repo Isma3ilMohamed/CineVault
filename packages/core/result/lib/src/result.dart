@@ -1,4 +1,4 @@
-import 'package:cine_vault/core/error/failures.dart';
+import 'package:core_result/src/failure.dart';
 import 'package:meta/meta.dart';
 
 @immutable

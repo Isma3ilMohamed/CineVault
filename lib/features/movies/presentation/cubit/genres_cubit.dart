@@ -1,7 +1,7 @@
-import 'package:cine_vault/core/result/result.dart';
 import 'package:cine_vault/core/usecase/usecase.dart';
 import 'package:cine_vault/features/movies/domain/entities/genre.dart';
 import 'package:cine_vault/features/movies/domain/usecases/get_genres.dart';
+import 'package:core_result/core_result.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// If the fetch fails the state stays empty and the UI hides genre chips.

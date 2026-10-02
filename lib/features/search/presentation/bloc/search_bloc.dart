@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:cine_vault/core/result/result.dart';
 import 'package:cine_vault/core/usecase/usecase.dart';
 import 'package:cine_vault/features/movies/domain/entities/movie.dart';
 import 'package:cine_vault/features/search/domain/usecases/clear_recent_searches.dart';
 import 'package:cine_vault/features/search/domain/usecases/get_recent_searches.dart';
 import 'package:cine_vault/features/search/domain/usecases/save_recent_search.dart';
 import 'package:cine_vault/features/search/domain/usecases/search_movies.dart';
+import 'package:core_result/core_result.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

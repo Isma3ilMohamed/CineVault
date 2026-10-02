@@ -1,8 +1,8 @@
-import 'package:cine_vault/core/result/result.dart';
 import 'package:cine_vault/features/movies/domain/entities/cast_member.dart';
 import 'package:cine_vault/features/movies/domain/entities/genre.dart';
 import 'package:cine_vault/features/movies/domain/entities/movie.dart';
 import 'package:cine_vault/features/movies/domain/entities/video.dart';
+import 'package:core_result/core_result.dart';
 
 abstract class MovieRepository {
   Future<Result<List<Movie>>> getPopularMovies({required int page});

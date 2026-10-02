@@ -1,10 +1,9 @@
 import 'package:cine_vault/core/error/exceptions.dart';
-import 'package:cine_vault/core/error/failures.dart';
-import 'package:cine_vault/core/result/result.dart';
 import 'package:cine_vault/features/favorites/data/datasources/local/favorites_local_data_source.dart';
 import 'package:cine_vault/features/favorites/data/models/favorite_movie_model.dart';
 import 'package:cine_vault/features/favorites/domain/repositories/favorites_repository.dart';
 import 'package:cine_vault/features/movies/domain/entities/movie.dart';
+import 'package:core_result/core_result.dart';
 
 class FavoritesRepositoryImpl implements FavoritesRepository {
   FavoritesRepositoryImpl({required this.localDataSource});

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cine_vault/core/result/result.dart';
 import 'package:cine_vault/core/usecase/usecase.dart';
 import 'package:cine_vault/features/movies/domain/entities/movie.dart';
 import 'package:cine_vault/features/search/domain/usecases/clear_recent_searches.dart';
@@ -8,6 +7,7 @@ import 'package:cine_vault/features/search/domain/usecases/get_recent_searches.d
 import 'package:cine_vault/features/search/domain/usecases/save_recent_search.dart';
 import 'package:cine_vault/features/search/domain/usecases/search_movies.dart';
 import 'package:cine_vault/features/search/presentation/bloc/search_bloc.dart';
+import 'package:core_result/core_result.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

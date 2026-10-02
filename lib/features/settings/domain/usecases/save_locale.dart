@@ -1,6 +1,6 @@
-import 'package:cine_vault/core/result/result.dart';
 import 'package:cine_vault/core/usecase/usecase.dart';
 import 'package:cine_vault/features/settings/domain/repositories/settings_repository.dart';
+import 'package:core_result/core_result.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
