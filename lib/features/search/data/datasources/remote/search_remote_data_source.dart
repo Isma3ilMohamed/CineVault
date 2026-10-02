@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../../../../../core/constants/app_constants.dart';
 import '../../../../../core/error/exceptions.dart';
+import '../../../../../core/network/interceptors/error_interceptor.dart';
 import '../../../../movies/data/models/movie_model.dart';
 
 /// ببساطة كدا: الـ search endpoint بيرجع نفس شكل الـ movie list
@@ -36,6 +37,8 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
         },
       );
       return MoviesPageResponse.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw e.toAppException();
     } on ServerException {
       rethrow;
     } on NetworkException {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'app.dart';
+import 'core/config/app_config.dart';
 import 'core/di/injection_container.dart' as di;
 
 /// ببساطة كدا: ده entry point التطبيق
@@ -10,17 +10,17 @@ import 'core/di/injection_container.dart' as di;
 ///
 /// الترتيب مهم:
 ///   1. ensureInitialized() - Flutter لازم يتهيأ قبل أي async
-///   2. dotenv.load() - نحمل الـ environment variables
+///   2. AppConfig.fromEnvironment() - flavor + config from --dart-define-from-file
 ///   3. initDependencies() - نسجل الـ DI
 ///   4. runApp() - نشغل التطبيق
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Load environment variables (API keys)
-  await dotenv.load(fileName: '.env');
+  // Fails fast if --flavor and the config file don't match
+  final config = AppConfig.fromEnvironment();
 
   // Initialize dependency injection
-  await di.initDependencies();
+  await di.initDependencies(config);
 
   // Optional: Bloc observer للـ debugging
   Bloc.observer = AppBlocObserver();

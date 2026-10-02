@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../../../../../core/constants/app_constants.dart';
 import '../../../../../core/error/exceptions.dart';
+import '../../../../../core/network/interceptors/error_interceptor.dart';
 import '../../models/cast_member_model.dart';
 import '../../models/genre_model.dart';
 import '../../models/movie_model.dart';
@@ -87,6 +88,8 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
     try {
       final response = await dio.get('${ApiConstants.movieDetails}/$movieId');
       return MovieModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw e.toAppException();
     } on ServerException {
       rethrow;
     } catch (e) {
@@ -113,6 +116,8 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
         queryParameters: {'language': 'en-US'},
       );
       return GenresResponse.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw e.toAppException();
     } on ServerException {
       rethrow;
     } on NetworkException {
@@ -129,6 +134,8 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
         '${ApiConstants.movieDetails}/$movieId/credits',
       );
       return CreditsResponse.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw e.toAppException();
     } on ServerException {
       rethrow;
     } on NetworkException {
@@ -145,6 +152,8 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
         '${ApiConstants.movieDetails}/$movieId/videos',
       );
       return VideosResponse.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw e.toAppException();
     } on ServerException {
       rethrow;
     } on NetworkException {
@@ -166,6 +175,8 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
         queryParameters: {'page': page, 'language': 'en-US'},
       );
       return MoviesPageResponse.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw e.toAppException();
     } on ServerException {
       rethrow;
     } on NetworkException {

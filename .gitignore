@@ -98,7 +98,10 @@ app.*.map.json
 
 # Environment variables
 .env
-!.env.example
+
+# Per-flavor config (--dart-define-from-file). Only the examples are committed.
+config/*.env
+!config/*.env.example
 
 # Generated files
 *.g.dart

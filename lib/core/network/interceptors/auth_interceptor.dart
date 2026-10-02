@@ -1,18 +1,17 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-/// ببساطة كدا: ده بيضيف الـ Bearer token في كل request
-/// TMDB v4 auth بيستخدم Bearer token
+/// Adds the TMDB v4 Bearer token to every request.
 class AuthInterceptor extends Interceptor {
+  AuthInterceptor(this._accessToken);
+
+  final String _accessToken;
+
   @override
   void onRequest(
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) {
-    final accessToken = dotenv.env['TMDB_ACCESS_TOKEN'];
-    if (accessToken != null && accessToken.isNotEmpty) {
-      options.headers['Authorization'] = 'Bearer $accessToken';
-    }
+    options.headers['Authorization'] = 'Bearer $_accessToken';
     super.onRequest(options, handler);
   }
 }

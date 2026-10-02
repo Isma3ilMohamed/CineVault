@@ -16,6 +16,7 @@ dependencies:
   # State Management
   flutter_bloc: ^8.1.6
   bloc: ^8.1.4
+  bloc_concurrency: ^0.2.5
   equatable: ^2.0.5
 
   # Networking (Dio only - Retrofit later if needed)
@@ -45,7 +46,6 @@ dependencies:
   # Utils
   intl: ^0.20.2
   connectivity_plus: ^6.1.0
-  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +64,5 @@ flutter:
   uses-material-design: true
   generate: true
   assets:
-    - .env
     - assets/images/
     - assets/icons/

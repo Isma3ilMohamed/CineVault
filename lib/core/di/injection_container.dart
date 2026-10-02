@@ -42,6 +42,7 @@ import '../../features/settings/domain/usecases/get_settings.dart';
 import '../../features/settings/domain/usecases/save_locale.dart';
 import '../../features/settings/domain/usecases/save_theme_mode.dart';
 import '../../features/settings/presentation/cubit/settings_cubit.dart';
+import '../config/app_config.dart';
 import '../network/dio_client.dart';
 import '../network/network_info.dart';
 
@@ -62,7 +63,9 @@ import '../network/network_info.dart';
 ///   - registerFactory: كل مرة نطلبه بيعمل instance جديدة (زي Koin factory)
 final sl = GetIt.instance; // sl = Service Locator
 
-Future<void> initDependencies() async {
+Future<void> initDependencies(AppConfig config) async {
+  sl.registerSingleton<AppConfig>(config);
+
   //! External
   sl.registerLazySingleton(() => Connectivity());
 
@@ -78,7 +81,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<Box<dynamic>>(() => favoritesBox);
 
   //! Core
-  sl.registerLazySingleton(() => DioClient());
+  sl.registerLazySingleton(() => DioClient(sl()));
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
 
   //! Features - Movies

@@ -30,6 +30,20 @@ android {
         versionName = flutter.versionName
     }
 
+    // Keep in sync with ios/Flutter/*.xcconfig and lib/core/config/app_config.dart.
+    flavorDimensions += "environment"
+    productFlavors {
+        create("staging") {
+            dimension = "environment"
+            applicationIdSuffix = ".staging"
+            manifestPlaceholders["appName"] = "CineVault Stg"
+        }
+        create("production") {
+            dimension = "environment"
+            manifestPlaceholders["appName"] = "CineVault"
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.

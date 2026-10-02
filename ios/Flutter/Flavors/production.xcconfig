@@ -1,0 +1,3 @@
+// Production flavor. Keep in sync with android/app/build.gradle.kts productFlavors.
+APP_DISPLAY_NAME = CineVault
+BUNDLE_ID_SUFFIX =

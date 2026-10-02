@@ -72,6 +72,8 @@ void main() {
               .thenAnswer((_) async => Ok(testMovies));
           when(() => mockMovieRepository.getNowPlayingMovies(page: 1))
               .thenAnswer((_) async => Ok(testMovies));
+          when(() => mockMovieRepository.getTrendingDayMovies(page: 1))
+              .thenAnswer((_) async => Ok(testMovies));
         },
         build: () => moviesBloc,
         act: (bloc) => bloc.add(const LoadHomeMovies()),
@@ -94,6 +96,8 @@ void main() {
           when(() => mockMovieRepository.getUpcomingMovies(page: 1))
               .thenAnswer((_) async => Ok(testMovies));
           when(() => mockMovieRepository.getNowPlayingMovies(page: 1))
+              .thenAnswer((_) async => Ok(testMovies));
+          when(() => mockMovieRepository.getTrendingDayMovies(page: 1))
               .thenAnswer((_) async => Ok(testMovies));
         },
         build: () => moviesBloc,

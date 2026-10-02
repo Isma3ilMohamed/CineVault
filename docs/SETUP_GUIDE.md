@@ -2,6 +2,9 @@
 
 هاك الخطوات الكاملة عشان تشغل CineVault على الماك M5 بتاعك.
 
+> ⚠️ **Outdated:** the `.env` / `flutter run` steps below predate flavors.
+> Config and run commands now live in [README §4–5](../README.md#4-flavors--config).
+
 ---
 
 ## ✅ Step 1: تأكد إن Flutter شغال

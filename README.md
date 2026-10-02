@@ -87,34 +87,45 @@ flutter pub get
 3. اختار **Developer** → املى الفورم
 4. هتاخد **API Key (v3)** و **API Read Access Token (v4)**
 
-### 4. Environment Variables
+### 4. Flavors & Config
+
+Two flavors: **staging** and **production**. Both hit TMDB; staging installs side by side
+(`.staging` app id suffix, "CineVault Stg" name) and has network logging on.
+
+Each flavor reads its config from `config/<flavor>.env` (git-ignored) at build time:
 
 ```bash
-# انسخ الـ template
-cp .env.example .env
-
-# بعد كدا افتح .env وحط الـ keys:
+cp config/staging.env.example config/staging.env
+cp config/production.env.example config/production.env
+# then put your TMDB v4 read access token in both files
 ```
 
-```env
-TMDB_API_KEY=<your_key>
-TMDB_ACCESS_TOKEN=<your_token>
-TMDB_BASE_URL=https://api.themoviedb.org/3
-TMDB_IMAGE_BASE_URL=https://image.tmdb.org/t/p
-```
+The app refuses to start if `--flavor` and the config file don't match.
+
+| | staging | production |
+|---|---|---|
+| Android app id | `com.ismail.cine_vault_temp.staging` | `com.ismail.cine_vault_temp` |
+| iOS bundle id | `com.ismail.cineVaultTemp.staging` | `com.ismail.cineVaultTemp` |
+| Network logs | ✅ | ❌ |
+
+Flavor wiring lives in `android/app/build.gradle.kts`, `ios/Flutter/Flavors/` and
+`lib/core/config/app_config.dart` — keep them in sync.
 
 ### 5. Run
 
+A flavor is required (there is no default build any more).
+
 ```bash
-# Android
-flutter run
+flutter run --flavor staging --dart-define-from-file=config/staging.env
+flutter run --flavor production --dart-define-from-file=config/production.env
+```
 
-# iOS
-flutter run -d "iPhone 15 Pro"
+Android Studio: pick the **staging** / **production** run configuration (from `.run/`).
 
-# Specific device
-flutter devices
-flutter run -d <device_id>
+```bash
+# Release builds
+flutter build apk --flavor production --dart-define-from-file=config/production.env
+flutter build ipa --flavor production --dart-define-from-file=config/production.env
 ```
 
 ## 🧩 الـ Stack

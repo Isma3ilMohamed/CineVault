@@ -20,10 +20,13 @@ final class SearchQueryChanged extends SearchEvent {
 }
 
 /// Internal event — بيتفجر بعد الـ debounce window بينفذ الـ API call
-final class _SearchExecuted extends SearchEvent {
+/// Internal: the single entry point for running a search.
+/// An empty [query] means "go back to idle". Handled with `restartable()`,
+/// so a newer request cancels the one in flight and stale results never land.
+final class _SearchRequested extends SearchEvent {
   final String query;
 
-  const _SearchExecuted(this.query);
+  const _SearchRequested(this.query);
 
   @override
   List<Object> get props => [query];

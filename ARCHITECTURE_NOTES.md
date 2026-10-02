@@ -353,7 +353,8 @@ class MovieDetailsRouteData extends GoRouteData {
 
 | Phase | الشغل | Done when |
 |---|---|---|
-| **0** | `git init` · رفع الـ SDK لـ `^3.7` · `very_good_analysis` · `dart format` على كله · إصلاح bugs 1، 2، 5 | `dart analyze` نضيف، commit أساسي |
+| **0-A** | إصلاح الـ test القديم · bugs 1، 2، 5 · flavors (staging/production) + config per flavor | tests خضرا، الـ flavors بتعمل build على Android و iOS |
+| **0-B** | رفع الـ SDK لـ `^3.7` · `very_good_analysis` · `dart format` · `dart fix` | `dart analyze` نضيف (دفعة ميكانيكية لوحدها) |
 | **1** | melos workspace · `core/result` (sealed Failure) · `core/base` (EffectEmitter, BlocEffectListener, allowedEvents) + tests | الـ base مغطاة بـ tests |
 | **2** | `lints` package — أول 4 قواعد (content pure · bloc pure · provider only in route · no navigation in features) | القواعد بتفشل على الكود الحالي ✔ |
 | **3** | `domain` pure Dart · نقل الـ entities · `GetMoviesByCategory` · `GetMovieTrailer` + tests | `domain` من غير `flutter` |
@@ -364,9 +365,17 @@ class MovieDetailsRouteData extends GoRouteData {
 
 ---
 
-## 7. قرارات مفتوحة
+## 7. القرارات
 
-- [ ] **`freezed`** للـ states، ولا `Equatable` + `copyWith` يدوي؟
-- [ ] **`go_router_builder`** (المقترح في §4)، ولا route classes يدوي؟
-- [ ] **melos من Phase 1** (المقترح — الـ cycle بين movies/favorites مش هيبان غير بالـ compiler)، ولا فولدرات الأول؟
-- [ ] analyzer plugin ولا `custom_lint`؟ (نقرر بعد ما نجرّب الـ plugin API على Dart 3.13)
+| القرار | الحالة |
+|---|---|
+| `freezed` للـ states والـ contracts | ✅ متفق (2026-10-02) |
+| `go_router_builder` للـ typed routes | ✅ متفق |
+| melos من Phase 1 | ✅ متفق |
+| Flavors: `staging` · `production` | ✅ متعملة في Phase 0 |
+| analyzer plugin ولا `custom_lint` | ⏳ نقرر في Phase 2 بعد ما نجرّب الـ plugin API على Dart 3.13 |
+| إعادة تسمية الـ app id (`cine_vault_temp` → ?) | ⏳ مفتوح |
+
+## 8. Workflow
+- **مفيش commit من غير مراجعة.** كل دفعة بتتسلّم كـ diff، والـ commit بيحصل بعد الموافقة.
+- التغييرات الميكانيكية (format · `dart fix`) دايماً في دفعة لوحدها عشان متدفنش التغييرات الحقيقية.
