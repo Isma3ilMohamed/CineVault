@@ -29,39 +29,20 @@
 
 ## 📁 Folder Structure
 
+The project is mid-migration to a melos workspace (target layout and plan:
+[ARCHITECTURE_NOTES.md](ARCHITECTURE_NOTES.md)).
+
 ```
-lib/
-├── core/                       # Shared across features
-│   ├── constants/              # App & API constants
-│   ├── di/                     # Dependency injection (GetIt)
-│   ├── error/                  # Failures & Exceptions
-│   ├── network/                # Dio, interceptors, connectivity
-│   ├── router/                 # go_router setup
-│   ├── theme/                  # Material 3 dark theme
-│   ├── usecase/                # Base UseCase class
-│   └── widgets/                # Shared UI components
-│
-├── features/
-│   ├── movies/                 # ✅ Implemented
-│   │   ├── data/
-│   │   │   ├── datasources/    # Remote (Dio) & Local (Isar)
-│   │   │   ├── models/         # DTOs with JSON mapping
-│   │   │   └── repositories/   # Repository implementations
-│   │   ├── domain/
-│   │   │   ├── entities/       # Pure business models
-│   │   │   ├── repositories/   # Abstract contracts
-│   │   │   └── usecases/       # One action per class
-│   │   └── presentation/
-│   │       ├── bloc/           # MoviesBloc + Events + States
-│   │       ├── pages/          # Full screens
-│   │       └── widgets/        # Feature-specific widgets
-│   │
-│   ├── search/                 # 🔜 To be implemented
-│   ├── favorites/              # 🔜 To be implemented
-│   └── auth/                   # 🔜 To be implemented
-│
-├── app.dart                    # Root MaterialApp
-└── main.dart                   # Entry point
+cine_vault/                     # Workspace root, and (for now) the app itself
+├── lib/                        # App: features not yet moved into packages
+├── test/                       # App tests
+├── packages/
+│   └── core/
+│       ├── result/             # core_result: Result, sealed Failure (pure Dart)
+│       └── base/               # core_base: EffectEmitter, EventGuard (pure Dart)
+│                               #            + BlocEffectListener (widgets.dart)
+├── config/                     # Per-flavor build config (*.env git-ignored)
+└── pubspec.yaml                # App deps + `workspace:` list + melos scripts
 ```
 
 ## 🚀 Getting Started
@@ -127,6 +108,19 @@ Android Studio: pick the **staging** / **production** run configuration (from `.
 flutter build apk --flavor production --dart-define-from-file=config/production.env
 flutter build ipa --flavor production --dart-define-from-file=config/production.env
 ```
+
+## 🛠️ Development
+
+The workspace is driven by [melos](https://melos.invertase.dev) (a dev dependency):
+
+```bash
+dart run melos run format    # fails if anything is unformatted
+dart run melos run analyze   # flutter analyze --fatal-infos, whole workspace
+dart run melos run test      # every package's tests + the app's tests
+```
+
+Adding a package: create it under `packages/`, give its pubspec
+`resolution: workspace`, and list it under `workspace:` in the root `pubspec.yaml`.
 
 ## 🧩 الـ Stack
 

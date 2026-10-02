@@ -9,6 +9,7 @@ environment:
 # Pub workspace: one resolution for the app and every package below.
 # Add new packages here; melos picks them up automatically.
 workspace:
+  - packages/core/base
   - packages/core/result
 
 dependencies:
@@ -19,6 +20,8 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   # Workspace packages
+  core_base:
+    path: packages/core/base
   core_result:
     path: packages/core/result
 

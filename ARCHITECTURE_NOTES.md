@@ -149,10 +149,13 @@ class MovieDetailsContent extends StatelessWidget {
 }
 ```
 
-### الـ Base في `core/base`
-- `mixin EffectEmitter<E>` على الـ Bloc — `StreamController<E>.broadcast()` + `emitEffect(E)` + بيتقفل في `close()`. ده المقابل لـ `Channel` + `receiveAsFlow`.
-- `BlocEffectListener<B, E>` widget — بيعمل subscribe في `initState` وبيلغي في `dispose`.
-- `allowedEvents` — `assert` في debug و log في release لو الـ event مش مسموح في الـ state الحالية.
+### الـ Base في `core/base` ✅ (Phase 1)
+مدخلين عشان الـ bloc والـ contract يفضلوا pure Dart:
+- `package:core_base/core_base.dart` (من غير Flutter):
+  - `mixin EffectEmitter<S, E> on BlocBase<S>` — `emitEffect(effect)` + `effects` stream. الـ effect بيوصل **مرة واحدة**: لو مفيش listener بيتخزن لحد أول واحد، ومبيتعادش لحد بعده. نفس سلوك `Channel` في CMP.
+  - `mixin EventGuard<E, S> on Bloc<E, S>` — بديل `allowedEvents`. الـ bloc بيعمل override لـ `isEventAllowed(event, state)` بـ `switch ((state, event))`. المرفوض: `assert` في debug، و log + تجاهل في release. **الـ check بيحصل وقت `add()`** على الـ state الحالية، مش وقت معالجة الـ event.
+  - اتحط على الـ bloc مش الـ state عشان مايحتاجش `const State._()` مع `freezed`.
+- `package:core_base/widgets.dart`: `BlocEffectListener<B, E>` — بياخد الـ bloc من `BlocProvider` أو من `bloc:`، وبيعمل resubscribe لو الـ bloc اتغير.
 - **helper واحد بس.** لو حد احتاج تاني، نسأل ليه.
 
 ---
@@ -242,7 +245,7 @@ cine_vault/
 ├── app/                    main · DI composition · theme wiring · MaterialApp
 ├── packages/
 │   ├── core/
-│   │   ├── base/           EffectEmitter · BlocEffectListener · allowedEvents
+│   │   ├── base/           EffectEmitter · EventGuard · BlocEffectListener
 │   │   ├── result/         Result · sealed Failure
 │   │   ├── network/        Dio client · interceptors
 │   │   ├── storage/        Hive · SharedPreferences wrappers
@@ -355,7 +358,7 @@ class MovieDetailsRouteData extends GoRouteData {
 |---|---|---|
 | **0-A** | إصلاح الـ test القديم · bugs 1، 2، 5 · flavors (staging/production) + config per flavor | tests خضرا، الـ flavors بتعمل build على Android و iOS |
 | **0-B** | رفع الـ SDK لـ `^3.13` · `very_good_analysis` · `dart format` · `dart fix` + إصلاح الباقي بإيدينا | ✅ `flutter analyze`: No issues |
-| **1** | melos workspace · `core/result` (sealed Failure) · `core/base` (EffectEmitter, BlocEffectListener, allowedEvents) + tests | الـ base مغطاة بـ tests |
+| **1** | melos workspace · `core/result` (sealed Failure) · `core/base` (EffectEmitter, EventGuard, BlocEffectListener) + tests | ✅ 18 test في الـ packages · `melos run analyze/test` خضرا |
 | **2** | `lints` package — أول 4 قواعد (content pure · bloc pure · provider only in route · no navigation in features) | القواعد بتفشل على الكود الحالي ✔ |
 | **3** | `domain` pure Dart · نقل الـ entities · `GetMoviesByCategory` · `GetMovieTrailer` + tests | `domain` من غير `flutter` |
 | **4** | `data` · `guard()` · interceptor بـ `reject` · repo tests | |
@@ -371,7 +374,10 @@ class MovieDetailsRouteData extends GoRouteData {
 |---|---|
 | `freezed` للـ states والـ contracts | ✅ متفق (2026-10-02) |
 | `go_router_builder` للـ typed routes | ✅ متفق |
-| melos من Phase 1 | ✅ متفق |
+| melos من Phase 1 | ✅ melos 8 فوق Dart pub workspaces (Phase 1) |
+| التطبيق في root الـ workspace مؤقتاً | ✅ Phase 1 — النقل لـ `app/` في Phase 7 (معاه `android/` و `ios/`) |
+| `AuthFailure` · `ValidationFailure` | ❌ اتشالوا (مش مستخدمين؛ مع `sealed` كل type زيادة = case إجباري). يرجعوا لما نحتاجهم |
+| رسايل الـ Failure العربي في الكود | ⏳ فاضلة لحد Phase 6: الـ states هتشيل `Failure` والـ UI يترجمها بمفاتيح `failure*` الموجودة في الـ ARB |
 | Flavors: `staging` · `production` | ✅ متعملة في Phase 0 |
 | analyzer plugin ولا `custom_lint` | ⏳ نقرر في Phase 2 بعد ما نجرّب الـ plugin API على Dart 3.13 |
 | إعادة تسمية الـ app id (`cine_vault_temp` → ?) | ⏳ مفتوح |
