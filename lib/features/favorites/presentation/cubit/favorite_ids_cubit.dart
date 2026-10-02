@@ -1,28 +1,24 @@
 import 'dart:async';
 
+import 'package:cine_vault/features/favorites/domain/usecases/toggle_favorite.dart';
+import 'package:cine_vault/features/favorites/domain/usecases/watch_favorite_ids.dart';
+import 'package:cine_vault/features/movies/domain/entities/movie.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../movies/domain/entities/movie.dart';
-import '../../domain/usecases/toggle_favorite.dart';
-import '../../domain/usecases/watch_favorite_ids.dart';
-
 class FavoriteIdsCubit extends Cubit<Set<int>> {
-  final WatchFavoriteIds watchFavoriteIds;
-  final ToggleFavorite toggleFavoriteUseCase;
-
-  StreamSubscription<Set<int>>? _subscription;
-
-  FavoriteIdsCubit({
-    required this.watchFavoriteIds,
-    required this.toggleFavoriteUseCase,
-  }) : super(const <int>{}) {
+  FavoriteIdsCubit({required this.watchFavoriteIds, required this.toggleFavoriteUseCase})
+    : super(const <int>{}) {
     _subscription = watchFavoriteIds().listen(
-      (ids) => emit(ids),
+      emit,
       onError: (_) {
         // Ignore stream errors and keep the last known ids.
       },
     );
   }
+  final WatchFavoriteIds watchFavoriteIds;
+  final ToggleFavorite toggleFavoriteUseCase;
+
+  StreamSubscription<Set<int>>? _subscription;
 
   bool contains(int movieId) => state.contains(movieId);
 

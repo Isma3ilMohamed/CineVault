@@ -1,32 +1,19 @@
-import '../../domain/entities/movie.dart';
+import 'package:cine_vault/features/movies/domain/entities/movie.dart';
 
 class MovieModel {
-  final int id;
-  final String title;
-  final String overview;
-  final String? posterPath;
-  final String? backdropPath;
-  final double voteAverage;
-  final int voteCount;
-  final String? releaseDate;
-  final List<int> genreIds;
-  final String originalLanguage;
-  final double popularity;
-  final bool adult;
-
   MovieModel({
     required this.id,
     required this.title,
     required this.overview,
-    this.posterPath,
-    this.backdropPath,
     required this.voteAverage,
     required this.voteCount,
-    this.releaseDate,
     required this.genreIds,
     required this.originalLanguage,
     required this.popularity,
     required this.adult,
+    this.posterPath,
+    this.backdropPath,
+    this.releaseDate,
   });
 
   factory MovieModel.fromJson(Map<String, dynamic> json) {
@@ -39,48 +26,10 @@ class MovieModel {
       voteAverage: (json['vote_average'] as num?)?.toDouble() ?? 0.0,
       voteCount: json['vote_count'] as int? ?? 0,
       releaseDate: json['release_date'] as String?,
-      genreIds: (json['genre_ids'] as List<dynamic>?)
-              ?.map((e) => e as int)
-              .toList() ??
-          [],
+      genreIds: (json['genre_ids'] as List<dynamic>?)?.map((e) => e as int).toList() ?? [],
       originalLanguage: json['original_language'] as String? ?? 'en',
       popularity: (json['popularity'] as num?)?.toDouble() ?? 0.0,
       adult: json['adult'] as bool? ?? false,
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'overview': overview,
-        'poster_path': posterPath,
-        'backdrop_path': backdropPath,
-        'vote_average': voteAverage,
-        'vote_count': voteCount,
-        'release_date': releaseDate,
-        'genre_ids': genreIds,
-        'original_language': originalLanguage,
-        'popularity': popularity,
-        'adult': adult,
-      };
-
-  Movie toEntity() {
-    return Movie(
-      id: id,
-      title: title,
-      overview: overview,
-      posterPath: posterPath,
-      backdropPath: backdropPath,
-      voteAverage: voteAverage,
-      voteCount: voteCount,
-      releaseDate:
-          releaseDate != null && releaseDate!.isNotEmpty
-              ? DateTime.tryParse(releaseDate!)
-              : null,
-      genreIds: genreIds,
-      originalLanguage: originalLanguage,
-      popularity: popularity,
-      adult: adult,
     );
   }
 
@@ -100,14 +49,55 @@ class MovieModel {
       adult: movie.adult,
     );
   }
+  final int id;
+  final String title;
+  final String overview;
+  final String? posterPath;
+  final String? backdropPath;
+  final double voteAverage;
+  final int voteCount;
+  final String? releaseDate;
+  final List<int> genreIds;
+  final String originalLanguage;
+  final double popularity;
+  final bool adult;
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'title': title,
+    'overview': overview,
+    'poster_path': posterPath,
+    'backdrop_path': backdropPath,
+    'vote_average': voteAverage,
+    'vote_count': voteCount,
+    'release_date': releaseDate,
+    'genre_ids': genreIds,
+    'original_language': originalLanguage,
+    'popularity': popularity,
+    'adult': adult,
+  };
+
+  Movie toEntity() {
+    return Movie(
+      id: id,
+      title: title,
+      overview: overview,
+      posterPath: posterPath,
+      backdropPath: backdropPath,
+      voteAverage: voteAverage,
+      voteCount: voteCount,
+      releaseDate: releaseDate != null && releaseDate!.isNotEmpty
+          ? DateTime.tryParse(releaseDate!)
+          : null,
+      genreIds: genreIds,
+      originalLanguage: originalLanguage,
+      popularity: popularity,
+      adult: adult,
+    );
+  }
 }
 
 class MoviesPageResponse {
-  final int page;
-  final List<MovieModel> results;
-  final int totalPages;
-  final int totalResults;
-
   MoviesPageResponse({
     required this.page,
     required this.results,
@@ -118,7 +108,8 @@ class MoviesPageResponse {
   factory MoviesPageResponse.fromJson(Map<String, dynamic> json) {
     return MoviesPageResponse(
       page: json['page'] as int? ?? 1,
-      results: (json['results'] as List<dynamic>?)
+      results:
+          (json['results'] as List<dynamic>?)
               ?.map((e) => MovieModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
@@ -126,4 +117,8 @@ class MoviesPageResponse {
       totalResults: json['total_results'] as int? ?? 0,
     );
   }
+  final int page;
+  final List<MovieModel> results;
+  final int totalPages;
+  final int totalResults;
 }

@@ -1,14 +1,12 @@
+import 'package:cine_vault/core/result/result.dart';
+import 'package:cine_vault/core/usecase/usecase.dart';
+import 'package:cine_vault/features/movies/domain/entities/movie.dart';
+import 'package:cine_vault/features/movies/domain/repositories/movie_repository.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/result/result.dart';
-import '../../../../core/usecase/usecase.dart';
-import '../entities/movie.dart';
-import '../repositories/movie_repository.dart';
-
 class GetPopularMovies implements UseCase<List<Movie>, PageParams> {
-  final MovieRepository repository;
-
   const GetPopularMovies(this.repository);
+  final MovieRepository repository;
 
   @override
   Future<Result<List<Movie>>> call(PageParams params) {
@@ -17,9 +15,8 @@ class GetPopularMovies implements UseCase<List<Movie>, PageParams> {
 }
 
 class PageParams extends Equatable {
-  final int page;
-
   const PageParams({required this.page});
+  final int page;
 
   @override
   List<Object> get props => [page];

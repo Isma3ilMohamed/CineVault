@@ -1,7 +1,6 @@
+import 'package:cine_vault/core/result/result.dart';
+import 'package:cine_vault/features/settings/domain/entities/app_settings.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../core/result/result.dart';
-import '../entities/app_settings.dart';
 
 abstract class SettingsRepository {
   Future<Result<AppSettings>> getSettings();

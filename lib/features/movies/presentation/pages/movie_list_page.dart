@@ -1,17 +1,15 @@
+import 'package:cine_vault/features/movies/domain/entities/movie.dart';
+import 'package:cine_vault/features/movies/domain/entities/movie_category.dart';
+import 'package:cine_vault/features/movies/presentation/bloc/movie_list_bloc.dart';
+import 'package:cine_vault/features/movies/presentation/widgets/movie_card.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../l10n/generated/app_localizations.dart';
-import '../../domain/entities/movie.dart';
-import '../../domain/entities/movie_category.dart';
-import '../bloc/movie_list_bloc.dart';
-import '../widgets/movie_card.dart';
-
 class MovieListPage extends StatelessWidget {
+  const MovieListPage({required this.category, super.key});
   final MovieCategory category;
-
-  const MovieListPage({super.key, required this.category});
 
   String _titleFor(AppLocalizations l10n) {
     return switch (category) {
@@ -39,25 +37,18 @@ class MovieListPage extends StatelessWidget {
         builder: (context, state) {
           return switch (state) {
             MovieListInitial() || MovieListLoading() => const Center(
-                child: CircularProgressIndicator(color: Color(0xFFE50914)),
-              ),
+              child: CircularProgressIndicator(color: Color(0xFFE50914)),
+            ),
             MovieListError(:final message) => _ErrorView(
-                message: message,
-                onRetry: () => context
-                    .read<MovieListBloc>()
-                    .add(const MovieListRetried()),
-              ),
-            MovieListLoaded(
-              :final movies,
-              :final isLoadingMore,
-              :final hasReachedMax,
-            ) =>
-              _Grid(
-                movies: movies,
-                isLoadingMore: isLoadingMore,
-                hasReachedMax: hasReachedMax,
-                category: category,
-              ),
+              message: message,
+              onRetry: () => context.read<MovieListBloc>().add(const MovieListRetried()),
+            ),
+            MovieListLoaded(:final movies, :final isLoadingMore, :final hasReachedMax) => _Grid(
+              movies: movies,
+              isLoadingMore: isLoadingMore,
+              hasReachedMax: hasReachedMax,
+              category: category,
+            ),
           };
         },
       ),
@@ -66,17 +57,16 @@ class MovieListPage extends StatelessWidget {
 }
 
 class _Grid extends StatefulWidget {
-  final List<Movie> movies;
-  final bool isLoadingMore;
-  final bool hasReachedMax;
-  final MovieCategory category;
-
   const _Grid({
     required this.movies,
     required this.isLoadingMore,
     required this.hasReachedMax,
     required this.category,
   });
+  final List<Movie> movies;
+  final bool isLoadingMore;
+  final bool hasReachedMax;
+  final MovieCategory category;
 
   @override
   State<_Grid> createState() => _GridState();
@@ -103,9 +93,7 @@ class _GridState extends State<_Grid> {
     if (!_scrollController.hasClients) return;
     final max = _scrollController.position.maxScrollExtent;
     final cur = _scrollController.position.pixels;
-    if (cur >= max * 0.8 &&
-        !widget.isLoadingMore &&
-        !widget.hasReachedMax) {
+    if (cur >= max * 0.8 && !widget.isLoadingMore && !widget.hasReachedMax) {
       context.read<MovieListBloc>().add(const MovieListLoadMore());
     }
   }
@@ -124,32 +112,24 @@ class _GridState extends State<_Grid> {
               crossAxisSpacing: 12,
               childAspectRatio: 0.55,
             ),
-            delegate: SliverChildBuilderDelegate(
-              (context, i) {
-                final movie = widget.movies[i];
-                final heroTag = '${widget.category.slug}_list_${movie.id}';
-                return MovieCard(
-                  movie: movie,
-                  width: double.infinity,
-                  height: 260,
-                  heroTag: heroTag,
-                  onTap: () => context.push(
-                    '/movie/${movie.id}',
-                    extra: {'heroTag': heroTag},
-                  ),
-                );
-              },
-              childCount: widget.movies.length,
-            ),
+            delegate: SliverChildBuilderDelegate((context, i) {
+              final movie = widget.movies[i];
+              final heroTag = '${widget.category.slug}_list_${movie.id}';
+              return MovieCard(
+                movie: movie,
+                width: double.infinity,
+                height: 260,
+                heroTag: heroTag,
+                onTap: () => context.push('/movie/${movie.id}', extra: {'heroTag': heroTag}),
+              );
+            }, childCount: widget.movies.length),
           ),
         ),
         if (widget.isLoadingMore)
           const SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.only(bottom: 24),
-              child: Center(
-                child: CircularProgressIndicator(color: Color(0xFFE50914)),
-              ),
+              child: Center(child: CircularProgressIndicator(color: Color(0xFFE50914))),
             ),
           ),
       ],
@@ -158,10 +138,9 @@ class _GridState extends State<_Grid> {
 }
 
 class _ErrorView extends StatelessWidget {
+  const _ErrorView({required this.message, required this.onRetry});
   final String message;
   final VoidCallback onRetry;
-
-  const _ErrorView({required this.message, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {
@@ -173,19 +152,12 @@ class _ErrorView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.error_outline_rounded,
-              size: 64,
-              color: onSurface.withValues(alpha: 0.55),
-            ),
+            Icon(Icons.error_outline_rounded, size: 64, color: onSurface.withValues(alpha: 0.55)),
             const SizedBox(height: 16),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: onSurface.withValues(alpha: 0.7),
-                fontSize: 16,
-              ),
+              style: TextStyle(color: onSurface.withValues(alpha: 0.7), fontSize: 16),
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(

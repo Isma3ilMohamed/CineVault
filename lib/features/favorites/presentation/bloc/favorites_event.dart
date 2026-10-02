@@ -12,9 +12,8 @@ final class FavoritesSubscribed extends FavoritesEvent {
 }
 
 final class _FavoritesUpdated extends FavoritesEvent {
-  final List<Movie> movies;
-
   const _FavoritesUpdated(this.movies);
+  final List<Movie> movies;
 
   @override
   List<Object> get props => [movies];

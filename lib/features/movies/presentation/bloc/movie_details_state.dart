@@ -16,27 +16,25 @@ final class MovieDetailsLoading extends MovieDetailsState {
 }
 
 final class MovieDetailsLoaded extends MovieDetailsState {
-  final Movie movie;
-  final List<Movie> similarMovies;
-  final List<CastMember> cast;
-
-  final Video? trailer;
-
   const MovieDetailsLoaded({
     required this.movie,
     required this.similarMovies,
     required this.cast,
     this.trailer,
   });
+  final Movie movie;
+  final List<Movie> similarMovies;
+  final List<CastMember> cast;
+
+  final Video? trailer;
 
   @override
   List<Object?> get props => [movie, similarMovies, cast, trailer];
 }
 
 final class MovieDetailsError extends MovieDetailsState {
-  final String message;
-
   const MovieDetailsError({required this.message});
+  final String message;
 
   @override
   List<Object> get props => [message];

@@ -12,9 +12,8 @@ final class FavoritesInitial extends FavoritesState {
 }
 
 final class FavoritesLoaded extends FavoritesState {
-  final List<Movie> movies;
-
   const FavoritesLoaded({required this.movies});
+  final List<Movie> movies;
 
   bool get isEmpty => movies.isEmpty;
 

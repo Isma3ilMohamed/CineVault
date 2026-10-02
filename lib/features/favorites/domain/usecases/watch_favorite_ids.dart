@@ -1,9 +1,8 @@
-import '../repositories/favorites_repository.dart';
+import 'package:cine_vault/features/favorites/domain/repositories/favorites_repository.dart';
 
 class WatchFavoriteIds {
-  final FavoritesRepository repository;
-
   const WatchFavoriteIds(this.repository);
+  final FavoritesRepository repository;
 
   Stream<Set<int>> call() => repository.watchFavoriteIds();
 }

@@ -1,11 +1,10 @@
+import 'package:cine_vault/features/favorites/presentation/bloc/favorites_bloc.dart';
+import 'package:cine_vault/features/movies/domain/entities/movie.dart';
+import 'package:cine_vault/features/movies/presentation/widgets/movie_card.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../../l10n/generated/app_localizations.dart';
-import '../../../movies/domain/entities/movie.dart';
-import '../../../movies/presentation/widgets/movie_card.dart';
-import '../bloc/favorites_bloc.dart';
 
 /// No pagination: favorites are few and stored locally, so all load at once.
 class FavoritesPage extends StatelessWidget {
@@ -28,10 +27,9 @@ class FavoritesPage extends StatelessWidget {
         builder: (context, state) {
           return switch (state) {
             FavoritesInitial() => const Center(
-                child: CircularProgressIndicator(color: Color(0xFFE50914)),
-              ),
-            FavoritesLoaded(:final movies) when movies.isEmpty =>
-              const _EmptyFavorites(),
+              child: CircularProgressIndicator(color: Color(0xFFE50914)),
+            ),
+            FavoritesLoaded(:final movies) when movies.isEmpty => const _EmptyFavorites(),
             FavoritesLoaded(:final movies) => _FavoritesGrid(movies: movies),
           };
         },
@@ -41,9 +39,8 @@ class FavoritesPage extends StatelessWidget {
 }
 
 class _FavoritesGrid extends StatelessWidget {
-  final List<Movie> movies;
-
   const _FavoritesGrid({required this.movies});
+  final List<Movie> movies;
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +61,7 @@ class _FavoritesGrid extends StatelessWidget {
           width: double.infinity,
           height: 260,
           heroTag: heroTag,
-          onTap: () => context.push(
-            '/movie/${movie.id}',
-            extra: {'heroTag': heroTag},
-          ),
+          onTap: () => context.push('/movie/${movie.id}', extra: {'heroTag': heroTag}),
         );
       },
     );
@@ -87,18 +81,11 @@ class _EmptyFavorites extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.favorite_border_rounded,
-              size: 72,
-              color: onSurface.withValues(alpha: 0.2),
-            ),
+            Icon(Icons.favorite_border_rounded, size: 72, color: onSurface.withValues(alpha: 0.2)),
             const SizedBox(height: 16),
             Text(
               l10n.favoritesEmptyTitle,
-              style: TextStyle(
-                color: onSurface.withValues(alpha: 0.7),
-                fontSize: 16,
-              ),
+              style: TextStyle(color: onSurface.withValues(alpha: 0.7), fontSize: 16),
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(

@@ -1,28 +1,24 @@
-import '../../../../core/error/exceptions.dart';
-import '../../../../core/error/failures.dart';
-import '../../../../core/network/network_info.dart';
-import '../../../../core/result/result.dart';
-import '../../../movies/domain/entities/movie.dart';
-import '../../domain/repositories/search_repository.dart';
-import '../datasources/local/recent_searches_local_data_source.dart';
-import '../datasources/remote/search_remote_data_source.dart';
+import 'package:cine_vault/core/error/exceptions.dart';
+import 'package:cine_vault/core/error/failures.dart';
+import 'package:cine_vault/core/network/network_info.dart';
+import 'package:cine_vault/core/result/result.dart';
+import 'package:cine_vault/features/movies/domain/entities/movie.dart';
+import 'package:cine_vault/features/search/data/datasources/local/recent_searches_local_data_source.dart';
+import 'package:cine_vault/features/search/data/datasources/remote/search_remote_data_source.dart';
+import 'package:cine_vault/features/search/domain/repositories/search_repository.dart';
 
 class SearchRepositoryImpl implements SearchRepository {
-  final SearchRemoteDataSource remoteDataSource;
-  final RecentSearchesLocalDataSource localDataSource;
-  final NetworkInfo networkInfo;
-
   SearchRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
     required this.networkInfo,
   });
+  final SearchRemoteDataSource remoteDataSource;
+  final RecentSearchesLocalDataSource localDataSource;
+  final NetworkInfo networkInfo;
 
   @override
-  Future<Result<List<Movie>>> searchMovies({
-    required String query,
-    required int page,
-  }) async {
+  Future<Result<List<Movie>>> searchMovies({required String query, required int page}) async {
     final trimmed = query.trim();
     if (trimmed.isEmpty) {
       return const Ok(<Movie>[]);
@@ -33,10 +29,7 @@ class SearchRepositoryImpl implements SearchRepository {
     }
 
     try {
-      final response = await remoteDataSource.searchMovies(
-        query: trimmed,
-        page: page,
-      );
+      final response = await remoteDataSource.searchMovies(query: trimmed, page: page);
       final movies = response.results.map((m) => m.toEntity()).toList();
       return Ok(movies);
     } on ServerException catch (e) {

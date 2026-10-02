@@ -1,33 +1,27 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cine_vault/features/favorites/presentation/widgets/favorite_heart_button.dart';
+import 'package:cine_vault/features/movies/domain/entities/cast_member.dart';
+import 'package:cine_vault/features/movies/domain/entities/movie.dart';
+import 'package:cine_vault/features/movies/domain/entities/video.dart';
+import 'package:cine_vault/features/movies/presentation/bloc/movie_details_bloc.dart';
+import 'package:cine_vault/features/movies/presentation/cubit/genres_cubit.dart';
+import 'package:cine_vault/features/movies/presentation/widgets/cast_card.dart';
+import 'package:cine_vault/features/movies/presentation/widgets/movie_card.dart';
+import 'package:cine_vault/features/movies/presentation/widgets/trailer_player_modal.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../../l10n/generated/app_localizations.dart';
-import '../../../favorites/presentation/widgets/favorite_heart_button.dart';
-import '../../domain/entities/cast_member.dart';
-import '../../domain/entities/movie.dart';
-import '../../domain/entities/video.dart';
-import '../bloc/movie_details_bloc.dart';
-import '../cubit/genres_cubit.dart';
-import '../widgets/cast_card.dart';
-import '../widgets/movie_card.dart';
-import '../widgets/trailer_player_modal.dart';
-
 /// The bloc and its initial load event are created in the router; creating
 /// them in build would refetch on every rebuild.
 class MovieDetailsPage extends StatelessWidget {
+  const MovieDetailsPage({required this.movieId, super.key, this.heroTag});
   final int movieId;
 
   /// Hero tag used by the source screen; null when opened via deep link.
   final String? heroTag;
-
-  const MovieDetailsPage({
-    super.key,
-    required this.movieId,
-    this.heroTag,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,16 +29,9 @@ class MovieDetailsPage extends StatelessWidget {
       body: BlocBuilder<MovieDetailsBloc, MovieDetailsState>(
         builder: (context, state) {
           return switch (state) {
-            MovieDetailsInitial() || MovieDetailsLoading() =>
-              const _LoadingView(),
-            MovieDetailsError(:final message) =>
-              _ErrorView(message: message, movieId: movieId),
-            MovieDetailsLoaded(
-              :final movie,
-              :final similarMovies,
-              :final cast,
-              :final trailer,
-            ) =>
+            MovieDetailsInitial() || MovieDetailsLoading() => const _LoadingView(),
+            MovieDetailsError(:final message) => _ErrorView(message: message, movieId: movieId),
+            MovieDetailsLoaded(:final movie, :final similarMovies, :final cast, :final trailer) =>
               _LoadedView(
                 movie: movie,
                 similarMovies: similarMovies,
@@ -64,17 +51,14 @@ class _LoadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: CircularProgressIndicator(color: Color(0xFFE50914)),
-    );
+    return const Center(child: CircularProgressIndicator(color: Color(0xFFE50914)));
   }
 }
 
 class _ErrorView extends StatelessWidget {
+  const _ErrorView({required this.message, required this.movieId});
   final String message;
   final int movieId;
-
-  const _ErrorView({required this.message, required this.movieId});
 
   @override
   Widget build(BuildContext context) {
@@ -83,11 +67,7 @@ class _ErrorView extends StatelessWidget {
     return SafeArea(
       child: Stack(
         children: [
-          Positioned(
-            top: 8,
-            left: 8,
-            child: _BackButton(onPressed: () => context.pop()),
-          ),
+          Positioned(top: 8, left: 8, child: _BackButton(onPressed: () => context.pop())),
           Center(
             child: Padding(
               padding: const EdgeInsets.all(24),
@@ -103,16 +83,12 @@ class _ErrorView extends StatelessWidget {
                   Text(
                     message,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: onSurface.withValues(alpha: 0.7),
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(color: onSurface.withValues(alpha: 0.7), fontSize: 16),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton.icon(
-                    onPressed: () => context
-                        .read<MovieDetailsBloc>()
-                        .add(RetryMovieDetails(movieId)),
+                    onPressed: () =>
+                        context.read<MovieDetailsBloc>().add(RetryMovieDetails(movieId)),
                     icon: const Icon(Icons.refresh),
                     label: Text(l10n.tryAgain),
                   ),
@@ -127,12 +103,6 @@ class _ErrorView extends StatelessWidget {
 }
 
 class _LoadedView extends StatelessWidget {
-  final Movie movie;
-  final List<Movie> similarMovies;
-  final List<CastMember> cast;
-  final Video? trailer;
-  final String? heroTag;
-
   const _LoadedView({
     required this.movie,
     required this.similarMovies,
@@ -140,6 +110,11 @@ class _LoadedView extends StatelessWidget {
     this.trailer,
     this.heroTag,
   });
+  final Movie movie;
+  final List<Movie> similarMovies;
+  final List<CastMember> cast;
+  final Video? trailer;
+  final String? heroTag;
 
   @override
   Widget build(BuildContext context) {
@@ -156,11 +131,7 @@ class _LoadedView extends StatelessWidget {
               children: [
                 Text(
                   movie.title,
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: onSurface,
-                  ),
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: onSurface),
                 ),
                 const SizedBox(height: 8),
                 _MetaRow(movie: movie),
@@ -174,9 +145,7 @@ class _LoadedView extends StatelessWidget {
                 _SectionTitle(l10n.detailsOverview),
                 const SizedBox(height: 8),
                 Text(
-                  movie.overview.isEmpty
-                      ? l10n.detailsOverviewNone
-                      : movie.overview,
+                  movie.overview.isEmpty ? l10n.detailsOverviewNone : movie.overview,
                   style: TextStyle(
                     color: onSurface.withValues(alpha: 0.75),
                     fontSize: 15,
@@ -192,7 +161,7 @@ class _LoadedView extends StatelessWidget {
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: cast.length > 15 ? 15 : cast.length,
-                      separatorBuilder: (_, __) => const SizedBox(width: 12),
+                      separatorBuilder: (_, _) => const SizedBox(width: 12),
                       itemBuilder: (_, i) => CastCard(member: cast[i]),
                     ),
                   ),
@@ -206,7 +175,7 @@ class _LoadedView extends StatelessWidget {
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: similarMovies.length,
-                      separatorBuilder: (_, __) => const SizedBox(width: 12),
+                      separatorBuilder: (_, _) => const SizedBox(width: 12),
                       itemBuilder: (_, i) {
                         final similar = similarMovies[i];
                         // Distinct prefix so tags do not collide with Hero tags on the pushed route.
@@ -214,10 +183,8 @@ class _LoadedView extends StatelessWidget {
                         return MovieCard(
                           movie: similar,
                           heroTag: tag,
-                          onTap: () => context.push(
-                            '/movie/${similar.id}',
-                            extra: {'heroTag': tag},
-                          ),
+                          onTap: () =>
+                              context.push('/movie/${similar.id}', extra: {'heroTag': tag}),
                         );
                       },
                     ),
@@ -234,10 +201,9 @@ class _LoadedView extends StatelessWidget {
 }
 
 class _DetailsAppBar extends StatelessWidget {
+  const _DetailsAppBar({required this.movie, this.heroTag});
   final Movie movie;
   final String? heroTag;
-
-  const _DetailsAppBar({required this.movie, this.heroTag});
 
   @override
   Widget build(BuildContext context) {
@@ -248,12 +214,12 @@ class _DetailsAppBar extends StatelessWidget {
           CachedNetworkImage(
             imageUrl: movie.fullBackdropUrl!,
             fit: BoxFit.cover,
-            placeholder: (_, __) => Shimmer.fromColors(
+            placeholder: (_, _) => Shimmer.fromColors(
               baseColor: Colors.grey[800]!,
               highlightColor: Colors.grey[700]!,
               child: Container(color: Colors.grey[800]),
             ),
-            errorWidget: (_, __, ___) => Container(color: Colors.grey[900]),
+            errorWidget: (_, _, _) => Container(color: Colors.grey[900]),
           )
         else
           Container(color: Colors.grey[900]),
@@ -274,8 +240,7 @@ class _DetailsAppBar extends StatelessWidget {
       ],
     );
 
-    final Widget heroBackground =
-        heroTag == null ? background : Hero(tag: heroTag!, child: background);
+    final heroBackground = heroTag == null ? background : Hero(tag: heroTag!, child: background);
 
     return SliverAppBar(
       expandedHeight: 400,
@@ -294,9 +259,8 @@ class _DetailsAppBar extends StatelessWidget {
 }
 
 class _MetaRow extends StatelessWidget {
-  final Movie movie;
-
   const _MetaRow({required this.movie});
+  final Movie movie;
 
   @override
   Widget build(BuildContext context) {
@@ -312,26 +276,18 @@ class _MetaRow extends StatelessWidget {
           style: TextStyle(color: muted),
         ),
         const SizedBox(width: 16),
-        Icon(
-          Icons.calendar_today_rounded,
-          color: onSurface.withValues(alpha: 0.55),
-          size: 16,
-        ),
+        Icon(Icons.calendar_today_rounded, color: onSurface.withValues(alpha: 0.55), size: 16),
         const SizedBox(width: 6),
-        Text(
-          movie.releaseYear,
-          style: TextStyle(color: muted),
-        ),
+        Text(movie.releaseYear, style: TextStyle(color: muted)),
       ],
     );
   }
 }
 
 class _PlayTrailerButton extends StatelessWidget {
+  const _PlayTrailerButton({required this.trailer, required this.title});
   final Video trailer;
   final String title;
-
-  const _PlayTrailerButton({required this.trailer, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -340,10 +296,7 @@ class _PlayTrailerButton extends StatelessWidget {
       onPressed: () => showDialog<void>(
         context: context,
         barrierColor: Colors.black87,
-        builder: (_) => TrailerPlayerModal(
-          videoKey: trailer.key,
-          title: title,
-        ),
+        builder: (_) => TrailerPlayerModal(videoKey: trailer.key, title: title),
       ),
       icon: const Icon(Icons.play_arrow_rounded),
       label: Text(l10n.playTrailer),
@@ -353,15 +306,12 @@ class _PlayTrailerButton extends StatelessWidget {
 
 /// Hidden when genres failed to load (empty GenresCubit map).
 class _GenreChips extends StatelessWidget {
-  final List<int> genreIds;
-
   const _GenreChips({required this.genreIds});
+  final List<int> genreIds;
 
   @override
   Widget build(BuildContext context) {
-    final names = context.select<GenresCubit, List<String>>(
-      (c) => c.namesFor(genreIds),
-    );
+    final names = context.select<GenresCubit, List<String>>((c) => c.namesFor(genreIds));
     if (names.isEmpty) return const SizedBox.shrink();
 
     final onSurface = Theme.of(context).colorScheme.onSurface;
@@ -375,9 +325,7 @@ class _GenreChips extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: onSurface.withValues(alpha: 0.1),
-              border: Border.all(
-                color: onSurface.withValues(alpha: 0.25),
-              ),
+              border: Border.all(color: onSurface.withValues(alpha: 0.25)),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
@@ -395,9 +343,8 @@ class _GenreChips extends StatelessWidget {
 }
 
 class _SectionTitle extends StatelessWidget {
-  final String text;
-
   const _SectionTitle(this.text);
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -413,9 +360,8 @@ class _SectionTitle extends StatelessWidget {
 }
 
 class _BackButton extends StatelessWidget {
-  final VoidCallback onPressed;
-
   const _BackButton({required this.onPressed});
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {

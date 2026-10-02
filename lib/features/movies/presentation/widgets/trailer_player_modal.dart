@@ -1,22 +1,16 @@
 import 'dart:async';
 
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
-import '../../../../l10n/generated/app_localizations.dart';
-
 /// Studios often disable embedding and some iframe errors never reach the stream,
 /// so a 6s no-playback timeout also triggers the open-in-YouTube fallback.
 class TrailerPlayerModal extends StatefulWidget {
+  const TrailerPlayerModal({required this.videoKey, required this.title, super.key});
   final String videoKey;
   final String title;
-
-  const TrailerPlayerModal({
-    super.key,
-    required this.videoKey,
-    required this.title,
-  });
 
   @override
   State<TrailerPlayerModal> createState() => _TrailerPlayerModalState();
@@ -35,13 +29,7 @@ class _TrailerPlayerModalState extends State<TrailerPlayerModal> {
     _controller = YoutubePlayerController.fromVideoId(
       videoId: widget.videoKey,
       autoPlay: true,
-      params: const YoutubePlayerParams(
-        showControls: true,
-        showFullscreenButton: true,
-        strictRelatedVideos: true,
-        // Avoids some embedding errors.
-        origin: 'https://www.youtube.com',
-      ),
+      params: const YoutubePlayerParams(showFullscreenButton: true, strictRelatedVideos: true),
     );
 
     _sub = _controller.stream.listen(_onPlayerState);
@@ -75,9 +63,7 @@ class _TrailerPlayerModalState extends State<TrailerPlayerModal> {
   }
 
   Future<void> _openInYouTube() async {
-    final uri = Uri.parse(
-      'https://www.youtube.com/watch?v=${widget.videoKey}',
-    );
+    final uri = Uri.parse('https://www.youtube.com/watch?v=${widget.videoKey}');
     await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
@@ -109,10 +95,7 @@ class _TrailerPlayerModalState extends State<TrailerPlayerModal> {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(
-                    Icons.open_in_new_rounded,
-                    color: Colors.white,
-                  ),
+                  icon: const Icon(Icons.open_in_new_rounded, color: Colors.white),
                   tooltip: l10n.openInYouTube,
                   onPressed: _openInYouTube,
                 ),
@@ -136,9 +119,8 @@ class _TrailerPlayerModalState extends State<TrailerPlayerModal> {
 }
 
 class _EmbedFailedFallback extends StatelessWidget {
-  final VoidCallback onOpen;
-
   const _EmbedFailedFallback({required this.onOpen});
+  final VoidCallback onOpen;
 
   @override
   Widget build(BuildContext context) {
@@ -148,19 +130,12 @@ class _EmbedFailedFallback extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
-            Icons.play_disabled_rounded,
-            size: 72,
-            color: Colors.white38,
-          ),
+          const Icon(Icons.play_disabled_rounded, size: 72, color: Colors.white38),
           const SizedBox(height: 16),
           Text(
             l10n.trailerEmbedUnavailable,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 16,
-            ),
+            style: const TextStyle(color: Colors.white70, fontSize: 16),
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(

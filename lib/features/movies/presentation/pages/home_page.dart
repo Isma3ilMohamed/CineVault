@@ -1,13 +1,12 @@
+import 'package:cine_vault/features/movies/domain/entities/movie.dart';
+import 'package:cine_vault/features/movies/domain/entities/movie_category.dart';
+import 'package:cine_vault/features/movies/presentation/bloc/movies_bloc.dart';
+import 'package:cine_vault/features/movies/presentation/widgets/featured_carousel.dart';
+import 'package:cine_vault/features/movies/presentation/widgets/movies_section.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../../l10n/generated/app_localizations.dart';
-import '../../domain/entities/movie.dart';
-import '../../domain/entities/movie_category.dart';
-import '../bloc/movies_bloc.dart';
-import '../widgets/featured_carousel.dart';
-import '../widgets/movies_section.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -44,9 +43,7 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildLoading() {
-    return const Center(
-      child: CircularProgressIndicator(color: Color(0xFFE50914)),
-    );
+    return const Center(child: CircularProgressIndicator(color: Color(0xFFE50914)));
   }
 
   Widget _buildError(BuildContext context, String message) {
@@ -57,19 +54,12 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.error_outline_rounded,
-              size: 64,
-              color: onSurface.withValues(alpha: 0.55),
-            ),
+            Icon(Icons.error_outline_rounded, size: 64, color: onSurface.withValues(alpha: 0.55)),
             const SizedBox(height: 16),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: onSurface.withValues(alpha: 0.7),
-                fontSize: 16,
-              ),
+              style: TextStyle(color: onSurface.withValues(alpha: 0.7), fontSize: 16),
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
@@ -106,10 +96,7 @@ class HomePage extends StatelessWidget {
             ),
             actions: [
               IconButton(
-                icon: Icon(
-                  Icons.search,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
+                icon: Icon(Icons.search, color: Theme.of(context).colorScheme.onSurface),
                 onPressed: () => context.push('/search'),
               ),
             ],
@@ -118,7 +105,6 @@ class HomePage extends StatelessWidget {
           SliverToBoxAdapter(
             child: FeaturedCarousel(
               movies: state.popularMovies,
-              heroTagPrefix: 'carousel',
               onMovieTap: (movie, heroTag) => _openDetails(context, movie, heroTag),
             ),
           ),

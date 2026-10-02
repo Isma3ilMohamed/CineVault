@@ -1,24 +1,21 @@
+import 'package:cine_vault/core/error/exceptions.dart';
+import 'package:cine_vault/core/error/failures.dart';
+import 'package:cine_vault/core/result/result.dart';
+import 'package:cine_vault/features/settings/data/datasources/local/settings_local_data_source.dart';
+import 'package:cine_vault/features/settings/domain/entities/app_settings.dart';
+import 'package:cine_vault/features/settings/domain/repositories/settings_repository.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/error/exceptions.dart';
-import '../../../../core/error/failures.dart';
-import '../../../../core/result/result.dart';
-import '../../domain/entities/app_settings.dart';
-import '../../domain/repositories/settings_repository.dart';
-import '../datasources/local/settings_local_data_source.dart';
-
 class SettingsRepositoryImpl implements SettingsRepository {
-  final SettingsLocalDataSource localDataSource;
-
   SettingsRepositoryImpl({required this.localDataSource});
+  final SettingsLocalDataSource localDataSource;
 
   @override
   Future<Result<AppSettings>> getSettings() async {
     try {
-      return Ok(AppSettings(
-        themeMode: localDataSource.getThemeMode(),
-        locale: localDataSource.getLocale(),
-      ));
+      return Ok(
+        AppSettings(themeMode: localDataSource.getThemeMode(), locale: localDataSource.getLocale()),
+      );
     } on CacheException catch (e) {
       return Err(CacheFailure(message: e.message));
     } catch (e) {

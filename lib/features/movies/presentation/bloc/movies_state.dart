@@ -16,16 +16,6 @@ class MoviesLoading extends MoviesState {
 }
 
 class MoviesLoaded extends MoviesState {
-  final List<Movie> popularMovies;
-  final List<Movie> topRatedMovies;
-  final List<Movie> upcomingMovies;
-  final List<Movie> nowPlayingMovies;
-  final List<Movie> trendingDayMovies;
-
-  final int popularPage;
-  final bool hasReachedMaxPopular;
-  final bool isLoadingMore;
-
   const MoviesLoaded({
     required this.popularMovies,
     required this.topRatedMovies,
@@ -36,6 +26,15 @@ class MoviesLoaded extends MoviesState {
     this.hasReachedMaxPopular = false,
     this.isLoadingMore = false,
   });
+  final List<Movie> popularMovies;
+  final List<Movie> topRatedMovies;
+  final List<Movie> upcomingMovies;
+  final List<Movie> nowPlayingMovies;
+  final List<Movie> trendingDayMovies;
+
+  final int popularPage;
+  final bool hasReachedMaxPopular;
+  final bool isLoadingMore;
 
   MoviesLoaded copyWith({
     List<Movie>? popularMovies,
@@ -61,21 +60,20 @@ class MoviesLoaded extends MoviesState {
 
   @override
   List<Object> get props => [
-        popularMovies,
-        topRatedMovies,
-        upcomingMovies,
-        nowPlayingMovies,
-        trendingDayMovies,
-        popularPage,
-        hasReachedMaxPopular,
-        isLoadingMore,
-      ];
+    popularMovies,
+    topRatedMovies,
+    upcomingMovies,
+    nowPlayingMovies,
+    trendingDayMovies,
+    popularPage,
+    hasReachedMaxPopular,
+    isLoadingMore,
+  ];
 }
 
 class MoviesError extends MoviesState {
-  final String message;
-
   const MoviesError({required this.message});
+  final String message;
 
   @override
   List<Object> get props => [message];

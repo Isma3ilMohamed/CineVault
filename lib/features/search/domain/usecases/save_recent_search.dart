@@ -1,13 +1,11 @@
+import 'package:cine_vault/core/result/result.dart';
+import 'package:cine_vault/core/usecase/usecase.dart';
+import 'package:cine_vault/features/search/domain/repositories/search_repository.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/result/result.dart';
-import '../../../../core/usecase/usecase.dart';
-import '../repositories/search_repository.dart';
-
 class SaveRecentSearch implements UseCase<void, SaveRecentSearchParams> {
-  final SearchRepository repository;
-
   const SaveRecentSearch(this.repository);
+  final SearchRepository repository;
 
   @override
   Future<Result<void>> call(SaveRecentSearchParams params) {
@@ -16,9 +14,8 @@ class SaveRecentSearch implements UseCase<void, SaveRecentSearchParams> {
 }
 
 class SaveRecentSearchParams extends Equatable {
-  final String query;
-
   const SaveRecentSearchParams({required this.query});
+  final String query;
 
   @override
   List<Object> get props => [query];

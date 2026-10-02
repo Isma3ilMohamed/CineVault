@@ -1,11 +1,10 @@
+import 'package:cine_vault/features/search/presentation/bloc/search_bloc.dart';
+import 'package:cine_vault/features/search/presentation/widgets/recent_searches_list.dart';
+import 'package:cine_vault/features/search/presentation/widgets/search_results_grid.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../../l10n/generated/app_localizations.dart';
-import '../bloc/search_bloc.dart';
-import '../widgets/recent_searches_list.dart';
-import '../widgets/search_results_grid.dart';
 
 /// The SearchBloc is provided by the router, which also dispatches
 /// SearchStarted to load recent searches.
@@ -72,37 +71,27 @@ class _SearchPageState extends State<SearchPage> {
         builder: (context, state) {
           return switch (state) {
             SearchIdle(:final recentSearches) => RecentSearchesList(
-                searches: recentSearches,
-                onTap: _onRecentTap,
-                onClearAll: () => context
-                    .read<SearchBloc>()
-                    .add(const RecentSearchesCleared()),
-              ),
+              searches: recentSearches,
+              onTap: _onRecentTap,
+              onClearAll: () => context.read<SearchBloc>().add(const RecentSearchesCleared()),
+            ),
             SearchLoading() => const Center(
-                child: CircularProgressIndicator(color: Color(0xFFE50914)),
-              ),
-            SearchLoaded(
-              :final results,
-              :final isLoadingMore,
-              :final hasReachedMax,
-            ) =>
+              child: CircularProgressIndicator(color: Color(0xFFE50914)),
+            ),
+            SearchLoaded(:final results, :final isLoadingMore, :final hasReachedMax) =>
               SearchResultsGrid(
                 movies: results,
                 isLoadingMore: isLoadingMore,
                 hasReachedMax: hasReachedMax,
-                onLoadMore: () =>
-                    context.read<SearchBloc>().add(const SearchLoadMore()),
-                onMovieTap: (movie, heroTag) => context.push(
-                  '/movie/${movie.id}',
-                  extra: {'heroTag': heroTag},
-                ),
+                onLoadMore: () => context.read<SearchBloc>().add(const SearchLoadMore()),
+                onMovieTap: (movie, heroTag) =>
+                    context.push('/movie/${movie.id}', extra: {'heroTag': heroTag}),
               ),
             SearchEmpty(:final query) => _EmptyResults(query: query),
             SearchError(:final message) => _ErrorView(
-                message: message,
-                onRetry: () =>
-                    context.read<SearchBloc>().add(const SearchRetried()),
-              ),
+              message: message,
+              onRetry: () => context.read<SearchBloc>().add(const SearchRetried()),
+            ),
           };
         },
       ),
@@ -111,17 +100,16 @@ class _SearchPageState extends State<SearchPage> {
 }
 
 class _SearchField extends StatelessWidget {
-  final TextEditingController controller;
-  final FocusNode focusNode;
-  final ValueChanged<String> onChanged;
-  final VoidCallback onClear;
-
   const _SearchField({
     required this.controller,
     required this.focusNode,
     required this.onChanged,
     required this.onClear,
   });
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onClear;
 
   @override
   Widget build(BuildContext context) {
@@ -144,10 +132,7 @@ class _SearchField extends StatelessWidget {
           builder: (context, value, _) {
             if (value.text.isEmpty) return const SizedBox.shrink();
             return IconButton(
-              icon: Icon(
-                Icons.close_rounded,
-                color: onSurface.withValues(alpha: 0.55),
-              ),
+              icon: Icon(Icons.close_rounded, color: onSurface.withValues(alpha: 0.55)),
               onPressed: onClear,
             );
           },
@@ -158,9 +143,8 @@ class _SearchField extends StatelessWidget {
 }
 
 class _EmptyResults extends StatelessWidget {
-  final String query;
-
   const _EmptyResults({required this.query});
+  final String query;
 
   @override
   Widget build(BuildContext context) {
@@ -172,19 +156,12 @@ class _EmptyResults extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.search_off_rounded,
-              size: 72,
-              color: onSurface.withValues(alpha: 0.2),
-            ),
+            Icon(Icons.search_off_rounded, size: 72, color: onSurface.withValues(alpha: 0.2)),
             const SizedBox(height: 16),
             Text(
               l10n.searchNothingFound(query),
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: onSurface.withValues(alpha: 0.55),
-                fontSize: 16,
-              ),
+              style: TextStyle(color: onSurface.withValues(alpha: 0.55), fontSize: 16),
             ),
           ],
         ),
@@ -194,10 +171,9 @@ class _EmptyResults extends StatelessWidget {
 }
 
 class _ErrorView extends StatelessWidget {
+  const _ErrorView({required this.message, required this.onRetry});
   final String message;
   final VoidCallback onRetry;
-
-  const _ErrorView({required this.message, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {
@@ -208,19 +184,12 @@ class _ErrorView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.error_outline_rounded,
-              size: 64,
-              color: onSurface.withValues(alpha: 0.55),
-            ),
+            Icon(Icons.error_outline_rounded, size: 64, color: onSurface.withValues(alpha: 0.55)),
             const SizedBox(height: 16),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: onSurface.withValues(alpha: 0.7),
-                fontSize: 16,
-              ),
+              style: TextStyle(color: onSurface.withValues(alpha: 0.7), fontSize: 16),
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(

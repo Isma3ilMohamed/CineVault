@@ -1,14 +1,12 @@
+import 'package:cine_vault/core/result/result.dart';
+import 'package:cine_vault/core/usecase/usecase.dart';
+import 'package:cine_vault/features/movies/domain/entities/movie.dart';
+import 'package:cine_vault/features/search/domain/repositories/search_repository.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/result/result.dart';
-import '../../../../core/usecase/usecase.dart';
-import '../../../movies/domain/entities/movie.dart';
-import '../repositories/search_repository.dart';
-
 class SearchMovies implements UseCase<List<Movie>, SearchParams> {
-  final SearchRepository repository;
-
   const SearchMovies(this.repository);
+  final SearchRepository repository;
 
   @override
   Future<Result<List<Movie>>> call(SearchParams params) {
@@ -17,10 +15,9 @@ class SearchMovies implements UseCase<List<Movie>, SearchParams> {
 }
 
 class SearchParams extends Equatable {
+  const SearchParams({required this.query, this.page = 1});
   final String query;
   final int page;
-
-  const SearchParams({required this.query, this.page = 1});
 
   @override
   List<Object> get props => [query, page];

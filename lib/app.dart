@@ -1,16 +1,15 @@
+import 'package:cine_vault/core/di/injection_container.dart';
+import 'package:cine_vault/core/router/app_router.dart';
+import 'package:cine_vault/core/theme/app_theme.dart';
+import 'package:cine_vault/features/favorites/presentation/cubit/favorite_ids_cubit.dart';
+import 'package:cine_vault/features/movies/presentation/cubit/genres_cubit.dart';
+import 'package:cine_vault/features/settings/domain/entities/app_settings.dart';
+import 'package:cine_vault/features/settings/presentation/cubit/settings_cubit.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
-
-import 'core/di/injection_container.dart';
-import 'core/router/app_router.dart';
-import 'core/theme/app_theme.dart';
-import 'features/favorites/presentation/cubit/favorite_ids_cubit.dart';
-import 'features/movies/presentation/cubit/genres_cubit.dart';
-import 'features/settings/domain/entities/app_settings.dart';
-import 'features/settings/presentation/cubit/settings_cubit.dart';
-import 'l10n/generated/app_localizations.dart';
 
 class CineVaultApp extends StatefulWidget {
   const CineVaultApp({super.key});
@@ -20,8 +19,7 @@ class CineVaultApp extends StatefulWidget {
 }
 
 class _CineVaultAppState extends State<CineVaultApp> {
-  final GlobalKey _themeBoundaryKey =
-      GlobalKey(debugLabel: 'theme_boundary');
+  final GlobalKey _themeBoundaryKey = GlobalKey(debugLabel: 'theme_boundary');
 
   // Created once, never in build(): rebuilding it on theme/locale change re-creates
   // its static GlobalKeys (duplicate GlobalKey error) and resets navigation to /home.

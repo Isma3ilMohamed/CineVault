@@ -1,16 +1,14 @@
 import 'dart:ui' as ui;
 
+import 'package:cine_vault/features/settings/presentation/widgets/theme_reveal_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
-import 'theme_reveal_overlay.dart';
 
 /// [boundaryKey] must be on a RepaintBoundary wrapping the MaterialApp so the
 /// current UI can be snapshotted before the theme switches.
 class ThemeRevealController {
-  final GlobalKey boundaryKey;
-
   ThemeRevealController(this.boundaryKey);
+  final GlobalKey boundaryKey;
 
   /// [onThemeSwitch] must switch the theme synchronously.
   Future<void> reveal({

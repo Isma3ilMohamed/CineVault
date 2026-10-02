@@ -1,9 +1,8 @@
+import 'package:cine_vault/app.dart';
+import 'package:cine_vault/core/config/app_config.dart';
+import 'package:cine_vault/core/di/injection_container.dart' as di;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'app.dart';
-import 'core/config/app_config.dart';
-import 'core/di/injection_container.dart' as di;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -8,18 +8,16 @@ sealed class MovieDetailsEvent extends Equatable {
 }
 
 final class LoadMovieDetails extends MovieDetailsEvent {
-  final int movieId;
-
   const LoadMovieDetails(this.movieId);
+  final int movieId;
 
   @override
   List<Object> get props => [movieId];
 }
 
 final class RetryMovieDetails extends MovieDetailsEvent {
-  final int movieId;
-
   const RetryMovieDetails(this.movieId);
+  final int movieId;
 
   @override
   List<Object> get props => [movieId];

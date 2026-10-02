@@ -1,11 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cine_vault/features/favorites/presentation/widgets/favorite_heart_button.dart';
+import 'package:cine_vault/features/movies/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../favorites/presentation/widgets/favorite_heart_button.dart';
-import '../../domain/entities/movie.dart';
-
 class MovieCard extends StatelessWidget {
+  const MovieCard({
+    required this.movie,
+    super.key,
+    this.onTap,
+    this.width = 140,
+    this.height = 210,
+    this.heroTag,
+  });
   final Movie movie;
   final VoidCallback? onTap;
   final double width;
@@ -14,15 +21,6 @@ class MovieCard extends StatelessWidget {
   /// Must be unique on the screen when the same movie can appear more than once;
   /// null disables the Hero.
   final String? heroTag;
-
-  const MovieCard({
-    super.key,
-    required this.movie,
-    this.onTap,
-    this.width = 140,
-    this.height = 210,
-    this.heroTag,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,24 +43,17 @@ class MovieCard extends StatelessWidget {
                           ? CachedNetworkImage(
                               imageUrl: movie.fullPosterUrl!,
                               fit: BoxFit.cover,
-                              placeholder: (_, __) => _buildShimmer(),
-                              errorWidget: (_, __, ___) => _buildPlaceholder(),
+                              placeholder: (_, _) => _buildShimmer(),
+                              errorWidget: (_, _, _) => _buildPlaceholder(),
                             )
                           : _buildPlaceholder(),
                     ),
-                    Positioned(
-                      top: 6,
-                      left: 6,
-                      child: FavoriteHeartButton(movie: movie, size: 18),
-                    ),
+                    Positioned(top: 6, left: 6, child: FavoriteHeartButton(movie: movie, size: 18)),
                     Positioned(
                       top: 8,
                       right: 8,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: Colors.black.withValues(alpha: 0.75),
                           borderRadius: BorderRadius.circular(8),
@@ -70,11 +61,7 @@ class MovieCard extends StatelessWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(
-                              Icons.star_rounded,
-                              color: Color(0xFFFFB800),
-                              size: 14,
-                            ),
+                            const Icon(Icons.star_rounded, color: Color(0xFFFFB800), size: 14),
                             const SizedBox(width: 2),
                             Text(
                               movie.formattedRating,
@@ -116,10 +103,7 @@ class MovieCard extends StatelessWidget {
                     movie.releaseYear,
                     style: TextStyle(
                       fontSize: 12,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.6),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                 ],
@@ -147,13 +131,7 @@ class MovieCard extends StatelessWidget {
   Widget _buildPlaceholder() {
     return Container(
       color: Colors.grey[900],
-      child: const Center(
-        child: Icon(
-          Icons.movie_outlined,
-          color: Colors.white24,
-          size: 40,
-        ),
-      ),
+      child: const Center(child: Icon(Icons.movie_outlined, color: Colors.white24, size: 40)),
     );
   }
 }

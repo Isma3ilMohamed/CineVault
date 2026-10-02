@@ -1,14 +1,12 @@
+import 'package:cine_vault/core/result/result.dart';
+import 'package:cine_vault/core/usecase/usecase.dart';
+import 'package:cine_vault/features/settings/domain/repositories/settings_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/result/result.dart';
-import '../../../../core/usecase/usecase.dart';
-import '../repositories/settings_repository.dart';
-
 class SaveThemeMode implements UseCase<void, SaveThemeModeParams> {
-  final SettingsRepository repository;
-
   const SaveThemeMode(this.repository);
+  final SettingsRepository repository;
 
   @override
   Future<Result<void>> call(SaveThemeModeParams params) {
@@ -17,9 +15,8 @@ class SaveThemeMode implements UseCase<void, SaveThemeModeParams> {
 }
 
 class SaveThemeModeParams extends Equatable {
-  final ThemeMode mode;
-
   const SaveThemeModeParams({required this.mode});
+  final ThemeMode mode;
 
   @override
   List<Object> get props => [mode];

@@ -1,12 +1,11 @@
-import '../../../../core/result/result.dart';
-import '../../../../core/usecase/usecase.dart';
-import '../entities/app_settings.dart';
-import '../repositories/settings_repository.dart';
+import 'package:cine_vault/core/result/result.dart';
+import 'package:cine_vault/core/usecase/usecase.dart';
+import 'package:cine_vault/features/settings/domain/entities/app_settings.dart';
+import 'package:cine_vault/features/settings/domain/repositories/settings_repository.dart';
 
 class GetSettings implements UseCase<AppSettings, NoParams> {
-  final SettingsRepository repository;
-
   const GetSettings(this.repository);
+  final SettingsRepository repository;
 
   @override
   Future<Result<AppSettings>> call(NoParams params) {

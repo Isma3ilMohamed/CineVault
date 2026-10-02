@@ -8,9 +8,8 @@ sealed class SearchEvent extends Equatable {
 }
 
 final class SearchQueryChanged extends SearchEvent {
-  final String query;
-
   const SearchQueryChanged(this.query);
+  final String query;
 
   @override
   List<Object> get props => [query];
@@ -20,18 +19,16 @@ final class SearchQueryChanged extends SearchEvent {
 /// An empty [query] means "go back to idle". Handled with `restartable()`,
 /// so a newer request cancels the one in flight and stale results never land.
 final class _SearchRequested extends SearchEvent {
-  final String query;
-
   const _SearchRequested(this.query);
+  final String query;
 
   @override
   List<Object> get props => [query];
 }
 
 final class RecentSearchTapped extends SearchEvent {
-  final String query;
-
   const RecentSearchTapped(this.query);
+  final String query;
 
   @override
   List<Object> get props => [query];

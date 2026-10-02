@@ -7,10 +7,7 @@ class AuthInterceptor extends Interceptor {
   final String _accessToken;
 
   @override
-  void onRequest(
-    RequestOptions options,
-    RequestInterceptorHandler handler,
-  ) {
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     options.headers['Authorization'] = 'Bearer $_accessToken';
     super.onRequest(options, handler);
   }

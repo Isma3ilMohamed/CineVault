@@ -1,5 +1,5 @@
-import '../../../../core/result/result.dart';
-import '../../../movies/domain/entities/movie.dart';
+import 'package:cine_vault/core/result/result.dart';
+import 'package:cine_vault/features/movies/domain/entities/movie.dart';
 
 abstract class FavoritesRepository {
   Stream<List<Movie>> watchFavorites();

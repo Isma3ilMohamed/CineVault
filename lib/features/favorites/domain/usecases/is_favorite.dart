@@ -1,13 +1,11 @@
+import 'package:cine_vault/core/result/result.dart';
+import 'package:cine_vault/core/usecase/usecase.dart';
+import 'package:cine_vault/features/favorites/domain/repositories/favorites_repository.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/result/result.dart';
-import '../../../../core/usecase/usecase.dart';
-import '../repositories/favorites_repository.dart';
-
 class IsFavorite implements UseCase<bool, IsFavoriteParams> {
-  final FavoritesRepository repository;
-
   const IsFavorite(this.repository);
+  final FavoritesRepository repository;
 
   @override
   Future<Result<bool>> call(IsFavoriteParams params) {
@@ -16,9 +14,8 @@ class IsFavorite implements UseCase<bool, IsFavoriteParams> {
 }
 
 class IsFavoriteParams extends Equatable {
-  final int movieId;
-
   const IsFavoriteParams({required this.movieId});
+  final int movieId;
 
   @override
   List<Object> get props => [movieId];

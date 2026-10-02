@@ -18,8 +18,7 @@ class _FakeAdapter implements HttpClientAdapter {
     RequestOptions options,
     Stream<Uint8List>? requestStream,
     Future<void>? cancelFuture,
-  ) =>
-      _respond(options);
+  ) => _respond(options);
 
   @override
   void close({bool force = false}) {}
@@ -37,17 +36,12 @@ void main() {
     test('connection error surfaces as NetworkException', () async {
       final dataSource = _dataSourceWith(
         _FakeAdapter(
-          (options) => throw DioException.connectionError(
-            requestOptions: options,
-            reason: 'offline',
-          ),
+          (options) =>
+              throw DioException.connectionError(requestOptions: options, reason: 'offline'),
         ),
       );
 
-      await expectLater(
-        dataSource.getMovieDetails(movieId: 1),
-        throwsA(isA<NetworkException>()),
-      );
+      await expectLater(dataSource.getMovieDetails(movieId: 1), throwsA(isA<NetworkException>()));
     });
 
     test('404 surfaces as ServerException with TMDB message', () async {

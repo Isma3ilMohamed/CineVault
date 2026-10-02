@@ -20,16 +20,16 @@ class _MockSaveRecentSearch extends Mock implements SaveRecentSearch {}
 class _MockClearRecentSearches extends Mock implements ClearRecentSearches {}
 
 Movie _movie(int id, String title) => Movie(
-      id: id,
-      title: title,
-      overview: '',
-      voteAverage: 0,
-      voteCount: 0,
-      genreIds: const [],
-      originalLanguage: 'en',
-      popularity: 0,
-      adult: false,
-    );
+  id: id,
+  title: title,
+  overview: '',
+  voteAverage: 0,
+  voteCount: 0,
+  genreIds: const [],
+  originalLanguage: 'en',
+  popularity: 0,
+  adult: false,
+);
 
 void main() {
   late _MockSearchMovies searchMovies;
@@ -48,8 +48,7 @@ void main() {
     getRecentSearches = _MockGetRecentSearches();
     saveRecentSearch = _MockSaveRecentSearch();
 
-    when(() => getRecentSearches(any()))
-        .thenAnswer((_) async => const Ok(<String>[]));
+    when(() => getRecentSearches(any())).thenAnswer((_) async => const Ok(<String>[]));
     when(() => saveRecentSearch(any())).thenAnswer((_) async => const Ok(null));
 
     bloc = SearchBloc(
@@ -66,8 +65,7 @@ void main() {
   /// Lets timers, event queues and pending futures run.
   Future<void> pump() => Future<void>.delayed(const Duration(milliseconds: 10));
 
-  test('a slow response for an old query never overwrites newer results',
-      () async {
+  test('a slow response for an old query never overwrites newer results', () async {
     final slowBatman = Completer<Result<List<Movie>>>();
     final fastSuperman = Completer<Result<List<Movie>>>();
     when(() => searchMovies(const SearchParams(query: 'batman')))
@@ -88,14 +86,8 @@ void main() {
     slowBatman.complete(Ok([_movie(1, 'Batman')]));
     await pump();
 
-    expect(
-      bloc.state,
-      isA<SearchLoaded>().having((s) => s.query, 'query', 'superman'),
-    );
-    expect(
-      states.whereType<SearchLoaded>().map((s) => s.query),
-      isNot(contains('batman')),
-    );
+    expect(bloc.state, isA<SearchLoaded>().having((s) => s.query, 'query', 'superman'));
+    expect(states.whereType<SearchLoaded>().map((s) => s.query), isNot(contains('batman')));
     await sub.cancel();
   });
 
@@ -115,8 +107,7 @@ void main() {
     expect(bloc.state, isA<SearchIdle>());
   });
 
-  test('load more finishing after a new search does not restore old results',
-      () async {
+  test('load more finishing after a new search does not restore old results', () async {
     final page2 = Completer<Result<List<Movie>>>();
     when(() => searchMovies(const SearchParams(query: 'batman')))
         .thenAnswer((_) async => Ok([_movie(1, 'Batman')]));
@@ -134,9 +125,6 @@ void main() {
     page2.complete(Ok([_movie(3, 'Batman Returns')]));
     await pump();
 
-    expect(
-      bloc.state,
-      isA<SearchLoaded>().having((s) => s.query, 'query', 'superman'),
-    );
+    expect(bloc.state, isA<SearchLoaded>().having((s) => s.query, 'query', 'superman'));
   });
 }

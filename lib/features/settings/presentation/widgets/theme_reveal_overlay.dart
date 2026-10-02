@@ -5,18 +5,17 @@ import 'package:flutter/material.dart';
 /// Covers the app with a snapshot of the old theme and cuts a growing circle
 /// out of it (even-odd clip), revealing the already-switched theme underneath.
 class ThemeRevealOverlay extends StatefulWidget {
+  const ThemeRevealOverlay({
+    required this.oldThemeImage,
+    required this.center,
+    required this.onCompleted,
+    super.key,
+    this.duration = const Duration(milliseconds: 650),
+  });
   final ui.Image oldThemeImage;
   final Offset center;
   final Duration duration;
   final VoidCallback onCompleted;
-
-  const ThemeRevealOverlay({
-    super.key,
-    required this.oldThemeImage,
-    required this.center,
-    required this.onCompleted,
-    this.duration = const Duration(milliseconds: 650),
-  });
 
   @override
   State<ThemeRevealOverlay> createState() => _ThemeRevealOverlayState();
@@ -46,10 +45,8 @@ class _ThemeRevealOverlayState extends State<ThemeRevealOverlay>
   }
 
   double _maxRadius(Size size) {
-    final dx = [widget.center.dx, size.width - widget.center.dx]
-        .reduce((a, b) => a > b ? a : b);
-    final dy = [widget.center.dy, size.height - widget.center.dy]
-        .reduce((a, b) => a > b ? a : b);
+    final dx = [widget.center.dx, size.width - widget.center.dx].reduce((a, b) => a > b ? a : b);
+    final dy = [widget.center.dy, size.height - widget.center.dy].reduce((a, b) => a > b ? a : b);
     return Offset(dx, dy).distance * 1.05; // slight overshoot
   }
 
@@ -64,15 +61,9 @@ class _ThemeRevealOverlayState extends State<ThemeRevealOverlay>
         builder: (context, _) {
           final radius = _animation.value * maxRadius;
           return ClipPath(
-            clipper: _InverseCircleClipper(
-              center: widget.center,
-              radius: radius,
-            ),
+            clipper: _InverseCircleClipper(center: widget.center, radius: radius),
             child: SizedBox.expand(
-              child: RawImage(
-                image: widget.oldThemeImage,
-                fit: BoxFit.cover,
-              ),
+              child: RawImage(image: widget.oldThemeImage, fit: BoxFit.cover),
             ),
           );
         },
@@ -82,10 +73,9 @@ class _ThemeRevealOverlayState extends State<ThemeRevealOverlay>
 }
 
 class _InverseCircleClipper extends CustomClipper<Path> {
+  _InverseCircleClipper({required this.center, required this.radius});
   final Offset center;
   final double radius;
-
-  _InverseCircleClipper({required this.center, required this.radius});
 
   @override
   Path getClip(Size size) {

@@ -1,22 +1,21 @@
+import 'package:cine_vault/core/di/injection_container.dart';
+import 'package:cine_vault/core/widgets/app_shell.dart';
+import 'package:cine_vault/features/favorites/presentation/bloc/favorites_bloc.dart';
+import 'package:cine_vault/features/favorites/presentation/pages/favorites_page.dart';
+import 'package:cine_vault/features/movies/domain/entities/movie_category.dart';
+import 'package:cine_vault/features/movies/presentation/bloc/movie_details_bloc.dart';
+import 'package:cine_vault/features/movies/presentation/bloc/movie_list_bloc.dart';
+import 'package:cine_vault/features/movies/presentation/bloc/movies_bloc.dart';
+import 'package:cine_vault/features/movies/presentation/pages/home_page.dart';
+import 'package:cine_vault/features/movies/presentation/pages/movie_details_page.dart';
+import 'package:cine_vault/features/movies/presentation/pages/movie_list_page.dart';
+import 'package:cine_vault/features/search/presentation/bloc/search_bloc.dart';
+import 'package:cine_vault/features/search/presentation/pages/search_page.dart';
+import 'package:cine_vault/features/settings/presentation/pages/more_page.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../features/favorites/presentation/bloc/favorites_bloc.dart';
-import '../../features/favorites/presentation/pages/favorites_page.dart';
-import '../../features/movies/domain/entities/movie_category.dart';
-import '../../features/movies/presentation/bloc/movie_details_bloc.dart';
-import '../../features/movies/presentation/bloc/movie_list_bloc.dart';
-import '../../features/movies/presentation/bloc/movies_bloc.dart';
-import '../../features/movies/presentation/pages/home_page.dart';
-import '../../features/movies/presentation/pages/movie_details_page.dart';
-import '../../features/movies/presentation/pages/movie_list_page.dart';
-import '../../features/search/presentation/bloc/search_bloc.dart';
-import '../../features/search/presentation/pages/search_page.dart';
-import '../../features/settings/presentation/pages/more_page.dart';
-import '../../l10n/generated/app_localizations.dart';
-import '../di/injection_container.dart';
-import '../widgets/app_shell.dart';
 
 /// `router(themeBoundaryKey)`: the key must sit on the RepaintBoundary wrapping
 /// the app; MorePage passes it to ThemeRevealController for the theme toggle.
@@ -34,8 +33,7 @@ class AppRouter {
       initialLocation: '/home',
       routes: [
         StatefulShellRoute.indexedStack(
-          builder: (context, state, navigationShell) =>
-              AppShell(navigationShell: navigationShell),
+          builder: (context, state, navigationShell) => AppShell(navigationShell: navigationShell),
           branches: [
             StatefulShellBranch(
               navigatorKey: _homeNavigatorKey,
@@ -43,10 +41,8 @@ class AppRouter {
                 GoRoute(
                   path: '/home',
                   name: 'home',
-                  builder: (context, state) => BlocProvider(
-                    create: (_) => sl<MoviesBloc>(),
-                    child: const HomePage(),
-                  ),
+                  builder: (context, state) =>
+                      BlocProvider(create: (_) => sl<MoviesBloc>(), child: const HomePage()),
                 ),
               ],
             ),
@@ -57,8 +53,7 @@ class AppRouter {
                   path: '/favorites',
                   name: 'favorites',
                   builder: (context, state) => BlocProvider(
-                    create: (_) =>
-                        sl<FavoritesBloc>()..add(const FavoritesSubscribed()),
+                    create: (_) => sl<FavoritesBloc>()..add(const FavoritesSubscribed()),
                     child: const FavoritesPage(),
                   ),
                 ),
@@ -70,9 +65,7 @@ class AppRouter {
                 GoRoute(
                   path: '/more',
                   name: 'more',
-                  builder: (context, state) => MorePage(
-                    themeBoundaryKey: themeBoundaryKey,
-                  ),
+                  builder: (context, state) => MorePage(themeBoundaryKey: themeBoundaryKey),
                 ),
               ],
             ),
@@ -92,18 +85,12 @@ class AppRouter {
           path: '/list/:category',
           name: 'movieList',
           builder: (context, state) {
-            final category = MovieCategory.fromSlug(
-              state.pathParameters['category'],
-            );
+            final category = MovieCategory.fromSlug(state.pathParameters['category']);
             if (category == null) {
-              return const Scaffold(
-                body: Center(child: Text('Invalid category')),
-              );
+              return const Scaffold(body: Center(child: Text('Invalid category')));
             }
             return BlocProvider(
-              create: (_) =>
-                  sl<MovieListBloc>(param1: category)
-                    ..add(const MovieListStarted()),
+              create: (_) => sl<MovieListBloc>(param1: category)..add(const MovieListStarted()),
               child: MovieListPage(category: category),
             );
           },
@@ -119,23 +106,16 @@ class AppRouter {
               return const _InvalidMovieRoute();
             }
             final extra = state.extra;
-            final heroTag = (extra is Map<String, Object?>)
-                ? extra['heroTag'] as String?
-                : null;
+            final heroTag = (extra is Map<String, Object?>) ? extra['heroTag'] as String? : null;
             return BlocProvider(
-              create: (_) =>
-                  sl<MovieDetailsBloc>()..add(LoadMovieDetails(movieId)),
+              create: (_) => sl<MovieDetailsBloc>()..add(LoadMovieDetails(movieId)),
               child: MovieDetailsPage(movieId: movieId, heroTag: heroTag),
             );
           },
         ),
       ],
       errorBuilder: (context, state) => Scaffold(
-        body: Center(
-          child: Text(
-            AppLocalizations.of(context).errorPrefix('${state.error}'),
-          ),
-        ),
+        body: Center(child: Text(AppLocalizations.of(context).errorPrefix('${state.error}'))),
       ),
     );
   }
@@ -146,10 +126,6 @@ class _InvalidMovieRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text(AppLocalizations.of(context).detailsInvalidMovieId),
-      ),
-    );
+    return Scaffold(body: Center(child: Text(AppLocalizations.of(context).detailsInvalidMovieId)));
   }
 }

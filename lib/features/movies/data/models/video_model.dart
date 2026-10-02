@@ -1,13 +1,6 @@
-import '../../domain/entities/video.dart';
+import 'package:cine_vault/features/movies/domain/entities/video.dart';
 
 class VideoModel {
-  final String id;
-  final String key;
-  final String site;
-  final String name;
-  final String type;
-  final bool official;
-
   const VideoModel({
     required this.id,
     required this.key,
@@ -27,28 +20,28 @@ class VideoModel {
       official: json['official'] as bool? ?? false,
     );
   }
+  final String id;
+  final String key;
+  final String site;
+  final String name;
+  final String type;
+  final bool official;
 
-  Video toEntity() => Video(
-        id: id,
-        key: key,
-        site: site,
-        name: name,
-        type: type,
-        official: official,
-      );
+  Video toEntity() =>
+      Video(id: id, key: key, site: site, name: name, type: type, official: official);
 }
 
 class VideosResponse {
-  final List<VideoModel> results;
-
   const VideosResponse({required this.results});
 
   factory VideosResponse.fromJson(Map<String, dynamic> json) {
     return VideosResponse(
-      results: (json['results'] as List<dynamic>?)
+      results:
+          (json['results'] as List<dynamic>?)
               ?.map((e) => VideoModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
     );
   }
+  final List<VideoModel> results;
 }

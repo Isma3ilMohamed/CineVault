@@ -1,9 +1,16 @@
+import 'package:cine_vault/features/movies/domain/entities/movie.dart';
+import 'package:cine_vault/features/movies/presentation/widgets/movie_card.dart';
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/movie.dart';
-import 'movie_card.dart';
-
 class MoviesSection extends StatelessWidget {
+  const MoviesSection({
+    required this.title,
+    required this.movies,
+    required this.heroTagPrefix,
+    super.key,
+    this.onSeeAll,
+    this.onMovieTap,
+  });
   final String title;
   final List<Movie> movies;
   final VoidCallback? onSeeAll;
@@ -12,15 +19,6 @@ class MoviesSection extends StatelessWidget {
 
   /// Must differ from other sections on the same page to avoid Hero tag collisions.
   final String heroTagPrefix;
-
-  const MoviesSection({
-    super.key,
-    required this.title,
-    required this.movies,
-    required this.heroTagPrefix,
-    this.onSeeAll,
-    this.onMovieTap,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +43,7 @@ class MoviesSection extends StatelessWidget {
                   onPressed: onSeeAll,
                   child: const Text(
                     'See All',
-                    style: TextStyle(
-                      color: Color(0xFFE50914),
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(color: Color(0xFFE50914), fontWeight: FontWeight.w600),
                   ),
                 ),
             ],
@@ -62,7 +57,7 @@ class MoviesSection extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             itemCount: movies.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            separatorBuilder: (_, _) => const SizedBox(width: 12),
             itemBuilder: (context, index) {
               final movie = movies[index];
               final heroTag = '${heroTagPrefix}_${movie.id}';

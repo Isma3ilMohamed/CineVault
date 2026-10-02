@@ -1,27 +1,19 @@
+import 'package:cine_vault/core/constants/app_constants.dart';
+import 'package:cine_vault/core/error/exceptions.dart';
+import 'package:cine_vault/core/network/interceptors/error_interceptor.dart';
+import 'package:cine_vault/features/movies/data/models/movie_model.dart';
 import 'package:dio/dio.dart';
 
-import '../../../../../core/constants/app_constants.dart';
-import '../../../../../core/error/exceptions.dart';
-import '../../../../../core/network/interceptors/error_interceptor.dart';
-import '../../../../movies/data/models/movie_model.dart';
-
 abstract class SearchRemoteDataSource {
-  Future<MoviesPageResponse> searchMovies({
-    required String query,
-    required int page,
-  });
+  Future<MoviesPageResponse> searchMovies({required String query, required int page});
 }
 
 class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
+  SearchRemoteDataSourceImpl(this.dio);
   final Dio dio;
 
-  SearchRemoteDataSourceImpl(this.dio);
-
   @override
-  Future<MoviesPageResponse> searchMovies({
-    required String query,
-    required int page,
-  }) async {
+  Future<MoviesPageResponse> searchMovies({required String query, required int page}) async {
     try {
       final response = await dio.get(
         ApiConstants.searchMovies,
@@ -40,7 +32,7 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
     } on NetworkException {
       rethrow;
     } catch (e) {
-      throw ServerException(message: 'Search failed: ${e.toString()}');
+      throw ServerException(message: 'Search failed: $e');
     }
   }
 }

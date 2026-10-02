@@ -1,23 +1,21 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cine_vault/features/movies/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/movie.dart';
-
 class FeaturedCarousel extends StatelessWidget {
+  const FeaturedCarousel({
+    required this.movies,
+    super.key,
+    this.onMovieTap,
+    this.heroTagPrefix = 'carousel',
+  });
   final List<Movie> movies;
 
   final void Function(Movie movie, String heroTag)? onMovieTap;
 
   /// Must be unique on the screen so Hero tags do not collide with other sections.
   final String heroTagPrefix;
-
-  const FeaturedCarousel({
-    super.key,
-    required this.movies,
-    this.onMovieTap,
-    this.heroTagPrefix = 'carousel',
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +32,9 @@ class FeaturedCarousel extends StatelessWidget {
       },
       options: CarouselOptions(
         height: 280,
-        viewportFraction: 1.0,
+        viewportFraction: 1,
         autoPlay: true,
         autoPlayInterval: const Duration(seconds: 5),
-        autoPlayAnimationDuration: const Duration(milliseconds: 800),
       ),
     );
   }
@@ -54,8 +51,7 @@ class FeaturedCarousel extends StatelessWidget {
                 ? CachedNetworkImage(
                     imageUrl: movie.fullBackdropUrl!,
                     fit: BoxFit.cover,
-                    errorWidget: (_, __, ___) =>
-                        Container(color: Colors.grey[900]),
+                    errorWidget: (_, _, _) => Container(color: Colors.grey[900]),
                   )
                 : Container(color: Colors.grey[900]),
           ),
@@ -95,25 +91,16 @@ class FeaturedCarousel extends StatelessWidget {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Icon(
-                      Icons.star_rounded,
-                      color: Color(0xFFFFB800),
-                      size: 18,
-                    ),
+                    const Icon(Icons.star_rounded, color: Color(0xFFFFB800), size: 18),
                     const SizedBox(width: 4),
                     Text(
                       movie.formattedRating,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(width: 12),
                     Text(
                       movie.releaseYear,
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.8),
-                      ),
+                      style: TextStyle(color: Colors.white.withValues(alpha: 0.8)),
                     ),
                   ],
                 ),

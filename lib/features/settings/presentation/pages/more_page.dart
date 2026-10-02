@@ -1,15 +1,14 @@
+import 'package:cine_vault/features/settings/presentation/cubit/settings_cubit.dart';
+import 'package:cine_vault/features/settings/presentation/widgets/theme_reveal_controller.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../l10n/generated/app_localizations.dart';
-import '../cubit/settings_cubit.dart';
-import '../widgets/theme_reveal_controller.dart';
-
 class MorePage extends StatelessWidget {
+  const MorePage({required this.themeBoundaryKey, super.key});
+
   /// RepaintBoundary around the root MaterialApp, snapshotted for the theme reveal.
   final GlobalKey themeBoundaryKey;
-
-  const MorePage({super.key, required this.themeBoundaryKey});
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +43,8 @@ class MorePage extends StatelessWidget {
 }
 
 class _SectionHeader extends StatelessWidget {
-  final String text;
-
   const _SectionHeader({required this.text});
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +64,8 @@ class _SectionHeader extends StatelessWidget {
 }
 
 class _ThemeToggleTile extends StatelessWidget {
-  final GlobalKey boundaryKey;
-
   const _ThemeToggleTile({required this.boundaryKey});
+  final GlobalKey boundaryKey;
 
   Future<void> _handleTap(BuildContext context, Offset position) async {
     final cubit = context.read<SettingsCubit>();
@@ -85,9 +82,7 @@ class _ThemeToggleTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final themeMode = context.select<SettingsCubit, ThemeMode>(
-      (c) => c.state.themeMode,
-    );
+    final themeMode = context.select<SettingsCubit, ThemeMode>((c) => c.state.themeMode);
     final isDark = themeMode == ThemeMode.dark;
 
     return _TapPositionDetector(
@@ -106,10 +101,9 @@ class _ThemeToggleTile extends StatelessWidget {
 }
 
 class _TapPositionDetector extends StatelessWidget {
+  const _TapPositionDetector({required this.child, required this.onTap});
   final Widget child;
   final ValueChanged<Offset> onTap;
-
-  const _TapPositionDetector({required this.child, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -127,13 +121,10 @@ class _LanguageTiles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final currentLocale = context.select<SettingsCubit, Locale?>(
-      (c) => c.state.locale,
-    );
+    final currentLocale = context.select<SettingsCubit, Locale?>((c) => c.state.locale);
 
     // null → system. We show the active language based on what's resolved.
-    final activeCode = currentLocale?.languageCode ??
-        Localizations.localeOf(context).languageCode;
+    final activeCode = currentLocale?.languageCode ?? Localizations.localeOf(context).languageCode;
 
     return RadioGroup<String>(
       groupValue: activeCode,
@@ -143,14 +134,8 @@ class _LanguageTiles extends StatelessWidget {
       },
       child: Column(
         children: [
-          RadioListTile<String>(
-            title: Text(l10n.moreLanguageEnglish),
-            value: 'en',
-          ),
-          RadioListTile<String>(
-            title: Text(l10n.moreLanguageArabic),
-            value: 'ar',
-          ),
+          RadioListTile<String>(title: Text(l10n.moreLanguageEnglish), value: 'en'),
+          RadioListTile<String>(title: Text(l10n.moreLanguageArabic), value: 'ar'),
         ],
       ),
     );
@@ -169,10 +154,7 @@ class _AboutTiles extends StatelessWidget {
           leading: const Icon(Icons.info_outline_rounded),
           title: Text(l10n.moreAboutVersion('1.0.0')),
         ),
-        ListTile(
-          leading: const Icon(Icons.movie_outlined),
-          title: Text(l10n.moreAboutTmdb),
-        ),
+        ListTile(leading: const Icon(Icons.movie_outlined), title: Text(l10n.moreAboutTmdb)),
       ],
     );
   }

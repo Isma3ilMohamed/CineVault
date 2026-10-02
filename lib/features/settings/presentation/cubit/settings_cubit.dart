@@ -1,25 +1,23 @@
+import 'package:cine_vault/core/usecase/usecase.dart';
+import 'package:cine_vault/features/settings/domain/entities/app_settings.dart';
+import 'package:cine_vault/features/settings/domain/usecases/get_settings.dart';
+import 'package:cine_vault/features/settings/domain/usecases/save_locale.dart';
+import 'package:cine_vault/features/settings/domain/usecases/save_theme_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../core/usecase/usecase.dart';
-import '../../domain/entities/app_settings.dart';
-import '../../domain/usecases/get_settings.dart';
-import '../../domain/usecases/save_locale.dart';
-import '../../domain/usecases/save_theme_mode.dart';
 
 /// For the circular theme reveal, [setThemeMode] must be called only after the
 /// old-theme snapshot overlay is shown, so the rebuild happens underneath it.
 class SettingsCubit extends Cubit<AppSettings> {
-  final GetSettings getSettingsUseCase;
-  final SaveThemeMode saveThemeModeUseCase;
-  final SaveLocale saveLocaleUseCase;
-
   SettingsCubit({
     required this.getSettingsUseCase,
     required this.saveThemeModeUseCase,
     required this.saveLocaleUseCase,
     required AppSettings initial,
   }) : super(initial);
+  final GetSettings getSettingsUseCase;
+  final SaveThemeMode saveThemeModeUseCase;
+  final SaveLocale saveLocaleUseCase;
 
   /// Loads persisted settings before runApp so the first frame already uses
   /// the saved theme and locale instead of flashing the defaults.

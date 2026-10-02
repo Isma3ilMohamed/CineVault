@@ -1,56 +1,44 @@
 class ServerException implements Exception {
+  ServerException({required this.message, this.statusCode});
   final String message;
   final int? statusCode;
-
-  ServerException({
-    required this.message,
-    this.statusCode,
-  });
 
   @override
   String toString() => 'ServerException: $message (code: $statusCode)';
 }
 
 class NetworkException implements Exception {
-  final String message;
-
   NetworkException({this.message = 'No internet connection'});
+  final String message;
 
   @override
   String toString() => 'NetworkException: $message';
 }
 
 class CacheException implements Exception {
-  final String message;
-
   CacheException({required this.message});
+  final String message;
 
   @override
   String toString() => 'CacheException: $message';
 }
 
 class AuthException implements Exception {
+  AuthException({required this.message, this.statusCode});
   final String message;
   final int? statusCode;
-
-  AuthException({
-    required this.message,
-    this.statusCode,
-  });
 
   @override
   String toString() => 'AuthException: $message';
 }
 
 class UnauthorizedException extends AuthException {
-  UnauthorizedException({String message = 'Unauthorized access'})
-      : super(message: message, statusCode: 401);
+  UnauthorizedException({super.message = 'Unauthorized access'}) : super(statusCode: 401);
 }
 
 class NotFoundException implements Exception {
-  final String message;
-
   NotFoundException({this.message = 'Resource not found'});
+  final String message;
 
   @override
   String toString() => 'NotFoundException: $message';

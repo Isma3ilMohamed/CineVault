@@ -1,7 +1,6 @@
+import 'package:cine_vault/core/error/exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../../../core/error/exceptions.dart';
 
 /// Persisted as strings: theme_mode is 'light' | 'dark' | 'system';
 /// locale is a language code, or absent to follow the system.
@@ -14,12 +13,11 @@ abstract class SettingsLocalDataSource {
 }
 
 class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
+  SettingsLocalDataSourceImpl(this.prefs);
   static const String _themeModeKey = 'theme_mode';
   static const String _localeKey = 'locale';
 
   final SharedPreferences prefs;
-
-  SettingsLocalDataSourceImpl(this.prefs);
 
   @override
   ThemeMode getThemeMode() {

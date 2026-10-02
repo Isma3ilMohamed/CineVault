@@ -1,25 +1,9 @@
-import '../../../movies/data/models/movie_model.dart';
-import '../../../movies/domain/entities/movie.dart';
+import 'package:cine_vault/features/movies/data/models/movie_model.dart';
+import 'package:cine_vault/features/movies/domain/entities/movie.dart';
 
 /// Stored in Hive as a plain map (no codegen), keyed by movieId.
 class FavoriteMovieModel {
-  static const String addedAtKey = '_added_at';
-
-  final MovieModel movie;
-  final DateTime addedAt;
-
-  const FavoriteMovieModel({
-    required this.movie,
-    required this.addedAt,
-  });
-
-  /// The movie JSON with `_added_at` merged into the same map.
-  Map<String, dynamic> toStorage() {
-    return {
-      ...movie.toJson(),
-      addedAtKey: addedAt.toIso8601String(),
-    };
-  }
+  const FavoriteMovieModel({required this.movie, required this.addedAt});
 
   /// Hive returns `Map<dynamic, dynamic>`; copy to a typed map before parsing.
   factory FavoriteMovieModel.fromStorage(Map<dynamic, dynamic> raw) {
@@ -38,6 +22,15 @@ class FavoriteMovieModel {
       movie: MovieModel.fromEntity(entity),
       addedAt: addedAt ?? DateTime.now(),
     );
+  }
+  static const String addedAtKey = '_added_at';
+
+  final MovieModel movie;
+  final DateTime addedAt;
+
+  /// The movie JSON with `_added_at` merged into the same map.
+  Map<String, dynamic> toStorage() {
+    return {...movie.toJson(), addedAtKey: addedAt.toIso8601String()};
   }
 
   Movie toEntity() => movie.toEntity();

@@ -1,24 +1,18 @@
+import 'package:cine_vault/core/result/result.dart';
+import 'package:cine_vault/features/movies/domain/entities/cast_member.dart';
+import 'package:cine_vault/features/movies/domain/entities/movie.dart';
+import 'package:cine_vault/features/movies/domain/entities/video.dart';
+import 'package:cine_vault/features/movies/domain/usecases/get_movie_credits.dart';
+import 'package:cine_vault/features/movies/domain/usecases/get_movie_details.dart';
+import 'package:cine_vault/features/movies/domain/usecases/get_movie_videos.dart';
+import 'package:cine_vault/features/movies/domain/usecases/get_similar_movies.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../core/result/result.dart';
-import '../../domain/entities/cast_member.dart';
-import '../../domain/entities/movie.dart';
-import '../../domain/entities/video.dart';
-import '../../domain/usecases/get_movie_credits.dart';
-import '../../domain/usecases/get_movie_details.dart';
-import '../../domain/usecases/get_movie_videos.dart';
-import '../../domain/usecases/get_similar_movies.dart';
 
 part 'movie_details_event.dart';
 part 'movie_details_state.dart';
 
 class MovieDetailsBloc extends Bloc<MovieDetailsEvent, MovieDetailsState> {
-  final GetMovieDetails getMovieDetails;
-  final GetSimilarMovies getSimilarMovies;
-  final GetMovieCredits getMovieCredits;
-  final GetMovieVideos getMovieVideos;
-
   MovieDetailsBloc({
     required this.getMovieDetails,
     required this.getSimilarMovies,
@@ -26,15 +20,14 @@ class MovieDetailsBloc extends Bloc<MovieDetailsEvent, MovieDetailsState> {
     required this.getMovieVideos,
   }) : super(const MovieDetailsInitial()) {
     on<LoadMovieDetails>(_onLoad);
-    on<RetryMovieDetails>(
-      (event, emit) => _load(event.movieId, emit),
-    );
+    on<RetryMovieDetails>((event, emit) => _load(event.movieId, emit));
   }
+  final GetMovieDetails getMovieDetails;
+  final GetSimilarMovies getSimilarMovies;
+  final GetMovieCredits getMovieCredits;
+  final GetMovieVideos getMovieVideos;
 
-  Future<void> _onLoad(
-    LoadMovieDetails event,
-    Emitter<MovieDetailsState> emit,
-  ) =>
+  Future<void> _onLoad(LoadMovieDetails event, Emitter<MovieDetailsState> emit) =>
       _load(event.movieId, emit);
 
   /// Only the details request is critical; similar, cast and videos fall back
@@ -43,8 +36,7 @@ class MovieDetailsBloc extends Bloc<MovieDetailsEvent, MovieDetailsState> {
     emit(const MovieDetailsLoading());
 
     final detailsFuture = getMovieDetails(MovieIdParams(movieId: movieId));
-    final similarFuture =
-        getSimilarMovies(SimilarMoviesParams(movieId: movieId));
+    final similarFuture = getSimilarMovies(SimilarMoviesParams(movieId: movieId));
     final creditsFuture = getMovieCredits(MovieIdParams(movieId: movieId));
     final videosFuture = getMovieVideos(MovieIdParams(movieId: movieId));
 
@@ -67,23 +59,19 @@ class MovieDetailsBloc extends Bloc<MovieDetailsEvent, MovieDetailsState> {
             (v) => v.isYouTube && v.isTrailer,
             orElse: () => videos.firstWhere(
               (v) => v.isYouTube,
-              orElse: () => const Video(
-                id: '',
-                key: '',
-                site: '',
-                name: '',
-                type: '',
-                official: false,
-              ),
+              orElse: () =>
+                  const Video(id: '', key: '', site: '', name: '', type: '', official: false),
             ),
           ),
         );
-        emit(MovieDetailsLoaded(
-          movie: value,
-          similarMovies: similar,
-          cast: cast,
-          trailer: trailer.key.isEmpty ? null : trailer,
-        ));
+        emit(
+          MovieDetailsLoaded(
+            movie: value,
+            similarMovies: similar,
+            cast: cast,
+            trailer: trailer.key.isEmpty ? null : trailer,
+          ),
+        );
     }
   }
 }

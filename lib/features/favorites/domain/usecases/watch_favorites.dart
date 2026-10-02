@@ -1,11 +1,10 @@
-import '../../../movies/domain/entities/movie.dart';
-import '../repositories/favorites_repository.dart';
+import 'package:cine_vault/features/favorites/domain/repositories/favorites_repository.dart';
+import 'package:cine_vault/features/movies/domain/entities/movie.dart';
 
 /// Not a UseCase subclass: returns a Stream; errors are handled in the bloc.
 class WatchFavorites {
-  final FavoritesRepository repository;
-
   const WatchFavorites(this.repository);
+  final FavoritesRepository repository;
 
   Stream<List<Movie>> call() => repository.watchFavorites();
 }

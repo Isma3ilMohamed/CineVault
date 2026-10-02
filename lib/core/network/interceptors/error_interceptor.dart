@@ -1,6 +1,5 @@
+import 'package:cine_vault/core/error/exceptions.dart';
 import 'package:dio/dio.dart';
-
-import '../../error/exceptions.dart';
 
 /// Maps every [DioException] to one of our data-layer exceptions and attaches
 /// it to [DioException.error].
@@ -19,15 +18,12 @@ class ErrorInterceptor extends Interceptor {
     return switch (err.type) {
       DioExceptionType.connectionTimeout ||
       DioExceptionType.sendTimeout ||
-      DioExceptionType.receiveTimeout =>
-        NetworkException(message: 'Connection timeout'),
-      DioExceptionType.connectionError =>
-        NetworkException(message: 'No internet connection'),
+      DioExceptionType.receiveTimeout => NetworkException(message: 'Connection timeout'),
+      DioExceptionType.connectionError => NetworkException(),
       DioExceptionType.badResponse => _mapBadResponse(err.response),
       DioExceptionType.cancel => ServerException(message: 'Request cancelled'),
       DioExceptionType.badCertificate ||
-      DioExceptionType.unknown =>
-        ServerException(message: err.message ?? 'Unknown error occurred'),
+      DioExceptionType.unknown => ServerException(message: err.message ?? 'Unknown error occurred'),
     };
   }
 

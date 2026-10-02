@@ -1,15 +1,14 @@
-import '../../../../core/error/exceptions.dart';
-import '../../../../core/error/failures.dart';
-import '../../../../core/result/result.dart';
-import '../../../movies/domain/entities/movie.dart';
-import '../../domain/repositories/favorites_repository.dart';
-import '../datasources/local/favorites_local_data_source.dart';
-import '../models/favorite_movie_model.dart';
+import 'package:cine_vault/core/error/exceptions.dart';
+import 'package:cine_vault/core/error/failures.dart';
+import 'package:cine_vault/core/result/result.dart';
+import 'package:cine_vault/features/favorites/data/datasources/local/favorites_local_data_source.dart';
+import 'package:cine_vault/features/favorites/data/models/favorite_movie_model.dart';
+import 'package:cine_vault/features/favorites/domain/repositories/favorites_repository.dart';
+import 'package:cine_vault/features/movies/domain/entities/movie.dart';
 
 class FavoritesRepositoryImpl implements FavoritesRepository {
-  final FavoritesLocalDataSource localDataSource;
-
   FavoritesRepositoryImpl({required this.localDataSource});
+  final FavoritesLocalDataSource localDataSource;
 
   @override
   Stream<List<Movie>> watchFavorites() async* {
@@ -91,8 +90,7 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
     }
   }
 
-  List<Movie> _readFavorites() =>
-      localDataSource.getAll().map((f) => f.toEntity()).toList();
+  List<Movie> _readFavorites() => localDataSource.getAll().map((f) => f.toEntity()).toList();
 
   Set<int> _readIds() => localDataSource.getAllIds();
 }

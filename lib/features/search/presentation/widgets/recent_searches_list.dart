@@ -1,18 +1,16 @@
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../l10n/generated/app_localizations.dart';
-
 class RecentSearchesList extends StatelessWidget {
-  final List<String> searches;
-  final ValueChanged<String> onTap;
-  final VoidCallback onClearAll;
-
   const RecentSearchesList({
-    super.key,
     required this.searches,
     required this.onTap,
     required this.onClearAll,
+    super.key,
   });
+  final List<String> searches;
+  final ValueChanged<String> onTap;
+  final VoidCallback onClearAll;
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +41,7 @@ class RecentSearchesList extends StatelessWidget {
                 onPressed: onClearAll,
                 child: Text(
                   l10n.clear,
-                  style: const TextStyle(
-                    color: Color(0xFFE50914),
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: const TextStyle(color: Color(0xFFE50914), fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -58,10 +53,7 @@ class RecentSearchesList extends StatelessWidget {
             itemBuilder: (context, i) {
               final query = searches[i];
               return ListTile(
-                leading: Icon(
-                  Icons.history_rounded,
-                  color: onSurface.withValues(alpha: 0.55),
-                ),
+                leading: Icon(Icons.history_rounded, color: onSurface.withValues(alpha: 0.55)),
                 title: Text(query),
                 trailing: Icon(
                   Icons.north_west_rounded,
@@ -90,18 +82,11 @@ class _EmptyRecents extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.movie_filter_outlined,
-              size: 72,
-              color: onSurface.withValues(alpha: 0.2),
-            ),
+            Icon(Icons.movie_filter_outlined, size: 72, color: onSurface.withValues(alpha: 0.2)),
             const SizedBox(height: 16),
             Text(
               AppLocalizations.of(context).searchEmptyPrompt,
-              style: TextStyle(
-                color: onSurface.withValues(alpha: 0.55),
-                fontSize: 16,
-              ),
+              style: TextStyle(color: onSurface.withValues(alpha: 0.55), fontSize: 16),
             ),
           ],
         ),

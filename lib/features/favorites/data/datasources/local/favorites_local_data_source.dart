@@ -1,7 +1,6 @@
+import 'package:cine_vault/core/error/exceptions.dart';
+import 'package:cine_vault/features/favorites/data/models/favorite_movie_model.dart';
 import 'package:hive/hive.dart';
-
-import '../../../../../core/error/exceptions.dart';
-import '../../models/favorite_movie_model.dart';
 
 /// Hive box "favorites": key = movieId, value = movie JSON plus `_added_at`.
 abstract class FavoritesLocalDataSource {
@@ -20,11 +19,10 @@ abstract class FavoritesLocalDataSource {
 }
 
 class FavoritesLocalDataSourceImpl implements FavoritesLocalDataSource {
+  FavoritesLocalDataSourceImpl(this.box);
   static const String boxName = 'favorites';
 
   final Box<dynamic> box;
-
-  FavoritesLocalDataSourceImpl(this.box);
 
   @override
   List<FavoriteMovieModel> getAll() {

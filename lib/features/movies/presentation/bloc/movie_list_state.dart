@@ -16,17 +16,16 @@ final class MovieListLoading extends MovieListState {
 }
 
 final class MovieListLoaded extends MovieListState {
-  final List<Movie> movies;
-  final int page;
-  final bool hasReachedMax;
-  final bool isLoadingMore;
-
   const MovieListLoaded({
     required this.movies,
     required this.page,
     required this.hasReachedMax,
     this.isLoadingMore = false,
   });
+  final List<Movie> movies;
+  final int page;
+  final bool hasReachedMax;
+  final bool isLoadingMore;
 
   MovieListLoaded copyWith({
     List<Movie>? movies,
@@ -47,9 +46,8 @@ final class MovieListLoaded extends MovieListState {
 }
 
 final class MovieListError extends MovieListState {
-  final String message;
-
   const MovieListError({required this.message});
+  final String message;
 
   @override
   List<Object> get props => [message];

@@ -1,18 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cine_vault/features/movies/domain/entities/cast_member.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../domain/entities/cast_member.dart';
-
 class CastCard extends StatelessWidget {
+  const CastCard({required this.member, super.key, this.width = 96});
   final CastMember member;
   final double width;
-
-  const CastCard({
-    super.key,
-    required this.member,
-    this.width = 96,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +15,6 @@ class CastCard extends StatelessWidget {
     return SizedBox(
       width: width,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ClipOval(
             child: SizedBox(
@@ -31,9 +24,8 @@ class CastCard extends StatelessWidget {
                   ? CachedNetworkImage(
                       imageUrl: member.fullProfileUrl!,
                       fit: BoxFit.cover,
-                      placeholder: (_, __) => _buildShimmer(),
-                      errorWidget: (_, __, ___) =>
-                          _buildPlaceholder(onSurface),
+                      placeholder: (_, _) => _buildShimmer(),
+                      errorWidget: (_, _, _) => _buildPlaceholder(onSurface),
                     )
                   : _buildPlaceholder(onSurface),
             ),
@@ -44,11 +36,7 @@ class CastCard extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: onSurface,
-            ),
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: onSurface),
           ),
           if (member.character.isNotEmpty) ...[
             const SizedBox(height: 2),
@@ -57,10 +45,7 @@ class CastCard extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 11,
-                color: onSurface.withValues(alpha: 0.6),
-              ),
+              style: TextStyle(fontSize: 11, color: onSurface.withValues(alpha: 0.6)),
             ),
           ],
         ],
@@ -77,13 +62,9 @@ class CastCard extends StatelessWidget {
   }
 
   Widget _buildPlaceholder(Color onSurface) {
-    return Container(
+    return ColoredBox(
       color: onSurface.withValues(alpha: 0.1),
-      child: Icon(
-        Icons.person_rounded,
-        color: onSurface.withValues(alpha: 0.3),
-        size: width * 0.5,
-      ),
+      child: Icon(Icons.person_rounded, color: onSurface.withValues(alpha: 0.3), size: width * 0.5),
     );
   }
 }

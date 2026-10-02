@@ -1,14 +1,12 @@
+import 'package:cine_vault/core/result/result.dart';
+import 'package:cine_vault/core/usecase/usecase.dart';
+import 'package:cine_vault/features/favorites/domain/repositories/favorites_repository.dart';
+import 'package:cine_vault/features/movies/domain/entities/movie.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/result/result.dart';
-import '../../../../core/usecase/usecase.dart';
-import '../../../movies/domain/entities/movie.dart';
-import '../repositories/favorites_repository.dart';
-
 class ToggleFavorite implements UseCase<bool, ToggleFavoriteParams> {
-  final FavoritesRepository repository;
-
   const ToggleFavorite(this.repository);
+  final FavoritesRepository repository;
 
   @override
   Future<Result<bool>> call(ToggleFavoriteParams params) {
@@ -17,9 +15,8 @@ class ToggleFavorite implements UseCase<bool, ToggleFavoriteParams> {
 }
 
 class ToggleFavoriteParams extends Equatable {
-  final Movie movie;
-
   const ToggleFavoriteParams({required this.movie});
+  final Movie movie;
 
   @override
   List<Object> get props => [movie.id];

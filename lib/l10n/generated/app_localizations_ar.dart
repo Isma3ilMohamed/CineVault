@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -62,8 +63,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get openInYouTube => 'افتح في YouTube';
 
   @override
-  String get trailerEmbedUnavailable =>
-      'ما يمكنش تشغيل العرض الدعائي هنا. افتحه في YouTube.';
+  String get trailerEmbedUnavailable => 'ما يمكنش تشغيل العرض الدعائي هنا. افتحه في YouTube.';
 
   @override
   String get detailsInvalidMovieId => 'رقم فيلم غير صالح';

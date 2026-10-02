@@ -1,6 +1,5 @@
+import 'package:cine_vault/core/error/exceptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../../../core/error/exceptions.dart';
 
 /// Stored newest first, de-duplicated case-insensitively, capped at 10 entries.
 abstract class RecentSearchesLocalDataSource {
@@ -11,14 +10,12 @@ abstract class RecentSearchesLocalDataSource {
   Future<void> clearRecentSearches();
 }
 
-class RecentSearchesLocalDataSourceImpl
-    implements RecentSearchesLocalDataSource {
+class RecentSearchesLocalDataSourceImpl implements RecentSearchesLocalDataSource {
+  RecentSearchesLocalDataSourceImpl(this.prefs);
   static const String _key = 'recent_searches';
   static const int _maxItems = 10;
 
   final SharedPreferences prefs;
-
-  RecentSearchesLocalDataSourceImpl(this.prefs);
 
   @override
   Future<List<String>> getRecentSearches() async {
@@ -40,14 +37,10 @@ class RecentSearchesLocalDataSourceImpl
       final current = prefs.getStringList(_key) ?? const <String>[];
 
       // Drop any case-insensitive duplicate so a repeated query moves to the top.
-      final filtered = current
-          .where((q) => q.toLowerCase() != normalized.toLowerCase())
-          .toList();
+      final filtered = current.where((q) => q.toLowerCase() != normalized.toLowerCase()).toList();
 
       final updated = <String>[normalized, ...filtered];
-      final trimmed = updated.length > _maxItems
-          ? updated.sublist(0, _maxItems)
-          : updated;
+      final trimmed = updated.length > _maxItems ? updated.sublist(0, _maxItems) : updated;
 
       await prefs.setStringList(_key, trimmed);
       return trimmed;

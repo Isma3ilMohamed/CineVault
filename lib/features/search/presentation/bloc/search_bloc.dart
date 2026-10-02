@@ -1,16 +1,15 @@
 import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:cine_vault/core/result/result.dart';
+import 'package:cine_vault/core/usecase/usecase.dart';
+import 'package:cine_vault/features/movies/domain/entities/movie.dart';
+import 'package:cine_vault/features/search/domain/usecases/clear_recent_searches.dart';
+import 'package:cine_vault/features/search/domain/usecases/get_recent_searches.dart';
+import 'package:cine_vault/features/search/domain/usecases/save_recent_search.dart';
+import 'package:cine_vault/features/search/domain/usecases/search_movies.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../core/result/result.dart';
-import '../../../../core/usecase/usecase.dart';
-import '../../../movies/domain/entities/movie.dart';
-import '../../domain/usecases/clear_recent_searches.dart';
-import '../../domain/usecases/get_recent_searches.dart';
-import '../../domain/usecases/save_recent_search.dart';
-import '../../domain/usecases/search_movies.dart';
 
 part 'search_event.dart';
 part 'search_state.dart';
@@ -24,6 +23,22 @@ part 'search_state.dart';
 ///
 /// Typing is debounced with a cancellable [Timer] before it becomes a request.
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
+  SearchBloc({
+    required this.searchMoviesUseCase,
+    required this.getRecentSearchesUseCase,
+    required this.saveRecentSearchUseCase,
+    required this.clearRecentSearchesUseCase,
+    this._debounce = _defaultDebounce,
+  }) : super(const SearchIdle()) {
+    on<SearchStarted>(_onStarted);
+    on<SearchQueryChanged>(_onQueryChanged);
+    on<_SearchRequested>(_onSearchRequested, transformer: restartable());
+    on<RecentSearchTapped>(_onRecentSearchTapped);
+    on<SearchCleared>(_onCleared);
+    on<SearchLoadMore>(_onLoadMore);
+    on<SearchRetried>(_onRetried);
+    on<RecentSearchesCleared>(_onRecentSearchesCleared);
+  }
   static const _defaultDebounce = Duration(milliseconds: 400);
   static const _minQueryLength = 2;
 
@@ -35,35 +50,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   Timer? _debounceTimer;
 
-  SearchBloc({
-    required this.searchMoviesUseCase,
-    required this.getRecentSearchesUseCase,
-    required this.saveRecentSearchUseCase,
-    required this.clearRecentSearchesUseCase,
-    Duration debounce = _defaultDebounce,
-  })  : _debounce = debounce,
-        super(const SearchIdle()) {
-    on<SearchStarted>(_onStarted);
-    on<SearchQueryChanged>(_onQueryChanged);
-    on<_SearchRequested>(_onSearchRequested, transformer: restartable());
-    on<RecentSearchTapped>(_onRecentSearchTapped);
-    on<SearchCleared>(_onCleared);
-    on<SearchLoadMore>(_onLoadMore);
-    on<SearchRetried>(_onRetried);
-    on<RecentSearchesCleared>(_onRecentSearchesCleared);
-  }
-
-  Future<void> _onStarted(
-    SearchStarted event,
-    Emitter<SearchState> emit,
-  ) async {
+  Future<void> _onStarted(SearchStarted event, Emitter<SearchState> emit) async {
     await _emitIdleWithRecents(emit);
   }
 
-  void _onQueryChanged(
-    SearchQueryChanged event,
-    Emitter<SearchState> emit,
-  ) {
+  void _onQueryChanged(SearchQueryChanged event, Emitter<SearchState> emit) {
     _debounceTimer?.cancel();
 
     final trimmed = event.query.trim();
@@ -76,10 +67,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     _debounceTimer = Timer(_debounce, () => add(_SearchRequested(trimmed)));
   }
 
-  Future<void> _onSearchRequested(
-    _SearchRequested event,
-    Emitter<SearchState> emit,
-  ) async {
+  Future<void> _onSearchRequested(_SearchRequested event, Emitter<SearchState> emit) async {
     final query = event.query;
     if (query.isEmpty) {
       await _emitIdleWithRecents(emit);
@@ -88,9 +76,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
     emit(SearchLoading(query: query));
 
-    final result = await searchMoviesUseCase(
-      SearchParams(query: query, page: 1),
-    );
+    final result = await searchMoviesUseCase(SearchParams(query: query));
 
     // Cancelled by a newer request while awaiting: drop the stale result.
     if (emit.isDone) return;
@@ -102,38 +88,24 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         if (value.isEmpty) {
           emit(SearchEmpty(query: query));
         } else {
-          emit(SearchLoaded(
-            query: query,
-            results: value,
-            page: 1,
-            hasReachedMax: false,
-          ));
+          emit(SearchLoaded(query: query, results: value, page: 1, hasReachedMax: false));
         }
         // Saving a recent is best-effort; a local storage failure is ignored.
         await saveRecentSearchUseCase(SaveRecentSearchParams(query: query));
     }
   }
 
-  void _onRecentSearchTapped(
-    RecentSearchTapped event,
-    Emitter<SearchState> emit,
-  ) {
+  void _onRecentSearchTapped(RecentSearchTapped event, Emitter<SearchState> emit) {
     _debounceTimer?.cancel();
     add(_SearchRequested(event.query.trim()));
   }
 
-  void _onCleared(
-    SearchCleared event,
-    Emitter<SearchState> emit,
-  ) {
+  void _onCleared(SearchCleared event, Emitter<SearchState> emit) {
     _debounceTimer?.cancel();
     add(const _SearchRequested(''));
   }
 
-  Future<void> _onLoadMore(
-    SearchLoadMore event,
-    Emitter<SearchState> emit,
-  ) async {
+  Future<void> _onLoadMore(SearchLoadMore event, Emitter<SearchState> emit) async {
     final current = state;
     if (current is! SearchLoaded) return;
     if (current.hasReachedMax || current.isLoadingMore) return;
@@ -142,9 +114,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     emit(loading);
 
     final nextPage = current.page + 1;
-    final result = await searchMoviesUseCase(
-      SearchParams(query: current.query, page: nextPage),
-    );
+    final result = await searchMoviesUseCase(SearchParams(query: current.query, page: nextPage));
 
     // A new search (or clear) happened while loading: don't resurrect old results.
     if (!identical(state, loading)) return;
@@ -153,19 +123,18 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       case Err():
         emit(current.copyWith(isLoadingMore: false));
       case Ok(:final value):
-        emit(current.copyWith(
-          results: [...current.results, ...value],
-          page: nextPage,
-          hasReachedMax: value.isEmpty,
-          isLoadingMore: false,
-        ));
+        emit(
+          current.copyWith(
+            results: [...current.results, ...value],
+            page: nextPage,
+            hasReachedMax: value.isEmpty,
+            isLoadingMore: false,
+          ),
+        );
     }
   }
 
-  void _onRetried(
-    SearchRetried event,
-    Emitter<SearchState> emit,
-  ) {
+  void _onRetried(SearchRetried event, Emitter<SearchState> emit) {
     final query = switch (state) {
       SearchError(:final query) => query,
       SearchEmpty(:final query) => query,
@@ -183,7 +152,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   ) async {
     await clearRecentSearchesUseCase(const NoParams());
     if (state is SearchIdle) {
-      emit(const SearchIdle(recentSearches: []));
+      emit(const SearchIdle());
     }
   }
 

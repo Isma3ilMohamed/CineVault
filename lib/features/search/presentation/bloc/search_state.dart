@@ -8,30 +8,22 @@ sealed class SearchState extends Equatable {
 }
 
 final class SearchIdle extends SearchState {
-  final List<String> recentSearches;
-
   const SearchIdle({this.recentSearches = const []});
+  final List<String> recentSearches;
 
   @override
   List<Object> get props => [recentSearches];
 }
 
 final class SearchLoading extends SearchState {
-  final String query;
-
   const SearchLoading({required this.query});
+  final String query;
 
   @override
   List<Object> get props => [query];
 }
 
 final class SearchLoaded extends SearchState {
-  final String query;
-  final List<Movie> results;
-  final int page;
-  final bool hasReachedMax;
-  final bool isLoadingMore;
-
   const SearchLoaded({
     required this.query,
     required this.results,
@@ -39,6 +31,11 @@ final class SearchLoaded extends SearchState {
     required this.hasReachedMax,
     this.isLoadingMore = false,
   });
+  final String query;
+  final List<Movie> results;
+  final int page;
+  final bool hasReachedMax;
+  final bool isLoadingMore;
 
   SearchLoaded copyWith({
     String? query,
@@ -57,24 +54,21 @@ final class SearchLoaded extends SearchState {
   }
 
   @override
-  List<Object> get props =>
-      [query, results, page, hasReachedMax, isLoadingMore];
+  List<Object> get props => [query, results, page, hasReachedMax, isLoadingMore];
 }
 
 final class SearchEmpty extends SearchState {
-  final String query;
-
   const SearchEmpty({required this.query});
+  final String query;
 
   @override
   List<Object> get props => [query];
 }
 
 final class SearchError extends SearchState {
+  const SearchError({required this.query, required this.message});
   final String query;
   final String message;
-
-  const SearchError({required this.query, required this.message});
 
   @override
   List<Object> get props => [query, message];

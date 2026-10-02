@@ -1,6 +1,5 @@
+import 'package:cine_vault/core/result/result.dart';
 import 'package:equatable/equatable.dart';
-
-import '../result/result.dart';
 
 abstract class UseCase<T, Params> {
   Future<Result<T>> call(Params params);

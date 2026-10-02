@@ -12,11 +12,7 @@ enum Flavor { staging, production }
 /// Note: compile-time defines still end up in the binary. This keeps the token
 /// out of the bundled assets and out of git, but it is not a secret store.
 final class AppConfig {
-  const AppConfig({
-    required this.flavor,
-    required this.tmdbBaseUrl,
-    required this.tmdbAccessToken,
-  });
+  const AppConfig({required this.flavor, required this.tmdbBaseUrl, required this.tmdbAccessToken});
 
   factory AppConfig.fromEnvironment() {
     const configFlavor = String.fromEnvironment('APP_FLAVOR');
@@ -28,9 +24,7 @@ final class AppConfig {
 
     final flavor = Flavor.values.asNameMap()[appFlavor];
     if (flavor == null) {
-      throw StateError(
-        'Unknown flavor "$appFlavor". Run with --flavor staging|production.',
-      );
+      throw StateError('Unknown flavor "$appFlavor". Run with --flavor staging|production.');
     }
     if (configFlavor != flavor.name) {
       throw StateError(
@@ -42,11 +36,7 @@ final class AppConfig {
       throw StateError('TMDB_ACCESS_TOKEN is missing in config/${flavor.name}.env');
     }
 
-    return AppConfig(
-      flavor: flavor,
-      tmdbBaseUrl: tmdbBaseUrl,
-      tmdbAccessToken: tmdbAccessToken,
-    );
+    return AppConfig(flavor: flavor, tmdbBaseUrl: tmdbBaseUrl, tmdbAccessToken: tmdbAccessToken);
   }
 
   final Flavor flavor;

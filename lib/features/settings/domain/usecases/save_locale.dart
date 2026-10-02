@@ -1,14 +1,12 @@
+import 'package:cine_vault/core/result/result.dart';
+import 'package:cine_vault/core/usecase/usecase.dart';
+import 'package:cine_vault/features/settings/domain/repositories/settings_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/result/result.dart';
-import '../../../../core/usecase/usecase.dart';
-import '../repositories/settings_repository.dart';
-
 class SaveLocale implements UseCase<void, SaveLocaleParams> {
-  final SettingsRepository repository;
-
   const SaveLocale(this.repository);
+  final SettingsRepository repository;
 
   @override
   Future<Result<void>> call(SaveLocaleParams params) {
@@ -17,10 +15,10 @@ class SaveLocale implements UseCase<void, SaveLocaleParams> {
 }
 
 class SaveLocaleParams extends Equatable {
+  const SaveLocaleParams({required this.locale});
+
   /// A null locale means follow the device locale.
   final Locale? locale;
-
-  const SaveLocaleParams({required this.locale});
 
   @override
   List<Object?> get props => [locale];

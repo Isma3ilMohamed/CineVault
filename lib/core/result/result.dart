@@ -1,4 +1,4 @@
-import '../error/failures.dart';
+import 'package:cine_vault/core/error/failures.dart';
 
 sealed class Result<T> {
   const Result();
@@ -6,10 +6,7 @@ sealed class Result<T> {
   const factory Result.ok(T value) = Ok<T>;
   const factory Result.err(Failure failure) = Err<T>;
 
-  R when<R>({
-    required R Function(T value) ok,
-    required R Function(Failure failure) err,
-  }) {
+  R when<R>({required R Function(T value) ok, required R Function(Failure failure) err}) {
     return switch (this) {
       Ok<T>(:final value) => ok(value),
       Err<T>(:final failure) => err(failure),
@@ -24,14 +21,14 @@ sealed class Result<T> {
   }
 
   T? get valueOrNull => switch (this) {
-        Ok<T>(:final value) => value,
-        Err<T>() => null,
-      };
+    Ok<T>(:final value) => value,
+    Err<T>() => null,
+  };
 
   Failure? get failureOrNull => switch (this) {
-        Ok<T>() => null,
-        Err<T>(:final failure) => failure,
-      };
+    Ok<T>() => null,
+    Err<T>(:final failure) => failure,
+  };
 
   bool get isOk => this is Ok<T>;
   bool get isErr => this is Err<T>;
@@ -45,12 +42,11 @@ sealed class Result<T> {
 }
 
 final class Ok<T> extends Result<T> {
-  final T value;
   const Ok(this.value);
+  final T value;
 
   @override
-  bool operator ==(Object other) =>
-      other is Ok<T> && other.value == value;
+  bool operator ==(Object other) => other is Ok<T> && other.value == value;
 
   @override
   int get hashCode => value.hashCode;
@@ -60,12 +56,11 @@ final class Ok<T> extends Result<T> {
 }
 
 final class Err<T> extends Result<T> {
-  final Failure failure;
   const Err(this.failure);
+  final Failure failure;
 
   @override
-  bool operator ==(Object other) =>
-      other is Err<T> && other.failure == failure;
+  bool operator ==(Object other) => other is Err<T> && other.failure == failure;
 
   @override
   int get hashCode => failure.hashCode;
