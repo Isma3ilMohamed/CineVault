@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cine_vault/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:cine_vault/features/settings/presentation/widgets/theme_reveal_controller.dart';
 import 'package:cine_vault/l10n/generated/app_localizations.dart';
@@ -130,7 +132,7 @@ class _LanguageTiles extends StatelessWidget {
       groupValue: activeCode,
       onChanged: (code) {
         if (code == null) return;
-        context.read<SettingsCubit>().setLocale(Locale(code));
+        unawaited(context.read<SettingsCubit>().setLocale(Locale(code)));
       },
       child: Column(
         children: [

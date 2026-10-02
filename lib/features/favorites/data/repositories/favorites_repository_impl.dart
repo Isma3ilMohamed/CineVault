@@ -32,7 +32,7 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
       return Ok(_readFavorites());
     } on CacheException catch (e) {
       return Err(CacheFailure(message: e.message));
-    } catch (e) {
+    } on Object catch (e) {
       return Err(UnknownFailure(message: e.toString()));
     }
   }
@@ -43,7 +43,7 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
       return Ok(localDataSource.isFavorite(movieId));
     } on CacheException catch (e) {
       return Err(CacheFailure(message: e.message));
-    } catch (e) {
+    } on Object catch (e) {
       return Err(UnknownFailure(message: e.toString()));
     }
   }
@@ -55,7 +55,7 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
       return const Ok(null);
     } on CacheException catch (e) {
       return Err(CacheFailure(message: e.message));
-    } catch (e) {
+    } on Object catch (e) {
       return Err(UnknownFailure(message: e.toString()));
     }
   }
@@ -67,7 +67,7 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
       return const Ok(null);
     } on CacheException catch (e) {
       return Err(CacheFailure(message: e.message));
-    } catch (e) {
+    } on Object catch (e) {
       return Err(UnknownFailure(message: e.toString()));
     }
   }
@@ -85,7 +85,7 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
       }
     } on CacheException catch (e) {
       return Err(CacheFailure(message: e.message));
-    } catch (e) {
+    } on Object catch (e) {
       return Err(UnknownFailure(message: e.toString()));
     }
   }

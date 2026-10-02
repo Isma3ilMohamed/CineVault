@@ -1,5 +1,7 @@
 import 'package:cine_vault/core/error/failures.dart';
+import 'package:meta/meta.dart';
 
+@immutable
 sealed class Result<T> {
   const Result();
 

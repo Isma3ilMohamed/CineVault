@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cine_vault/core/di/injection_container.dart';
 import 'package:cine_vault/core/router/app_router.dart';
 import 'package:cine_vault/core/theme/app_theme.dart';
@@ -38,9 +40,13 @@ class _CineVaultAppState extends State<CineVaultApp> {
         BlocProvider<FavoriteIdsCubit>(create: (_) => sl<FavoriteIdsCubit>()),
         BlocProvider<SettingsCubit>.value(value: sl<SettingsCubit>()),
         BlocProvider<GenresCubit>(
-          // fire-and-forget load — lookups return empty until loaded,
-          // at which point UI re-renders via context.select
-          create: (_) => sl<GenresCubit>()..load(),
+          create: (_) {
+            // Fire-and-forget: lookups return empty until loaded, then the UI
+            // re-renders via context.select.
+            final cubit = sl<GenresCubit>();
+            unawaited(cubit.load());
+            return cubit;
+          },
         ),
       ],
       child: BlocBuilder<SettingsCubit, AppSettings>(

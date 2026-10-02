@@ -26,7 +26,8 @@ class ThemeRevealController {
     try {
       final pixelRatio = MediaQuery.devicePixelRatioOf(context);
       image = await boundary.toImage(pixelRatio: pixelRatio);
-    } catch (_) {
+    } on Object catch (_) {
+      // Snapshot failed: switch without the reveal animation.
       onThemeSwitch();
       return;
     }

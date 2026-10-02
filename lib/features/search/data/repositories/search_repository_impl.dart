@@ -36,7 +36,7 @@ class SearchRepositoryImpl implements SearchRepository {
       return Err(ServerFailure(message: e.message, statusCode: e.statusCode));
     } on NetworkException catch (e) {
       return Err(NetworkFailure(message: e.message));
-    } catch (e) {
+    } on Object catch (e) {
       return Err(UnknownFailure(message: e.toString()));
     }
   }
@@ -48,7 +48,7 @@ class SearchRepositoryImpl implements SearchRepository {
       return Ok(list);
     } on CacheException catch (e) {
       return Err(CacheFailure(message: e.message));
-    } catch (e) {
+    } on Object catch (e) {
       return Err(UnknownFailure(message: e.toString()));
     }
   }
@@ -60,7 +60,7 @@ class SearchRepositoryImpl implements SearchRepository {
       return const Ok(null);
     } on CacheException catch (e) {
       return Err(CacheFailure(message: e.message));
-    } catch (e) {
+    } on Object catch (e) {
       return Err(UnknownFailure(message: e.toString()));
     }
   }
@@ -72,7 +72,7 @@ class SearchRepositoryImpl implements SearchRepository {
       return const Ok(null);
     } on CacheException catch (e) {
       return Err(CacheFailure(message: e.message));
-    } catch (e) {
+    } on Object catch (e) {
       return Err(UnknownFailure(message: e.toString()));
     }
   }

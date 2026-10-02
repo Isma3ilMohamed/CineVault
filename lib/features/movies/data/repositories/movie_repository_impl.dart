@@ -3,6 +3,7 @@ import 'package:cine_vault/core/error/failures.dart';
 import 'package:cine_vault/core/network/network_info.dart';
 import 'package:cine_vault/core/result/result.dart';
 import 'package:cine_vault/features/movies/data/datasources/remote/movie_remote_data_source.dart';
+import 'package:cine_vault/features/movies/data/models/movie_model.dart';
 import 'package:cine_vault/features/movies/domain/entities/cast_member.dart';
 import 'package:cine_vault/features/movies/domain/entities/genre.dart';
 import 'package:cine_vault/features/movies/domain/entities/movie.dart';
@@ -15,27 +16,27 @@ class MovieRepositoryImpl implements MovieRepository {
   final NetworkInfo networkInfo;
 
   @override
-  Future<Result<List<Movie>>> getPopularMovies({required int page}) async {
+  Future<Result<List<Movie>>> getPopularMovies({required int page}) {
     return _getMoviesList(() => remoteDataSource.getPopularMovies(page: page));
   }
 
   @override
-  Future<Result<List<Movie>>> getTopRatedMovies({required int page}) async {
+  Future<Result<List<Movie>>> getTopRatedMovies({required int page}) {
     return _getMoviesList(() => remoteDataSource.getTopRatedMovies(page: page));
   }
 
   @override
-  Future<Result<List<Movie>>> getUpcomingMovies({required int page}) async {
+  Future<Result<List<Movie>>> getUpcomingMovies({required int page}) {
     return _getMoviesList(() => remoteDataSource.getUpcomingMovies(page: page));
   }
 
   @override
-  Future<Result<List<Movie>>> getNowPlayingMovies({required int page}) async {
+  Future<Result<List<Movie>>> getNowPlayingMovies({required int page}) {
     return _getMoviesList(() => remoteDataSource.getNowPlayingMovies(page: page));
   }
 
   @override
-  Future<Result<List<Movie>>> getTrendingDayMovies({required int page}) async {
+  Future<Result<List<Movie>>> getTrendingDayMovies({required int page}) {
     return _getMoviesList(() => remoteDataSource.getTrendingDayMovies(page: page));
   }
 
@@ -52,13 +53,13 @@ class MovieRepositoryImpl implements MovieRepository {
       return Err(ServerFailure(message: e.message, statusCode: e.statusCode));
     } on NetworkException catch (e) {
       return Err(NetworkFailure(message: e.message));
-    } catch (e) {
+    } on Object catch (e) {
       return Err(UnknownFailure(message: e.toString()));
     }
   }
 
   @override
-  Future<Result<List<Movie>>> getSimilarMovies({required int movieId, required int page}) async {
+  Future<Result<List<Movie>>> getSimilarMovies({required int movieId, required int page}) {
     return _getMoviesList(() => remoteDataSource.getSimilarMovies(movieId: movieId, page: page));
   }
 
@@ -76,7 +77,7 @@ class MovieRepositoryImpl implements MovieRepository {
       return Err(ServerFailure(message: e.message, statusCode: e.statusCode));
     } on NetworkException catch (e) {
       return Err(NetworkFailure(message: e.message));
-    } catch (e) {
+    } on Object catch (e) {
       return Err(UnknownFailure(message: e.toString()));
     }
   }
@@ -94,7 +95,7 @@ class MovieRepositoryImpl implements MovieRepository {
       return Err(ServerFailure(message: e.message, statusCode: e.statusCode));
     } on NetworkException catch (e) {
       return Err(NetworkFailure(message: e.message));
-    } catch (e) {
+    } on Object catch (e) {
       return Err(UnknownFailure(message: e.toString()));
     }
   }
@@ -112,25 +113,25 @@ class MovieRepositoryImpl implements MovieRepository {
       return Err(ServerFailure(message: e.message, statusCode: e.statusCode));
     } on NetworkException catch (e) {
       return Err(NetworkFailure(message: e.message));
-    } catch (e) {
+    } on Object catch (e) {
       return Err(UnknownFailure(message: e.toString()));
     }
   }
 
-  Future<Result<List<Movie>>> _getMoviesList(Future<dynamic> Function() fetch) async {
+  Future<Result<List<Movie>>> _getMoviesList(Future<MoviesPageResponse> Function() fetch) async {
     if (!await networkInfo.isConnected) {
       return const Err(NetworkFailure());
     }
 
     try {
       final response = await fetch();
-      final movies = (response.results as List).map((model) => model.toEntity() as Movie).toList();
+      final movies = response.results.map((model) => model.toEntity()).toList();
       return Ok(movies);
     } on ServerException catch (e) {
       return Err(ServerFailure(message: e.message, statusCode: e.statusCode));
     } on NetworkException catch (e) {
       return Err(NetworkFailure(message: e.message));
-    } catch (e) {
+    } on Object catch (e) {
       return Err(UnknownFailure(message: e.toString()));
     }
   }

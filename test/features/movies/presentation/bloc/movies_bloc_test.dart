@@ -32,8 +32,8 @@ void main() {
     );
   });
 
-  tearDown(() {
-    moviesBloc.close();
+  tearDown(() async {
+    await moviesBloc.close();
   });
 
   final testMovie = Movie(

@@ -18,7 +18,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
       );
     } on CacheException catch (e) {
       return Err(CacheFailure(message: e.message));
-    } catch (e) {
+    } on Object catch (e) {
       return Err(UnknownFailure(message: e.toString()));
     }
   }
@@ -30,7 +30,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
       return const Ok(null);
     } on CacheException catch (e) {
       return Err(CacheFailure(message: e.message));
-    } catch (e) {
+    } on Object catch (e) {
       return Err(UnknownFailure(message: e.toString()));
     }
   }
@@ -42,7 +42,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
       return const Ok(null);
     } on CacheException catch (e) {
       return Err(CacheFailure(message: e.message));
-    } catch (e) {
+    } on Object catch (e) {
       return Err(UnknownFailure(message: e.toString()));
     }
   }

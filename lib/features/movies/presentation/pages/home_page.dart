@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cine_vault/features/movies/domain/entities/movie.dart';
 import 'package:cine_vault/features/movies/domain/entities/movie_category.dart';
 import 'package:cine_vault/features/movies/presentation/bloc/movies_bloc.dart';
@@ -12,11 +14,11 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   void _openDetails(BuildContext context, Movie movie, String heroTag) {
-    context.push('/movie/${movie.id}', extra: {'heroTag': heroTag});
+    unawaited(context.push('/movie/${movie.id}', extra: {'heroTag': heroTag}));
   }
 
   void _openSeeAll(BuildContext context, MovieCategory category) {
-    context.push('/list/${category.slug}');
+    unawaited(context.push('/list/${category.slug}'));
   }
 
   @override

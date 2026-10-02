@@ -15,7 +15,7 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
   @override
   Future<MoviesPageResponse> searchMovies({required String query, required int page}) async {
     try {
-      final response = await dio.get(
+      final response = await dio.get<Map<String, dynamic>>(
         ApiConstants.searchMovies,
         queryParameters: {
           'query': query,
@@ -24,7 +24,7 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
           'include_adult': false,
         },
       );
-      return MoviesPageResponse.fromJson(response.data as Map<String, dynamic>);
+      return MoviesPageResponse.fromJson(response.data!);
     } on DioException catch (e) {
       throw e.toAppException();
     } on ServerException {

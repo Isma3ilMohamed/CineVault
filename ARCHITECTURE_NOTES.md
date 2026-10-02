@@ -162,8 +162,8 @@ class MovieDetailsContent extends StatelessWidget {
 ktlint = formatter + ruleset. في Flutter بنعملها على 3 طبقات:
 
 ### الطبقة 1 — Formatter: `dart format`
-- رفع `environment.sdk` لـ `^3.7.0` على الأقل (الجهاز عليه Dart 3.13). من 3.7 الـ formatter بقى **"tall style"** — بيحط الـ trailing commas ويكسر السطور لوحده، فمفيش نقاش على الشكل.
-- الـ constraint الحالي `^3.5.0` بيخلي الـ formatter يشتغل بالستايل القديم.
+- ✅ `environment.sdk: ^3.13.0` (Phase 0-B). `very_good_analysis` 11 محتاج 3.13، فـ `^3.7` كان هيبقى constraint كدّاب. الـ formatter بقى "tall style" — بيحط الـ trailing commas ويكسر السطور لوحده.
+- **ممنوع الـ syntax الجديدة بتاعة Dart 3.13** (`new(...)` بدل اسم الكلاس، و `class X;` بدل `class X {}`) — الـ lints اللي بتفرضها مقفولة في `analysis_options.yaml`. الهدف قراءة، مش أحدث syntax.
 
 ```yaml
 # analysis_options.yaml
@@ -354,7 +354,7 @@ class MovieDetailsRouteData extends GoRouteData {
 | Phase | الشغل | Done when |
 |---|---|---|
 | **0-A** | إصلاح الـ test القديم · bugs 1، 2، 5 · flavors (staging/production) + config per flavor | tests خضرا، الـ flavors بتعمل build على Android و iOS |
-| **0-B** | رفع الـ SDK لـ `^3.7` · `very_good_analysis` · `dart format` · `dart fix` | `dart analyze` نضيف (دفعة ميكانيكية لوحدها) |
+| **0-B** | رفع الـ SDK لـ `^3.13` · `very_good_analysis` · `dart format` · `dart fix` + إصلاح الباقي بإيدينا | ✅ `flutter analyze`: No issues |
 | **1** | melos workspace · `core/result` (sealed Failure) · `core/base` (EffectEmitter, BlocEffectListener, allowedEvents) + tests | الـ base مغطاة بـ tests |
 | **2** | `lints` package — أول 4 قواعد (content pure · bloc pure · provider only in route · no navigation in features) | القواعد بتفشل على الكود الحالي ✔ |
 | **3** | `domain` pure Dart · نقل الـ entities · `GetMoviesByCategory` · `GetMovieTrailer` + tests | `domain` من غير `flutter` |

@@ -30,7 +30,7 @@ class RecentSearchesLocalDataSourceImpl implements RecentSearchesLocalDataSource
   Future<List<String>> saveRecentSearch(String query) async {
     final normalized = query.trim();
     if (normalized.isEmpty) {
-      return getRecentSearches();
+      return await getRecentSearches();
     }
 
     try {

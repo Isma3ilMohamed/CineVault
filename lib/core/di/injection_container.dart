@@ -48,10 +48,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 final GetIt sl = GetIt.instance;
 
 Future<void> initDependencies(AppConfig config) async {
-  sl.registerSingleton<AppConfig>(config);
-
-  //! External
-  sl.registerLazySingleton(Connectivity.new);
+  sl
+    ..registerSingleton<AppConfig>(config)
+    //! External
+    ..registerLazySingleton(Connectivity.new);
 
   final prefs = await SharedPreferences.getInstance();
   sl.registerLazySingleton<SharedPreferences>(() => prefs);

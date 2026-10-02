@@ -28,35 +28,35 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
   final Dio dio;
 
   @override
-  Future<MoviesPageResponse> getPopularMovies({required int page}) async {
+  Future<MoviesPageResponse> getPopularMovies({required int page}) {
     return _fetchMoviesPage(endpoint: ApiConstants.popularMovies, page: page);
   }
 
   @override
-  Future<MoviesPageResponse> getTopRatedMovies({required int page}) async {
+  Future<MoviesPageResponse> getTopRatedMovies({required int page}) {
     return _fetchMoviesPage(endpoint: ApiConstants.topRatedMovies, page: page);
   }
 
   @override
-  Future<MoviesPageResponse> getUpcomingMovies({required int page}) async {
+  Future<MoviesPageResponse> getUpcomingMovies({required int page}) {
     return _fetchMoviesPage(endpoint: ApiConstants.upcomingMovies, page: page);
   }
 
   @override
-  Future<MoviesPageResponse> getNowPlayingMovies({required int page}) async {
+  Future<MoviesPageResponse> getNowPlayingMovies({required int page}) {
     return _fetchMoviesPage(endpoint: ApiConstants.nowPlayingMovies, page: page);
   }
 
   @override
-  Future<MoviesPageResponse> getTrendingDayMovies({required int page}) async {
+  Future<MoviesPageResponse> getTrendingDayMovies({required int page}) {
     return _fetchMoviesPage(endpoint: ApiConstants.trendingDay, page: page);
   }
 
   @override
   Future<MovieModel> getMovieDetails({required int movieId}) async {
     try {
-      final response = await dio.get('${ApiConstants.movieDetails}/$movieId');
-      return MovieModel.fromJson(response.data as Map<String, dynamic>);
+      final response = await dio.get<Map<String, dynamic>>('${ApiConstants.movieDetails}/$movieId');
+      return MovieModel.fromJson(response.data!);
     } on DioException catch (e) {
       throw e.toAppException();
     } on ServerException {
@@ -67,15 +67,18 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
   }
 
   @override
-  Future<MoviesPageResponse> getSimilarMovies({required int movieId, required int page}) async {
+  Future<MoviesPageResponse> getSimilarMovies({required int movieId, required int page}) {
     return _fetchMoviesPage(endpoint: '${ApiConstants.movieDetails}/$movieId/similar', page: page);
   }
 
   @override
   Future<GenresResponse> getGenres() async {
     try {
-      final response = await dio.get(ApiConstants.genres, queryParameters: {'language': 'en-US'});
-      return GenresResponse.fromJson(response.data as Map<String, dynamic>);
+      final response = await dio.get<Map<String, dynamic>>(
+        ApiConstants.genres,
+        queryParameters: {'language': 'en-US'},
+      );
+      return GenresResponse.fromJson(response.data!);
     } on DioException catch (e) {
       throw e.toAppException();
     } on ServerException {
@@ -90,8 +93,10 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
   @override
   Future<CreditsResponse> getMovieCredits({required int movieId}) async {
     try {
-      final response = await dio.get('${ApiConstants.movieDetails}/$movieId/credits');
-      return CreditsResponse.fromJson(response.data as Map<String, dynamic>);
+      final response = await dio.get<Map<String, dynamic>>(
+        '${ApiConstants.movieDetails}/$movieId/credits',
+      );
+      return CreditsResponse.fromJson(response.data!);
     } on DioException catch (e) {
       throw e.toAppException();
     } on ServerException {
@@ -106,8 +111,10 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
   @override
   Future<VideosResponse> getMovieVideos({required int movieId}) async {
     try {
-      final response = await dio.get('${ApiConstants.movieDetails}/$movieId/videos');
-      return VideosResponse.fromJson(response.data as Map<String, dynamic>);
+      final response = await dio.get<Map<String, dynamic>>(
+        '${ApiConstants.movieDetails}/$movieId/videos',
+      );
+      return VideosResponse.fromJson(response.data!);
     } on DioException catch (e) {
       throw e.toAppException();
     } on ServerException {
@@ -121,11 +128,11 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
 
   Future<MoviesPageResponse> _fetchMoviesPage({required String endpoint, required int page}) async {
     try {
-      final response = await dio.get(
+      final response = await dio.get<Map<String, dynamic>>(
         endpoint,
         queryParameters: {'page': page, 'language': 'en-US'},
       );
-      return MoviesPageResponse.fromJson(response.data as Map<String, dynamic>);
+      return MoviesPageResponse.fromJson(response.data!);
     } on DioException catch (e) {
       throw e.toAppException();
     } on ServerException {

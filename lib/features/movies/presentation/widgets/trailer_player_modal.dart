@@ -57,8 +57,8 @@ class _TrailerPlayerModalState extends State<TrailerPlayerModal> {
   @override
   void dispose() {
     _startTimeout?.cancel();
-    _sub?.cancel();
-    _controller.close();
+    unawaited(_sub?.cancel());
+    unawaited(_controller.close());
     super.dispose();
   }
 
