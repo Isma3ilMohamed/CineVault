@@ -13,14 +13,6 @@ import '../../domain/usecases/get_similar_movies.dart';
 part 'movie_details_event.dart';
 part 'movie_details_state.dart';
 
-/// ببساطة كدا: Bloc خاص بصفحة الـ Details
-/// بيجيب تفاصيل الفيلم + الأفلام الشبيهة في parallel
-///
-/// Flow:
-///   UI → LoadMovieDetails(id) → Bloc → [UseCase, UseCase] في parallel
-///   Details fail → error state
-///   Details ok + Similar fail → loaded state بـ similar فاضية (degraded)
-///   Details ok + Similar ok → loaded state كامل
 class MovieDetailsBloc extends Bloc<MovieDetailsEvent, MovieDetailsState> {
   final GetMovieDetails getMovieDetails;
   final GetSimilarMovies getSimilarMovies;
@@ -45,9 +37,8 @@ class MovieDetailsBloc extends Bloc<MovieDetailsEvent, MovieDetailsState> {
   ) =>
       _load(event.movieId, emit);
 
-  /// بنشغل الـ 4 requests في parallel عشان نوفر وقت
-  /// الـ details هو الـ critical path — لو فشل، نعرض error
-  /// الـ similar + cast + videos "nice to have" — لو فشلوا نكمل بقوائم فاضية
+  /// Only the details request is critical; similar, cast and videos fall back
+  /// to empty lists on failure.
   Future<void> _load(int movieId, Emitter<MovieDetailsState> emit) async {
     emit(const MovieDetailsLoading());
 
@@ -69,7 +60,7 @@ class MovieDetailsBloc extends Bloc<MovieDetailsEvent, MovieDetailsState> {
         final similar = similarResult.getOrElse(() => const <Movie>[]);
         final cast = creditsResult.getOrElse(() => const <CastMember>[]);
         final videos = videosResult.getOrElse(() => const <Video>[]);
-        // نختار أول YouTube trailer رسمي، أو أول YouTube video عموماً
+        // Prefer an official YouTube trailer, then any YouTube trailer, then any YouTube video.
         final trailer = videos.firstWhere(
           (v) => v.isYouTube && v.isTrailer && v.official,
           orElse: () => videos.firstWhere(

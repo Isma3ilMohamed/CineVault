@@ -4,13 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../movies/domain/entities/movie.dart';
 import '../cubit/favorite_ids_cubit.dart';
 
-/// ببساطة كدا: زرار القلب
-/// - بيقرا الحالة من FavoriteIdsCubit عبر context.select (minimal rebuild)
-/// - بيدوس → FavoriteIdsCubit.toggle → stream → UI يـ rebuild
-///
-/// Variants:
-///   - small (default): للـ MovieCard overlay
-///   - large: للـ MovieDetailsPage AppBar action
 class FavoriteHeartButton extends StatelessWidget {
   final Movie movie;
   final double size;
@@ -25,7 +18,6 @@ class FavoriteHeartButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // select: نعيد build بس لما الـ id بتاعنا يدخل/يخرج من الـ set
     final isFavorite = context.select<FavoriteIdsCubit, bool>(
       (cubit) => cubit.state.contains(movie.id),
     );

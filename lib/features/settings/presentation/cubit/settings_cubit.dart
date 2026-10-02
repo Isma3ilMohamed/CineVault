@@ -7,15 +7,8 @@ import '../../domain/usecases/get_settings.dart';
 import '../../domain/usecases/save_locale.dart';
 import '../../domain/usecases/save_theme_mode.dart';
 
-/// ببساطة كدا: global cubit بيحتفظ بـ AppSettings (theme + locale)
-/// - Lives at app root → MaterialApp بيقرا منه themeMode و locale
-/// - Persist بعد كل تغيير عن طريق save* use cases
-///
-/// Order of operations مهم لـ circular reveal:
-///   1. UI calls `setThemeMode(...)` AFTER animation starts
-///   2. Emit → MaterialApp rebuilds with new theme underneath
-///   3. Overlay (old theme screenshot) animates الـ clip circle
-///   4. Overlay ينتهي → removed
+/// For the circular theme reveal, [setThemeMode] must be called only after the
+/// old-theme snapshot overlay is shown, so the rebuild happens underneath it.
 class SettingsCubit extends Cubit<AppSettings> {
   final GetSettings getSettingsUseCase;
   final SaveThemeMode saveThemeModeUseCase;
@@ -28,8 +21,8 @@ class SettingsCubit extends Cubit<AppSettings> {
     required AppSettings initial,
   }) : super(initial);
 
-  /// Factory بيعمل cubit بعد ما يقرا الـ initial settings من الـ storage
-  /// بنستخدمه في main() قبل ما المـ MaterialApp يشتغل
+  /// Loads persisted settings before runApp so the first frame already uses
+  /// the saved theme and locale instead of flashing the defaults.
   static Future<SettingsCubit> create({
     required GetSettings getSettings,
     required SaveThemeMode saveThemeMode,

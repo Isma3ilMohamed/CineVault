@@ -46,22 +46,7 @@ import '../config/app_config.dart';
 import '../network/dio_client.dart';
 import '../network/network_info.dart';
 
-/// ببساطة كدا: ده الـ DI container
-/// كل الـ dependencies بيتسجلوا هنا مرة واحدة في main()
-/// وبعد كدا بنطلبها في أي مكان: sl<MoviesBloc>()
-///
-/// Compare مع Kee (Koin):
-///   val appModule = module {
-///     single { DioClient() }
-///     single<MovieRepository> { MovieRepositoryImpl(get(), get()) }
-///     factory { MoviesBloc(get(), get()) }
-///   }
-///
-/// أنواع التسجيل:
-///   - registerSingleton: instance واحدة للتطبيق كله (زي Koin single)
-///   - registerLazySingleton: بيتعمل لما نحتاجه لأول مرة
-///   - registerFactory: كل مرة نطلبه بيعمل instance جديدة (زي Koin factory)
-final sl = GetIt.instance; // sl = Service Locator
+final sl = GetIt.instance;
 
 Future<void> initDependencies(AppConfig config) async {
   sl.registerSingleton<AppConfig>(config);
@@ -69,12 +54,9 @@ Future<void> initDependencies(AppConfig config) async {
   //! External
   sl.registerLazySingleton(() => Connectivity());
 
-  // SharedPreferences لازم يتنادى بـ await، فبنعمل له registerSingletonAsync
-  // وبنستنى initialization يخلص في main() قبل ما نشغل الـ app
   final prefs = await SharedPreferences.getInstance();
   sl.registerLazySingleton<SharedPreferences>(() => prefs);
 
-  // Hive: initFlutter بيهيئ الـ path. بعدين نفتح الـ box للـ favorites
   await Hive.initFlutter();
   final favoritesBox =
       await Hive.openBox<dynamic>(FavoritesLocalDataSourceImpl.boxName);
@@ -109,7 +91,7 @@ Future<void> initDependencies(AppConfig config) async {
   // GenresCubit — global cache, lazy singleton (one instance for the app)
   sl.registerLazySingleton(() => GenresCubit(getGenres: sl()));
 
-  // Bloc - factory عشان كل screen تاخد instance جديدة
+  // Blocs are factories so each screen gets a fresh instance
   sl.registerFactory(
     () => MoviesBloc(
       getPopularMovies: sl(),
@@ -124,7 +106,6 @@ Future<void> initDependencies(AppConfig config) async {
       getMovieVideos: sl(),
     ),
   );
-  // Factory with parameter — كل MovieListPage ياخد instance مخصصة
   sl.registerFactoryParam<MovieListBloc, MovieCategory, void>(
     (category, _) => MovieListBloc(
       repository: sl(),
@@ -207,8 +188,7 @@ Future<void> initDependencies(AppConfig config) async {
   sl.registerLazySingleton(() => SaveThemeMode(sl()));
   sl.registerLazySingleton(() => SaveLocale(sl()));
 
-  // SettingsCubit بيقرا الـ initial settings من الـ storage قبل الـ app ما يشتغل
-  // فبنعمله registerSingletonAsync علشان الـ app يستناه
+  // Awaited so the persisted theme/locale are loaded before the first frame
   final settingsCubit = await SettingsCubit.create(
     getSettings: sl(),
     saveThemeMode: sl(),

@@ -9,12 +9,8 @@ import '../../domain/usecases/watch_favorites.dart';
 part 'favorites_event.dart';
 part 'favorites_state.dart';
 
-/// ببساطة كدا: bloc لصفحة الـ Favorites
-/// - بيشترك في watchFavorites stream على FavoritesSubscribed
-/// - كل snapshot بيحول إلى FavoritesLoaded state
-///
-/// Empty vs Loaded: الـ UI بيشوف `movies.isEmpty` على الـ loaded state
-/// (مش state منفصلة عشان الـ transitions تكون smoother)
+/// An empty list is emitted as FavoritesLoaded rather than a separate state,
+/// to keep UI transitions smooth.
 class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   final WatchFavorites watchFavorites;
 

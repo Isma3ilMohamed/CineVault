@@ -1,9 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-/// ببساطة كدا: video marketing للفيلم (trailer, teaser, clip, featurette...)
-/// - site: "YouTube" عادةً — نقدر نعرضه
-/// - key: الـ YouTube video id
-/// - type: "Trailer" عادةً الأهم
+/// `key` is the video id on `site` (usually YouTube).
 class Video extends Equatable {
   final String id;
   final String key;

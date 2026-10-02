@@ -18,19 +18,8 @@ import '../../l10n/generated/app_localizations.dart';
 import '../di/injection_container.dart';
 import '../widgets/app_shell.dart';
 
-/// ببساطة كدا: الـ routing system
-///
-/// Structure:
-///   Shell (bottom nav)
-///     branch 0: /home
-///     branch 1: /favorites
-///     branch 2: /more     ← new
-///   Pushed above shell (full-screen):
-///     /search
-///     /movie/:id
-///
-/// `AppRouter.router(key)` بياخد الـ themeBoundaryKey علشان الـ MorePage
-/// تقدر توصلها للـ ThemeRevealController عند toggle.
+/// `router(themeBoundaryKey)`: the key must sit on the RepaintBoundary wrapping
+/// the app; MorePage passes it to ThemeRevealController for the theme toggle.
 class AppRouter {
   AppRouter._();
 

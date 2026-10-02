@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// ببساطة كدا: ده الـ theme بتاع التطبيق
-/// Material 3 + Dark mode + Netflix-like colors
 class AppTheme {
   AppTheme._();
 

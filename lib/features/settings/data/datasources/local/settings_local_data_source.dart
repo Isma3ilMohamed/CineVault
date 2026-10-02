@@ -3,9 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../core/error/exceptions.dart';
 
-/// ببساطة كدا: ThemeMode + Locale stored في shared_preferences كـ strings
-/// - theme_mode: 'light' | 'dark' | 'system'
-/// - locale: 'en' | 'ar' | null (null → system default)
+/// Persisted as strings: theme_mode is 'light' | 'dark' | 'system';
+/// locale is a language code, or absent to follow the system.
 abstract class SettingsLocalDataSource {
   ThemeMode getThemeMode();
   Locale? getLocale();
@@ -30,7 +29,7 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
         'light' => ThemeMode.light,
         'dark' => ThemeMode.dark,
         'system' => ThemeMode.system,
-        _ => ThemeMode.dark, // default
+        _ => ThemeMode.dark,
       };
     } catch (e) {
       throw CacheException(message: 'Failed to read theme mode: $e');

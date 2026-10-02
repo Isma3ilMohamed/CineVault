@@ -1,6 +1,3 @@
-/// ببساطة كدا: الـ Exceptions بتحصل في Data Layer
-/// لما Dio بيرجع error، أو Isar يفشل في حاجة
-/// الـ Repository بعد كدا بيترجمها لـ Failure
 class ServerException implements Exception {
   final String message;
   final int? statusCode;

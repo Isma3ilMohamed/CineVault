@@ -5,8 +5,6 @@ import '../../../../core/usecase/usecase.dart';
 import '../entities/movie.dart';
 import '../repositories/movie_repository.dart';
 
-/// ببساطة كدا: ده use case واحد بيعمل حاجة واحدة بس
-/// Single Responsibility Principle
 class GetPopularMovies implements UseCase<List<Movie>, PageParams> {
   final MovieRepository repository;
 
@@ -18,8 +16,6 @@ class GetPopularMovies implements UseCase<List<Movie>, PageParams> {
   }
 }
 
-/// Params class للـ use case
-/// أحسن من تمرير primitive types مباشرة
 class PageParams extends Equatable {
   final int page;
 

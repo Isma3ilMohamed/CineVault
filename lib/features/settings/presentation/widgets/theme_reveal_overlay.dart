@@ -2,23 +2,8 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
-/// ببساطة كدا: الـ overlay اللي بيعمل circular reveal animation
-/// زي تيليجرام — الـ inner circle = الـ theme الجديد (المكشوف)،
-/// الـ outer = الـ theme القديم (الـ screenshot ده).
-///
-/// الفكرة:
-///   1. قبل ما الـ theme يتغير، بنلتقط صورة للـ UI الحالي (من RepaintBoundary)
-///   2. بنحطها في overlay فوق كل حاجة
-///   3. بنغير الـ theme (الـ MaterialApp يعيد build تحت الـ overlay)
-///   4. بنعمل animate لـ ClipPath — circle بيكبر من tap position
-///   5. الـ circle بيتـ cut out من الـ screenshot → الـ new theme بيبان
-///   6. لما الـ animation يخلص، نشيل الـ overlay
-///
-/// Inverse ClipPath:
-///   - نرسم كل الشاشة (rectangle)
-///   - نرسم circle داخل النقطة اللي المستخدم ضغط عليها
-///   - PathFillType.evenOdd → الـ circle يبقى فاضي (transparent)
-///   - كل ما الـ circle يكبر، الـ hole يكبر → الـ theme الجديد يبان أكتر
+/// Covers the app with a snapshot of the old theme and cuts a growing circle
+/// out of it (even-odd clip), revealing the already-switched theme underneath.
 class ThemeRevealOverlay extends StatefulWidget {
   final ui.Image oldThemeImage;
   final Offset center;
@@ -61,7 +46,6 @@ class _ThemeRevealOverlayState extends State<ThemeRevealOverlay>
   }
 
   double _maxRadius(Size size) {
-    // أكبر مسافة من الـ center لأي corner
     final dx = [widget.center.dx, size.width - widget.center.dx]
         .reduce((a, b) => a > b ? a : b);
     final dy = [widget.center.dy, size.height - widget.center.dy]
@@ -97,8 +81,6 @@ class _ThemeRevealOverlayState extends State<ThemeRevealOverlay>
   }
 }
 
-/// Clipper بينحت circle من الـ rectangle بتاع الـ screen
-/// الـ evenOdd fill rule بيخلي الـ circle area transparent
 class _InverseCircleClipper extends CustomClipper<Path> {
   final Offset center;
   final double radius;

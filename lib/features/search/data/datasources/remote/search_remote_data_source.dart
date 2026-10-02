@@ -5,10 +5,6 @@ import '../../../../../core/error/exceptions.dart';
 import '../../../../../core/network/interceptors/error_interceptor.dart';
 import '../../../../movies/data/models/movie_model.dart';
 
-/// ببساطة كدا: الـ search endpoint بيرجع نفس شكل الـ movie list
-/// فبنستخدم MoviesPageResponse من movies feature (cross-feature DTO reuse)
-///
-/// TMDB docs: /search/movie?query=...&page=...
 abstract class SearchRemoteDataSource {
   Future<MoviesPageResponse> searchMovies({
     required String query,

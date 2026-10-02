@@ -1,6 +1,5 @@
 part of 'search_bloc.dart';
 
-/// ببساطة كدا: الحالات اللي الـ UI ممكن يكون فيها
 sealed class SearchState extends Equatable {
   const SearchState();
 
@@ -8,7 +7,6 @@ sealed class SearchState extends Equatable {
   List<Object?> get props => [];
 }
 
-/// الحالة الابتدائية — معندناش query وبنعرض recent searches
 final class SearchIdle extends SearchState {
   final List<String> recentSearches;
 
@@ -18,7 +16,6 @@ final class SearchIdle extends SearchState {
   List<Object> get props => [recentSearches];
 }
 
-/// Debounce تمام والـ API شغالة
 final class SearchLoading extends SearchState {
   final String query;
 
@@ -28,7 +25,6 @@ final class SearchLoading extends SearchState {
   List<Object> get props => [query];
 }
 
-/// نتائج موجودة
 final class SearchLoaded extends SearchState {
   final String query;
   final List<Movie> results;
@@ -65,7 +61,6 @@ final class SearchLoaded extends SearchState {
       [query, results, page, hasReachedMax, isLoadingMore];
 }
 
-/// مفيش نتائج للـ query
 final class SearchEmpty extends SearchState {
   final String query;
 
@@ -75,7 +70,6 @@ final class SearchEmpty extends SearchState {
   List<Object> get props => [query];
 }
 
-/// Error في الـ API
 final class SearchError extends SearchState {
   final String query;
   final String message;

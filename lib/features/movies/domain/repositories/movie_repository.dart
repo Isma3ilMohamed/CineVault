@@ -4,14 +4,6 @@ import '../entities/genre.dart';
 import '../entities/movie.dart';
 import '../entities/video.dart';
 
-/// ببساطة كدا: ده الـ "contract" بين الـ Domain والـ Data
-/// الـ Domain بيعرف إن الـ methods دي موجودة
-/// بس ما يعرفش إزاي الـ data بتيجي (من API ولا Cache ولا File)
-///
-/// Compare مع Kee:
-///   abstract class MovieRepository {
-///     suspend fun getPopular(): `Result<List<Movie>>`
-///   }
 abstract class MovieRepository {
   Future<Result<List<Movie>>> getPopularMovies({
     required int page,

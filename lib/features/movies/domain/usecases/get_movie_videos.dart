@@ -4,8 +4,6 @@ import '../entities/video.dart';
 import '../repositories/movie_repository.dart';
 import 'get_movie_details.dart';
 
-/// بيجيب الـ videos (trailers, teasers, ...) لفيلم معين
-/// بنـ reuse MovieIdParams
 class GetMovieVideos implements UseCase<List<Video>, MovieIdParams> {
   final MovieRepository repository;
 

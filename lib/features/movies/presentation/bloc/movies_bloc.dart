@@ -9,15 +9,9 @@ import '../../domain/usecases/get_popular_movies.dart';
 part 'movies_event.dart';
 part 'movies_state.dart';
 
-/// ببساطة كدا: ده الـ Bloc
-/// بيستقبل Events، يعالجها، ويرسل States
-///
-/// Flow:
-///   UI → add(LoadHomeMovies) → Bloc → UseCase → Repository → API
-///   API → Entity → State → UI rebuild
 class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
   final GetPopularMovies getPopularMovies;
-  final MovieRepository movieRepository; // للـ top rated, upcoming, now playing
+  final MovieRepository movieRepository;
 
   MoviesBloc({
     required this.getPopularMovies,
@@ -40,12 +34,10 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
     RefreshHomeMovies event,
     Emitter<MoviesState> emit,
   ) async {
-    // مش بنعمل emit(Loading) عشان الـ RefreshIndicator هيبقى مسؤول عن الـ UI
+    // No Loading emit: RefreshIndicator owns the spinner during refresh.
     await _fetchAllCategories(emit);
   }
 
-  /// Helper: بيجيب كل الـ categories في parallel
-  /// Future.wait بيشغلهم مع بعض بدل واحد ورا التاني (أسرع)
   Future<void> _fetchAllCategories(Emitter<MoviesState> emit) async {
     final results = await Future.wait([
       getPopularMovies(const PageParams(page: 1)),
@@ -55,7 +47,6 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
       movieRepository.getTrendingDayMovies(page: 1),
     ]);
 
-    // لو أي واحد منهم Err، نرجع error state
     for (final result in results) {
       if (result case Err(:final failure)) {
         emit(MoviesError(message: failure.message));
@@ -63,7 +54,6 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
       }
     }
 
-    // كلهم Ok — بنستخرج القيم
     emit(MoviesLoaded(
       popularMovies: results[0].getOrElse(() => const []),
       topRatedMovies: results[1].getOrElse(() => const []),

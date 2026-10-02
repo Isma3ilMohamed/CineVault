@@ -1,9 +1,6 @@
 import '../../domain/entities/cast_member.dart';
 
-/// DTO للـ TMDB credits endpoint
-/// Response شكله:
-///   { "id": 157336, "cast": [...], "crew": [...] }
-/// بنقرا الـ cast فقط.
+/// Only `cast` is parsed from the credits response; `crew` is ignored.
 class CastMemberModel {
   final int id;
   final String name;

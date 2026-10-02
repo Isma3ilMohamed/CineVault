@@ -5,7 +5,6 @@ import '../../../../core/usecase/usecase.dart';
 import '../entities/movie.dart';
 import '../repositories/movie_repository.dart';
 
-/// ببساطة كدا: use case بيجيب تفاصيل فيلم واحد بالـ id بتاعه
 class GetMovieDetails implements UseCase<Movie, MovieIdParams> {
   final MovieRepository repository;
 

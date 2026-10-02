@@ -7,13 +7,7 @@ import '../../../movies/domain/entities/movie.dart';
 import '../../../movies/presentation/widgets/movie_card.dart';
 import '../bloc/favorites_bloc.dart';
 
-/// ببساطة كدا: صفحة الـ Favorites
-/// - Subscribed → reactive stream من Hive
-/// - Empty state لو مفيش أفلام
-/// - Grid 2 cols + scroll
-///
-/// ملاحظة: مفيش pagination — كل الـ favorites بتتحمل دفعة واحدة
-/// (عادةً عدد قليل وكلها offline)
+/// No pagination: favorites are few and stored locally, so all load at once.
 class FavoritesPage extends StatelessWidget {
   const FavoritesPage({super.key});
 

@@ -1,10 +1,6 @@
 import '../../../../core/result/result.dart';
 import '../../../movies/domain/entities/movie.dart';
 
-/// ببساطة كدا: contract بتاع feature الـ Favorites
-/// - watchFavorites / watchFavoriteIds: streams reactive
-/// - add/remove/toggle: mutations
-/// - isFavorite: one-shot check
 abstract class FavoritesRepository {
   Stream<List<Movie>> watchFavorites();
 
@@ -18,6 +14,6 @@ abstract class FavoritesRepository {
 
   Future<Result<void>> removeFavorite(int movieId);
 
-  /// Convenience: toggle. بيرجع bool = الحالة الجديدة
+  /// Returns the new state (true = now a favorite).
   Future<Result<bool>> toggleFavorite(Movie movie);
 }

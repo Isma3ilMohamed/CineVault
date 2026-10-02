@@ -7,12 +7,8 @@ import '../bloc/search_bloc.dart';
 import '../widgets/recent_searches_list.dart';
 import '../widgets/search_results_grid.dart';
 
-/// ببساطة كدا: صفحة البحث
-/// - TextField في AppBar متركز عليه أوتوماتيك
-/// - تحت: recents (لو مفيش query)، spinner، results، أو empty/error
-///
-/// الـ Bloc بيتعمل في الـ router ومعاه SearchStarted event
-/// لتحميل الـ recents.
+/// The SearchBloc is provided by the router, which also dispatches
+/// SearchStarted to load recent searches.
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
@@ -27,7 +23,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
-    // نفتح الـ keyboard بعد أول frame
+    // Wait for the first frame so the TextField is attached before focusing.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusNode.requestFocus();
     });

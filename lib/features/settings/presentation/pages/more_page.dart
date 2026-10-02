@@ -5,12 +5,8 @@ import '../../../../l10n/generated/app_localizations.dart';
 import '../cubit/settings_cubit.dart';
 import '../widgets/theme_reveal_controller.dart';
 
-/// ببساطة كدا: صفحة الإعدادات
-/// - Appearance: theme toggle (بـ circular reveal)
-/// - Language: radio tiles للـ Arabic / English
-/// - About: version + credit
 class MorePage extends StatelessWidget {
-  /// الـ boundary بتاع الـ MaterialApp الخارجي — للـ reveal animation
+  /// RepaintBoundary around the root MaterialApp, snapshotted for the theme reveal.
   final GlobalKey themeBoundaryKey;
 
   const MorePage({super.key, required this.themeBoundaryKey});
@@ -69,9 +65,6 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-/// ببساطة كدا: زرار theme toggle بالـ reveal animation
-/// - بنـ record الـ tap position من الـ GestureDetector
-/// - بنبعت للـ ThemeRevealController → يلتقط screenshot + بيبدل الـ theme + reveal
 class _ThemeToggleTile extends StatelessWidget {
   final GlobalKey boundaryKey;
 
@@ -105,14 +98,13 @@ class _ThemeToggleTile extends StatelessWidget {
         subtitle: Text(isDark ? l10n.moreThemeDark : l10n.moreThemeLight),
         trailing: Switch(
           value: isDark,
-          onChanged: null, // Switch visual only — التوجل بياخد place من الـ row tap
+          onChanged: null, // Visual only: the row handles taps so we get the tap position.
         ),
       ),
     );
   }
 }
 
-/// ببساطة كدا: wrapper بياخد الـ tap وبيحول الـ position لـ global coords
 class _TapPositionDetector extends StatelessWidget {
   final Widget child;
   final ValueChanged<Offset> onTap;

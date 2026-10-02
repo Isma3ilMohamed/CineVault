@@ -1,34 +1,11 @@
 import '../error/failures.dart';
 
-/// ببساطة كدا: `Result<T>` هو sealed class بيمثل نتيجة عملية
-/// ممكن تنجح (`Ok<T>`) أو تفشل (`Err<T>`)
-///
-/// الـ Rust + modern Kotlin equivalent:
-///   sealed class `Result<out T>` {
-///     data class `Ok<T>`(val value: T) : `Result<T>`()
-///     data class Err(val failure: Failure) : `Result<Nothing>`()
-///   }
-///
-/// الـ pattern matching في Dart 3:
-///   switch (result) {
-///     case Ok(:final value) =&gt; handleSuccess(value),
-///     case Err(:final failure) =&gt; handleError(failure),
-///   }
-///
-/// ليه `Result` بدل `Either<Failure, T>` (dartz)؟
-///   - Dart 3 sealed classes + pattern matching = language-level support
-///   - Compiler بيضمن إن الـ switch exhaustive
-///   - مفيش dependency خارجية (dartz = Scala port قديم)
-///   - اسامي أوضح: Ok/Err بدل Left/Right الـ ambiguous
 sealed class Result<T> {
   const Result();
 
-  /// factory shortcuts (اختياري، الـ constructors كفاية)
   const factory Result.ok(T value) = Ok<T>;
   const factory Result.err(Failure failure) = Err<T>;
 
-  /// Convenience: fold-style مثل dartz
-  /// بنفضل pattern matching مباشرة لكن ده مفيد في one-liners
   R when<R>({
     required R Function(T value) ok,
     required R Function(Failure failure) err,
@@ -39,7 +16,6 @@ sealed class Result<T> {
     };
   }
 
-  /// لو Ok بنرجع الـ value، لو Err بنرجع الـ fallback
   T getOrElse(T Function() fallback) {
     return switch (this) {
       Ok<T>(:final value) => value,
@@ -47,7 +23,6 @@ sealed class Result<T> {
     };
   }
 
-  /// Nullable getter
   T? get valueOrNull => switch (this) {
         Ok<T>(:final value) => value,
         Err<T>() => null,
@@ -61,7 +36,6 @@ sealed class Result<T> {
   bool get isOk => this is Ok<T>;
   bool get isErr => this is Err<T>;
 
-  /// Transform الـ value لو Ok (functor map)
   Result<R> map<R>(R Function(T value) transform) {
     return switch (this) {
       Ok<T>(:final value) => Ok(transform(value)),

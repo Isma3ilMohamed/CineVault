@@ -5,7 +5,6 @@ import '../../../../core/usecase/usecase.dart';
 import '../entities/movie.dart';
 import '../repositories/movie_repository.dart';
 
-/// ببساطة كدا: use case بيجيب أفلام شبيهة بفيلم معين
 class GetSimilarMovies implements UseCase<List<Movie>, SimilarMoviesParams> {
   final MovieRepository repository;
 

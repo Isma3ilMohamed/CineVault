@@ -341,7 +341,7 @@ class MovieDetailsRouteData extends GoRouteData {
 
 ### 🧹 Readability
 - `Color(0xFFE50914)` متكرر 18 مرة → token في `core/ui`.
-- 76 ملف فيهم تعليقات عربي.
+- ~~76 ملف فيهم تعليقات عربي.~~ ✅ اتشالت (2026-10-02): الكومنتات التعليمية اتمسحت، واللي بيشرح "ليه" اتحوّل لسطر إنجليزي.
 - `_buildX()` methods في كل الـ pages → private widgets.
 - Modifiers مش موحدة (`movies_event` classes عادية، `search`/`details` `final class`).
 - `List<Movie>` في الـ states → `IList` (`fast_immutable_collections`).

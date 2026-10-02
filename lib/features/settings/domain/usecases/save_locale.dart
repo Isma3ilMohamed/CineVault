@@ -17,7 +17,7 @@ class SaveLocale implements UseCase<void, SaveLocaleParams> {
 }
 
 class SaveLocaleParams extends Equatable {
-  /// null → "follow system"
+  /// A null locale means follow the device locale.
   final Locale? locale;
 
   const SaveLocaleParams({required this.locale});

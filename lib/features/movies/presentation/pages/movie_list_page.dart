@@ -8,10 +8,6 @@ import '../../domain/entities/movie_category.dart';
 import '../bloc/movie_list_bloc.dart';
 import '../widgets/movie_card.dart';
 
-/// ببساطة كدا: "See All" page generic
-/// - Grid 2-col
-/// - scroll-near-end → loadMore
-/// - يشتغل على أي MovieCategory
 class MovieListPage extends StatelessWidget {
   final MovieCategory category;
 

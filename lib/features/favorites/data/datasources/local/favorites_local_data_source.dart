@@ -3,18 +3,11 @@ import 'package:hive/hive.dart';
 import '../../../../../core/error/exceptions.dart';
 import '../../models/favorite_movie_model.dart';
 
-/// ببساطة كدا: الـ local store للـ favorites
-/// Hive box اسمه "favorites" بيخزن:
-///   key: int (movieId)
-///   value: `Map<String, dynamic>` (Movie JSON + _added_at)
-///
-/// الميزة الأساسية: box.watch() بيطلع stream بيطلق event
-/// مع كل write → UI هيعمل rebuild تلقائي
+/// Hive box "favorites": key = movieId, value = movie JSON plus `_added_at`.
 abstract class FavoritesLocalDataSource {
-  /// كل الأفلام المفضلة — مرتبة بـ addedAt descending (الأحدث الأول)
+  /// Sorted by addedAt, newest first.
   List<FavoriteMovieModel> getAll();
 
-  /// الـ ids بس — للـ heart icons على كل card (O(1) lookup)
   Set<int> getAllIds();
 
   bool isFavorite(int movieId);
@@ -23,8 +16,6 @@ abstract class FavoritesLocalDataSource {
 
   Future<void> remove(int movieId);
 
-  /// Stream بينبعت event كل لما الـ box يتعدل
-  /// الـ listener بيستخدمه عشان يعيد query للـ data
   Stream<void> watch();
 }
 
@@ -92,7 +83,7 @@ class FavoritesLocalDataSourceImpl implements FavoritesLocalDataSource {
 
   @override
   Stream<void> watch() {
-    // box.watch() بيرجع BoxEvent — بنتجاهل الـ payload ونبعت void
+    // The BoxEvent payload is ignored; listeners re-query the box.
     return box.watch().map<void>((_) {});
   }
 }

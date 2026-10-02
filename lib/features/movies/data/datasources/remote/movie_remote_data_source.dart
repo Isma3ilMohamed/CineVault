@@ -8,14 +8,6 @@ import '../../models/genre_model.dart';
 import '../../models/movie_model.dart';
 import '../../models/video_model.dart';
 
-/// ببساطة كدا: ده اللي بيكلم الـ API مباشرة
-/// Repository بيستخدمه، بس الـ Repository ماعرفش حاجة عن Dio
-///
-/// Compare مع Kee/Retrofit:
-///   interface MovieApi {
-///     @GET("movie/popular")
-///     suspend fun getPopular(@Query("page") page: Int): MoviesPageDto
-///   }
 abstract class MovieRemoteDataSource {
   Future<MoviesPageResponse> getPopularMovies({required int page});
   Future<MoviesPageResponse> getTopRatedMovies({required int page});
@@ -28,13 +20,10 @@ abstract class MovieRemoteDataSource {
     required int page,
   });
 
-  /// Movie genres list — بيتـ cache لأنها مش بتتغير كتير
   Future<GenresResponse> getGenres();
 
-  /// Movie credits (cast + crew) بالـ movieId
   Future<CreditsResponse> getMovieCredits({required int movieId});
 
-  /// Movie videos (trailers, teasers) — used for trailer embed
   Future<VideosResponse> getMovieVideos({required int movieId});
 }
 
@@ -163,8 +152,6 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
     }
   }
 
-  /// Helper مشترك لكل الـ paginated endpoints
-  /// بيمنع الـ code duplication
   Future<MoviesPageResponse> _fetchMoviesPage({
     required String endpoint,
     required int page,

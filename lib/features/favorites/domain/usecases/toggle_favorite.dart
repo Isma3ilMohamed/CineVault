@@ -5,8 +5,6 @@ import '../../../../core/usecase/usecase.dart';
 import '../../../movies/domain/entities/movie.dart';
 import '../repositories/favorites_repository.dart';
 
-/// ببساطة كدا: يقلب حالة الـ favorite لفيلم
-/// بيرجع الحالة الجديدة (true = أصبح favorite)
 class ToggleFavorite implements UseCase<bool, ToggleFavoriteParams> {
   final FavoritesRepository repository;
 

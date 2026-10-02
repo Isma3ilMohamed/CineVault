@@ -5,26 +5,14 @@ import 'package:flutter/rendering.dart';
 
 import 'theme_reveal_overlay.dart';
 
-/// ببساطة كدا: utility بيـ orchestrate الـ circular reveal animation
-///
-/// Usage:
-///   final controller = ThemeRevealController(boundaryKey);
-///   await controller.reveal(
-///     context: context,
-///     tapPosition: tapOffset,
-///     onThemeSwitch: () => cubit.setThemeMode(newMode),
-///   );
-///
-/// الـ boundaryKey لازم يكون على RepaintBoundary حوالين الـ MaterialApp
-/// عشان نقدر نلتقط الـ UI الحالي كصورة.
+/// [boundaryKey] must be on a RepaintBoundary wrapping the MaterialApp so the
+/// current UI can be snapshotted before the theme switches.
 class ThemeRevealController {
   final GlobalKey boundaryKey;
 
   ThemeRevealController(this.boundaryKey);
 
-  /// بياخد snapshot للـ UI الحالي، بيبدل الـ theme، وبيعمل animate للـ reveal
-  ///
-  /// onThemeSwitch: الـ callback اللي بيغير الـ theme (synchronous)
+  /// [onThemeSwitch] must switch the theme synchronously.
   Future<void> reveal({
     required BuildContext context,
     required Offset tapPosition,
@@ -32,18 +20,15 @@ class ThemeRevealController {
   }) async {
     final boundary = boundaryKey.currentContext?.findRenderObject();
     if (boundary is! RenderRepaintBoundary) {
-      // مفيش boundary — نعدي الـ animation ونـ switch مباشرة
       onThemeSwitch();
       return;
     }
 
-    // Step 1: capture screenshot (old theme)
     final ui.Image image;
     try {
       final pixelRatio = MediaQuery.devicePixelRatioOf(context);
       image = await boundary.toImage(pixelRatio: pixelRatio);
     } catch (_) {
-      // لو fail، نعدي الـ animation
       onThemeSwitch();
       return;
     }
@@ -53,7 +38,6 @@ class ThemeRevealController {
       return;
     }
 
-    // Step 2: show overlay
     final overlayState = Overlay.of(context, rootOverlay: true);
     late OverlayEntry entry;
     entry = OverlayEntry(
@@ -65,8 +49,8 @@ class ThemeRevealController {
     );
     overlayState.insert(entry);
 
-    // Step 3: switch theme — هيعيد build لكل الـ app تحت الـ overlay
-    // الـ overlay الـ screenshot ثابتة فمفيش flicker
+    // Switch only after the snapshot overlay is inserted, so the rebuild
+    // happens hidden beneath it and there is no flicker.
     onThemeSwitch();
   }
 }

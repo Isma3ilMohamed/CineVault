@@ -5,18 +5,14 @@ import 'package:shimmer/shimmer.dart';
 import '../../../favorites/presentation/widgets/favorite_heart_button.dart';
 import '../../domain/entities/movie.dart';
 
-/// ببساطة كدا: Widget صغير قابل لإعادة الاستخدام
-/// بيظهر poster الفيلم + الـ rating + العنوان
-/// بنستخدمه في الـ Home, Search, Favorites
 class MovieCard extends StatelessWidget {
   final Movie movie;
   final VoidCallback? onTap;
   final double width;
   final double height;
 
-  /// Optional tag للـ Hero animation.
-  /// لو الكارت بيظهر أكتر من مرة في نفس الصفحة (فيلم في Popular و Top Rated)
-  /// لازم كل instance يكون ليه tag فريد. خليها null لو مش عايز Hero خالص.
+  /// Must be unique on the screen when the same movie can appear more than once;
+  /// null disables the Hero.
   final String? heroTag;
 
   const MovieCard({
@@ -37,7 +33,6 @@ class MovieCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Poster
             _maybeWrapHero(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
@@ -55,13 +50,11 @@ class MovieCard extends StatelessWidget {
                             )
                           : _buildPlaceholder(),
                     ),
-                    // Favorite heart (top-left)
                     Positioned(
                       top: 6,
                       left: 6,
                       child: FavoriteHeartButton(movie: movie, size: 18),
                     ),
-                    // Rating badge (top-right)
                     Positioned(
                       top: 8,
                       right: 8,
@@ -100,8 +93,7 @@ class MovieCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            // Text area — Flexible عشان لو الـ parent ضيّق الـ title يقطع بـ ellipsis
-            // بدل ما الـ Column يعمل RenderFlex overflow
+            // Flexible so a narrow parent ellipsizes the title instead of overflowing.
             Flexible(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -139,8 +131,6 @@ class MovieCard extends StatelessWidget {
     );
   }
 
-  /// لو heroTag = null مش هنعمل Hero خالص (عشان ما يحصلش duplicate tag).
-  /// لو فيه tag، بنلفه حوالين الـ child.
   Widget _maybeWrapHero({required Widget child}) {
     if (heroTag == null) return child;
     return Hero(tag: heroTag!, child: child);

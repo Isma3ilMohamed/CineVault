@@ -9,9 +9,6 @@ import '../../domain/entities/video.dart';
 import '../../domain/repositories/movie_repository.dart';
 import '../datasources/remote/movie_remote_data_source.dart';
 
-/// ببساطة كدا: ده اللي بينفذ الـ MovieRepository interface
-/// هنا بيحصل التحويل من Exception → Failure
-/// وهنا بيتقرر: هاجيب من API ولا Cache؟
 class MovieRepositoryImpl implements MovieRepository {
   final MovieRemoteDataSource remoteDataSource;
   final NetworkInfo networkInfo;
@@ -145,8 +142,6 @@ class MovieRepositoryImpl implements MovieRepository {
     }
   }
 
-  /// Helper مشترك يمنع الـ duplication
-  /// بيمسك كل الـ exceptions ويحولها لـ failures
   Future<Result<List<Movie>>> _getMoviesList(
     Future<dynamic> Function() fetch,
   ) async {

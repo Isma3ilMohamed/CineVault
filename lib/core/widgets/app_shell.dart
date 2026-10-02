@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../l10n/generated/app_localizations.dart';
 
-/// ببساطة كدا: shell بـ bottom nav — 3 tabs (Home, Favorites, More)
 class AppShell extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
 

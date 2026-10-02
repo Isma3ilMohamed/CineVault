@@ -2,15 +2,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../core/error/exceptions.dart';
 
-/// ببساطة كدا: الـ local store للـ recent searches
-/// بنخزن آخر N queries في shared_preferences كـ `List<String>`
-/// - newest first
-/// - dedupe case-insensitive
-/// - max 10 entries
+/// Stored newest first, de-duplicated case-insensitively, capped at 10 entries.
 abstract class RecentSearchesLocalDataSource {
   Future<List<String>> getRecentSearches();
 
-  /// بيضيف query ويرجع الـ list الجديدة (newest first, max 10)
   Future<List<String>> saveRecentSearch(String query);
 
   Future<void> clearRecentSearches();
@@ -44,7 +39,7 @@ class RecentSearchesLocalDataSourceImpl
     try {
       final current = prefs.getStringList(_key) ?? const <String>[];
 
-      // dedupe case-insensitive — نشيل أي occurrence قديم وبعدين نضيف في الأول
+      // Drop any case-insensitive duplicate so a repeated query moves to the top.
       final filtered = current
           .where((q) => q.toLowerCase() != normalized.toLowerCase())
           .toList();

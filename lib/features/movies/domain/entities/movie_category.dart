@@ -1,9 +1,3 @@
-/// ببساطة كدا: enum للـ categories اللي على الـ home page
-/// كل واحدة بيترجم لـ:
-///  - repository method
-///  - route parameter (slug)
-///  - l10n key (للـ title)
-///  - hero tag prefix
 enum MovieCategory {
   trending,
   popular,
@@ -11,7 +5,7 @@ enum MovieCategory {
   nowPlaying,
   upcoming;
 
-  /// Slug الـ URL — بيتستخدم في /list/:category
+  /// URL slug used in the `/list/:category` route.
   String get slug => switch (this) {
         MovieCategory.trending => 'trending',
         MovieCategory.popular => 'popular',

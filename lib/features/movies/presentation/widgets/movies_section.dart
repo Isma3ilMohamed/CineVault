@@ -3,19 +3,14 @@ import 'package:flutter/material.dart';
 import '../../domain/entities/movie.dart';
 import 'movie_card.dart';
 
-/// Section من الأفلام (horizontal scroll)
-/// بيتستخدم في Home screen لعرض Popular/Top Rated/Upcoming
 class MoviesSection extends StatelessWidget {
   final String title;
   final List<Movie> movies;
   final VoidCallback? onSeeAll;
 
-  /// بناخد الـ tag كمان عشان نبعته للـ details page كـ extra
-  /// وبنبنيه من prefix عشان نتفادى collision لو الفيلم في أكتر من section
   final void Function(Movie movie, String heroTag)? onMovieTap;
 
-  /// Prefix لكل Hero tag في الـ section
-  /// لازم يكون مختلف عن باقي الـ sections في نفس الصفحة
+  /// Must differ from other sections on the same page to avoid Hero tag collisions.
   final String heroTagPrefix;
 
   const MoviesSection({
@@ -32,7 +27,6 @@ class MoviesSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Header
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
@@ -61,7 +55,7 @@ class MoviesSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        // Horizontal list — 290 عشان 2-line titles ترتاح مع text scaling
+        // 290 leaves room for two-line titles under larger text scaling.
         SizedBox(
           height: 290,
           child: ListView.separated(

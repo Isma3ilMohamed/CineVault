@@ -1,15 +1,5 @@
 import '../../domain/entities/movie.dart';
 
-/// ببساطة كدا: ده الـ DTO (Data Transfer Object)
-/// بيستقبل JSON من الـ API ويحوله لـ Entity نقية
-///
-/// ليه مش بنستخدم الـ Entity مباشرة؟
-/// - الـ Entity في Domain ماينفعش تعرف حاجة عن JSON
-/// - لو الـ API اتغير، نغير الـ Model فقط، الـ Entity والـ UI زي ما هم
-///
-/// Compare مع Kee:
-///   - Model هنا = DTO في KMP
-///   - toEntity() = toDomain() في Kee
 class MovieModel {
   final int id;
   final String title;
@@ -74,7 +64,6 @@ class MovieModel {
         'adult': adult,
       };
 
-  /// Convert DTO → Entity (Domain model)
   Movie toEntity() {
     return Movie(
       id: id,
@@ -95,7 +84,6 @@ class MovieModel {
     );
   }
 
-  /// Convert Entity → DTO (لو محتاجين نخزن في cache)
   factory MovieModel.fromEntity(Movie movie) {
     return MovieModel(
       id: movie.id,
@@ -114,8 +102,6 @@ class MovieModel {
   }
 }
 
-/// Wrapper للـ paginated responses من TMDB
-/// TMDB بيرجع: { page, results: [...], total_pages, total_results }
 class MoviesPageResponse {
   final int page;
   final List<MovieModel> results;

@@ -4,15 +4,12 @@ import 'package:flutter/material.dart';
 
 import '../../domain/entities/movie.dart';
 
-/// Big hero carousel في أعلى الـ Home screen
-/// بيعرض أشهر الأفلام بشكل cinematic
 class FeaturedCarousel extends StatelessWidget {
   final List<Movie> movies;
 
-  /// بنبعت الـ heroTag كمان للـ caller عشان يمرره للـ details page
   final void Function(Movie movie, String heroTag)? onMovieTap;
 
-  /// Prefix فريد للـ Hero tag عشان ما يحصلش collision مع باقي الـ cards
+  /// Must be unique on the screen so Hero tags do not collide with other sections.
   final String heroTagPrefix;
 
   const FeaturedCarousel({
@@ -26,7 +23,6 @@ class FeaturedCarousel extends StatelessWidget {
   Widget build(BuildContext context) {
     if (movies.isEmpty) return const SizedBox.shrink();
 
-    // ناخد أول 5 أفلام فقط
     final featured = movies.take(5).toList();
 
     return CarouselSlider.builder(
@@ -52,7 +48,6 @@ class FeaturedCarousel extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          // Backdrop image — ملفوف في Hero للـ cinematic transition للـ details
           Hero(
             tag: heroTag,
             child: movie.fullBackdropUrl != null
@@ -65,7 +60,6 @@ class FeaturedCarousel extends StatelessWidget {
                 : Container(color: Colors.grey[900]),
           ),
 
-          // Gradient overlay للـ readability
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -81,7 +75,6 @@ class FeaturedCarousel extends StatelessWidget {
             ),
           ),
 
-          // Content
           Positioned(
             left: 16,
             right: 16,

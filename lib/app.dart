@@ -12,15 +12,6 @@ import 'features/settings/domain/entities/app_settings.dart';
 import 'features/settings/presentation/cubit/settings_cubit.dart';
 import 'l10n/generated/app_localizations.dart';
 
-/// ببساطة كدا: root widget
-///
-/// مهم: الـ GoRouter بيتعمل مرة واحدة في `initState` ومش بيتعاد.
-/// لو عملناه جوه build، كل BlocBuilder rebuild (theme/locale change)
-/// هيعمل router جديد بنفس الـ GlobalKeys الـ static → duplicate GlobalKey error،
-/// وكمان هيرجع الـ navigation للـ initialLocation ('/home') مع كل تغيير.
-///
-/// الـ pattern: stateful widget يمسك الـ router + key، والـ MaterialApp
-/// بيتـ rebuild بس بقيم theme/locale الجديدة.
 class CineVaultApp extends StatefulWidget {
   const CineVaultApp({super.key});
 
@@ -32,6 +23,8 @@ class _CineVaultAppState extends State<CineVaultApp> {
   final GlobalKey _themeBoundaryKey =
       GlobalKey(debugLabel: 'theme_boundary');
 
+  // Created once, never in build(): rebuilding it on theme/locale change re-creates
+  // its static GlobalKeys (duplicate GlobalKey error) and resets navigation to /home.
   late final GoRouter _router;
 
   @override
@@ -57,11 +50,9 @@ class _CineVaultAppState extends State<CineVaultApp> {
           return MaterialApp.router(
             title: 'CineVault',
             debugShowCheckedModeBanner: false,
-            // Themes
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: settings.themeMode,
-            // Localization
             locale: settings.locale, // null → follows system
             supportedLocales: AppLocalizations.supportedLocales,
             localizationsDelegates: const [
@@ -70,7 +61,6 @@ class _CineVaultAppState extends State<CineVaultApp> {
               GlobalCupertinoLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
             ],
-            // Reuse the same router across rebuilds (stable, keeps nav state)
             routerConfig: _router,
             builder: (context, child) {
               return RepaintBoundary(

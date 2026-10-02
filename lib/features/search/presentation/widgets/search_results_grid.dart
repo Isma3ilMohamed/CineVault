@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../movies/domain/entities/movie.dart';
 import '../../../movies/presentation/widgets/movie_card.dart';
 
-/// ببساطة كدا: 2-col grid للـ search results
-/// - بيسمع الـ scroll و بيضيف SearchLoadMore لما يقرب من الآخر
-/// - بيظهر spinner في الـ footer لو بنحمل المزيد
 class SearchResultsGrid extends StatefulWidget {
   final List<Movie> movies;
   final bool isLoadingMore;
@@ -47,7 +44,6 @@ class _SearchResultsGridState extends State<SearchResultsGrid> {
     if (!_scrollController.hasClients) return;
     final max = _scrollController.position.maxScrollExtent;
     final current = _scrollController.position.pixels;
-    // trigger عند 80% من الـ scroll
     if (current >= max * 0.8 &&
         !widget.isLoadingMore &&
         !widget.hasReachedMax) {

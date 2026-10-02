@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../l10n/generated/app_localizations.dart';
 
-/// ببساطة كدا: قائمة الـ queries السابقة
-/// - onTap: يشغل البحث بالـ query ده
-/// - onClearAll: يمسح كل الـ recents
 class RecentSearchesList extends StatelessWidget {
   final List<String> searches;
   final ValueChanged<String> onTap;

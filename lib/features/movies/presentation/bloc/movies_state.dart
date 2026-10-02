@@ -1,10 +1,5 @@
 part of 'movies_bloc.dart';
 
-/// ببساطة كدا: الـ State دي اللي الـ UI بيرسمها
-/// كل حاجة الـ UI محتاج يعرفها موجودة هنا
-///
-/// استخدمنا sealed class عشان نستفيد من exhaustive checks
-/// في switch statements (زي when في Kotlin)
 sealed class MoviesState extends Equatable {
   const MoviesState();
 
@@ -12,18 +7,14 @@ sealed class MoviesState extends Equatable {
   List<Object?> get props => [];
 }
 
-/// الحالة الابتدائية - الصفحة لسه ما فتحتش
 class MoviesInitial extends MoviesState {
   const MoviesInitial();
 }
 
-/// بنحمل الداتا لأول مرة
 class MoviesLoading extends MoviesState {
   const MoviesLoading();
 }
 
-/// نجحنا - عندنا الداتا
-/// ليه في كذا list هنا؟ عشان الـ Home screen بيعرض 4 sections
 class MoviesLoaded extends MoviesState {
   final List<Movie> popularMovies;
   final List<Movie> topRatedMovies;
@@ -31,7 +22,6 @@ class MoviesLoaded extends MoviesState {
   final List<Movie> nowPlayingMovies;
   final List<Movie> trendingDayMovies;
 
-  /// pagination state for popular movies
   final int popularPage;
   final bool hasReachedMaxPopular;
   final bool isLoadingMore;
@@ -47,8 +37,6 @@ class MoviesLoaded extends MoviesState {
     this.isLoadingMore = false,
   });
 
-  /// Immutable state update pattern
-  /// زي data class copy() في Kotlin
   MoviesLoaded copyWith({
     List<Movie>? popularMovies,
     List<Movie>? topRatedMovies,
@@ -84,7 +72,6 @@ class MoviesLoaded extends MoviesState {
       ];
 }
 
-/// حصل error
 class MoviesError extends MoviesState {
   final String message;
 

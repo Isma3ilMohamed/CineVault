@@ -6,18 +6,8 @@ import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 import '../../../../l10n/generated/app_localizations.dart';
 
-/// ببساطة كدا: modal fullscreen بيعرض YouTube trailer
-///
-/// تحديات الـ YouTube embedding:
-///   - studios كتير بيعطلوا "Allow embedding" على الـ trailers بتاعتهم
-///   - الـ iframe API بيرمي error codes: 101 / 150 / 152
-///   - بعض الـ errors مش بتوصل على الـ stream
-///
-/// الحل:
-///   1. `origin` param → بيفيد في بعض الـ embedding errors
-///   2. listener للـ error stream → لو error ظاهر، نـ swap للـ fallback
-///   3. timeout 6s → لو الـ player ما دخلش `playing` state، نـ swap برضو
-///   4. زر external دائم في الـ header — المستخدم يقدر يخرج لـ YouTube في أي وقت
+/// Studios often disable embedding and some iframe errors never reach the stream,
+/// so a 6s no-playback timeout also triggers the open-in-YouTube fallback.
 class TrailerPlayerModal extends StatefulWidget {
   final String videoKey;
   final String title;
@@ -49,26 +39,23 @@ class _TrailerPlayerModalState extends State<TrailerPlayerModal> {
         showControls: true,
         showFullscreenButton: true,
         strictRelatedVideos: true,
-        // origin بيفيد في بعض الـ embedding cases
+        // Avoids some embedding errors.
         origin: 'https://www.youtube.com',
       ),
     );
 
     _sub = _controller.stream.listen(_onPlayerState);
 
-    // Safety net: لو الـ player ما بدأش يشغل خلال 6 ثواني، نعتبره failed
     _startTimeout = Timer(const Duration(seconds: 6), () {
       if (!_hasStartedPlaying) _setEmbedFailed();
     });
   }
 
   void _onPlayerState(YoutubePlayerValue value) {
-    // بمجرد ما playback يبدأ، بنلغي الـ timeout
     if (value.playerState == PlayerState.playing && !_hasStartedPlaying) {
       _hasStartedPlaying = true;
       _startTimeout?.cancel();
     }
-    // Explicit error من الـ iframe
     if (value.error != YoutubeError.none) {
       _setEmbedFailed();
     }
@@ -91,7 +78,6 @@ class _TrailerPlayerModalState extends State<TrailerPlayerModal> {
     final uri = Uri.parse(
       'https://www.youtube.com/watch?v=${widget.videoKey}',
     );
-    // externalApplication بيفتح YouTube app لو متثبت، YouTube web لو لأ
     await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
@@ -149,7 +135,6 @@ class _TrailerPlayerModalState extends State<TrailerPlayerModal> {
   }
 }
 
-/// UI بديل لما YouTube يمنع embedding
 class _EmbedFailedFallback extends StatelessWidget {
   final VoidCallback onOpen;
 

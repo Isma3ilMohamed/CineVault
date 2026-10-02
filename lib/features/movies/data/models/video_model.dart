@@ -1,7 +1,5 @@
 import '../../domain/entities/video.dart';
 
-/// DTO لـ TMDB videos endpoint
-/// Response: `{ "id": 157336, "results": [{ site, key, type, ... }] }`
 class VideoModel {
   final String id;
   final String key;

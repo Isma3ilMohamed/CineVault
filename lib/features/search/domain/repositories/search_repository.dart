@@ -1,9 +1,6 @@
 import '../../../../core/result/result.dart';
 import '../../../movies/domain/entities/movie.dart';
 
-/// ببساطة كدا: contract بتاع feature الـ Search
-/// - searchMovies: بيرجع نتيجة pagination من الـ API
-/// - recent searches: بيتخزنوا locally
 abstract class SearchRepository {
   Future<Result<List<Movie>>> searchMovies({
     required String query,

@@ -8,8 +8,6 @@ import 'package:cine_vault/features/movies/presentation/bloc/movies_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-/// مثال لـ Bloc testing
-/// ده هيبقى نموذج تكتب عليه بقية الـ tests
 class MockGetPopularMovies extends Mock implements GetPopularMovies {}
 
 class MockMovieRepository extends Mock implements MovieRepository {}

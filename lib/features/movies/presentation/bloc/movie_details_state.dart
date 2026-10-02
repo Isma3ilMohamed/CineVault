@@ -1,7 +1,5 @@
 part of 'movie_details_bloc.dart';
 
-/// ببساطة كدا: كل state ممكن الـ UI يكون فيها
-/// Sealed + Equatable = exhaustive pattern matching + rebuild optimization
 sealed class MovieDetailsState extends Equatable {
   const MovieDetailsState();
 
@@ -22,7 +20,6 @@ final class MovieDetailsLoaded extends MovieDetailsState {
   final List<Movie> similarMovies;
   final List<CastMember> cast;
 
-  /// أفضل YouTube trailer متاح، أو null لو مفيش
   final Video? trailer;
 
   const MovieDetailsLoaded({

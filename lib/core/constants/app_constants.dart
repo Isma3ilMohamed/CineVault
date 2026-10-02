@@ -1,7 +1,5 @@
-/// ببساطة كدا: دي الثوابت الأساسية للتطبيق
-/// زي الـ Constants object في Kotlin
 class AppConstants {
-  AppConstants._(); // private constructor - زي object في Kotlin
+  AppConstants._();
 
   // Cache
   static const Duration cacheValidDuration = Duration(hours: 1);
@@ -21,7 +19,6 @@ class AppConstants {
   static const String profileSize = 'w185';
 }
 
-/// TMDB API specific constants
 class ApiConstants {
   ApiConstants._();
 

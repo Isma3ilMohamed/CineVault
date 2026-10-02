@@ -4,9 +4,6 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../domain/entities/cast_member.dart';
 
-/// ببساطة كدا: card صغيرة للـ cast member
-/// - صورة دائرية (w185 من TMDB)
-/// - الاسم + الشخصية تحت
 class CastCard extends StatelessWidget {
   final CastMember member;
   final double width;

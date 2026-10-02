@@ -15,16 +15,12 @@ import '../widgets/cast_card.dart';
 import '../widgets/movie_card.dart';
 import '../widgets/trailer_player_modal.dart';
 
-/// ببساطة كدا: صفحة تفاصيل الفيلم
-/// بتعرض backdrop كبير بـ parallax + تفاصيل + أفلام شبيهة
-///
-/// الـ Bloc بيتعمل من الـ router ومعاه event اللودينج (anti-pattern لو عملناه هنا
-/// جوة build لأنه هيعيد الطلب مع كل rebuild)
+/// The bloc and its initial load event are created in the router; creating
+/// them in build would refetch on every rebuild.
 class MovieDetailsPage extends StatelessWidget {
   final int movieId;
 
-  /// الـ tag اللي المصدر استخدمه عشان نحقق الـ Hero animation.
-  /// null لو الصفحة اتفتحت من deep link.
+  /// Hero tag used by the source screen; null when opened via deep link.
   final String? heroTag;
 
   const MovieDetailsPage({
@@ -213,8 +209,7 @@ class _LoadedView extends StatelessWidget {
                       separatorBuilder: (_, __) => const SizedBox(width: 12),
                       itemBuilder: (_, i) {
                         final similar = similarMovies[i];
-                        // prefix فريد للـ similar row عشان ما يتعارضش
-                        // مع أي hero tag تاني في الـ route الجاي
+                        // Distinct prefix so tags do not collide with Hero tags on the pushed route.
                         final tag = 'similar_${similar.id}';
                         return MovieCard(
                           movie: similar,
@@ -279,7 +274,6 @@ class _DetailsAppBar extends StatelessWidget {
       ],
     );
 
-    // لو عندنا tag من الـ route، نعمل Hero animation. غير كدا، نعرض عادي.
     final Widget heroBackground =
         heroTag == null ? background : Hero(tag: heroTag!, child: background);
 
@@ -357,8 +351,7 @@ class _PlayTrailerButton extends StatelessWidget {
   }
 }
 
-/// Genre chips — بتقرا من GenresCubit (cached `Map<int, String>`)
-/// لو الـ map فاضي (lookup فشل)، widget بيختفي silently.
+/// Hidden when genres failed to load (empty GenresCubit map).
 class _GenreChips extends StatelessWidget {
   final List<int> genreIds;
 

@@ -9,10 +9,6 @@ import '../../domain/repositories/movie_repository.dart';
 part 'movie_list_event.dart';
 part 'movie_list_state.dart';
 
-/// ببساطة كدا: bloc generic للـ See All pages
-/// - ياخد category (Popular / Top Rated / ...)
-/// - بيـ dispatch للـ repo method المناسبة
-/// - بيعالج pagination + loading more
 class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
   final MovieRepository repository;
   final MovieCategory category;
@@ -26,7 +22,6 @@ class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
     on<MovieListRetried>((_, emit) => _onStarted(const MovieListStarted(), emit));
   }
 
-  /// بنختار الـ repo method حسب الـ category
   Future<Result<List<Movie>>> _fetch(int page) {
     return switch (category) {
       MovieCategory.trending => repository.getTrendingDayMovies(page: page),

@@ -1,7 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-/// ببساطة كدا: ده بيتأكد إن في إنترنت قبل ما نعمل request
-/// الـ Repository بيستخدمه عشان لو مفيش إنترنت يرجع من الكاش
 abstract class NetworkInfo {
   Future<bool> get isConnected;
 }

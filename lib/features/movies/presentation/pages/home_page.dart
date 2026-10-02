@@ -9,14 +9,9 @@ import '../bloc/movies_bloc.dart';
 import '../widgets/featured_carousel.dart';
 import '../widgets/movies_section.dart';
 
-/// ببساطة كدا: ده الـ Home screen
-/// أول حاجة بيفتحها المستخدم
-/// بيعرض carousel + 4 sections من الأفلام
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  /// بنبعت الـ heroTag في الـ extra عشان الـ details page يستخدمه في الـ Hero
-  /// لو الفيلم في أكتر من section، كل card بياخد tag مختلف
   void _openDetails(BuildContext context, Movie movie, String heroTag) {
     context.push('/movie/${movie.id}', extra: {'heroTag': heroTag});
   }
@@ -42,7 +37,6 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildInitial(BuildContext context) {
-    // Auto-trigger loading
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<MoviesBloc>().add(const LoadHomeMovies());
     });
@@ -100,7 +94,6 @@ class HomePage extends StatelessWidget {
       },
       child: CustomScrollView(
         slivers: [
-          // App bar
           SliverAppBar(
             floating: true,
             title: const Text(
@@ -121,7 +114,7 @@ class HomePage extends StatelessWidget {
               ),
             ],
           ),
-          // Carousel — كل section ليه prefix فريد عشان الـ Hero tags ما تتعارضش
+          // Each section uses a unique heroTagPrefix so Hero tags do not collide.
           SliverToBoxAdapter(
             child: FeaturedCarousel(
               movies: state.popularMovies,
@@ -130,7 +123,6 @@ class HomePage extends StatelessWidget {
             ),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 24)),
-          // Sections
           SliverToBoxAdapter(
             child: MoviesSection(
               title: l10n.sectionTrending,

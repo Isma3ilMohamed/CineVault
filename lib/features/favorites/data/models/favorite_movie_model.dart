@@ -1,13 +1,7 @@
 import '../../../movies/data/models/movie_model.dart';
 import '../../../movies/domain/entities/movie.dart';
 
-/// ببساطة كدا: wrapper حول MovieModel مع timestamp
-/// بنخزنها في Hive كـ `Map<String, dynamic>` (دون codegen)
-/// مفتاح الـ box = movieId (int)
-///
-/// ليه مش class كامل في domain؟
-/// عشان الـ Favorites feature من الـ UI angle هو مجرد list من Movie
-/// بتترتب بـ addedAt. الـ timestamp detail للـ data layer بس.
+/// Stored in Hive as a plain map (no codegen), keyed by movieId.
 class FavoriteMovieModel {
   static const String addedAtKey = '_added_at';
 
@@ -19,8 +13,7 @@ class FavoriteMovieModel {
     required this.addedAt,
   });
 
-  /// Convert إلى `Map<String, dynamic>` بنخزنه في Hive
-  /// بنضيف `_added_at` على نفس الـ map بتاع الـ movie
+  /// The movie JSON with `_added_at` merged into the same map.
   Map<String, dynamic> toStorage() {
     return {
       ...movie.toJson(),
@@ -28,8 +21,7 @@ class FavoriteMovieModel {
     };
   }
 
-  /// نقرا من الـ Hive value
-  /// الـ `box<dynamic>` بيرجع `Map<dynamic, dynamic>` فلازم نعمل copy مع cast
+  /// Hive returns `Map<dynamic, dynamic>`; copy to a typed map before parsing.
   factory FavoriteMovieModel.fromStorage(Map<dynamic, dynamic> raw) {
     final normalized = Map<String, dynamic>.from(raw);
     final added = normalized.remove(addedAtKey) as String?;

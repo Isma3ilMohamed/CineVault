@@ -1,7 +1,5 @@
 import '../../domain/entities/genre.dart';
 
-/// DTO للـ TMDB genre endpoint response
-/// Response شكله: `{ "genres": [{ "id": 28, "name": "Action" }, ...] }`
 class GenreModel {
   final int id;
   final String name;
