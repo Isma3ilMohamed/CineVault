@@ -1,0 +1,58 @@
+{
+  "@@locale": "ar",
+
+  "appName": "CineVault",
+
+  "tryAgain": "حاول تاني",
+  "back": "رجوع",
+  "clear": "مسح",
+  "seeAll": "عرض الكل",
+  "errorPrefix": "خطأ: {message}",
+
+  "sectionTrending": "الرائج اليوم",
+  "sectionPopular": "الأكثر شهرة",
+  "sectionTopRated": "الأعلى تقييماً",
+  "sectionNowPlaying": "يُعرض الآن",
+  "sectionUpcoming": "قريباً",
+
+  "detailsOverview": "نبذة",
+  "detailsOverviewNone": "مفيش نبذة متاحة.",
+  "detailsSimilarMovies": "أفلام مشابهة",
+  "detailsCast": "طاقم التمثيل",
+  "playTrailer": "تشغيل العرض الدعائي",
+  "openInYouTube": "افتح في YouTube",
+  "trailerEmbedUnavailable": "ما يمكنش تشغيل العرض الدعائي هنا. افتحه في YouTube.",
+  "detailsInvalidMovieId": "رقم فيلم غير صالح",
+  "detailsVotes": "{count, plural, =0{لا يوجد تصويتات} =1{تصويت واحد} =2{تصويتان} few{{count} تصويتات} many{{count} تصويت} other{{count} تصويت}}",
+
+  "searchHint": "ابحث عن فيلم...",
+  "searchRecent": "عمليات البحث الأخيرة",
+  "searchNothingFound": "مفيش نتائج لـ \"{query}\"",
+  "searchEmptyPrompt": "دور على أي فيلم",
+
+  "favoritesTitle": "المفضلة",
+  "favoritesEmptyTitle": "مفيش أفلام مفضلة لسه",
+  "favoritesEmptyCta": "ابحث عن فيلم",
+
+  "tabHome": "الرئيسية",
+  "tabFavorites": "المفضلة",
+  "tabMore": "المزيد",
+
+  "moreTitle": "المزيد",
+  "moreAppearance": "المظهر",
+  "moreTheme": "الثيم",
+  "moreThemeLight": "فاتح",
+  "moreThemeDark": "داكن",
+  "moreThemeSystem": "حسب النظام",
+  "moreLanguage": "اللغة",
+  "moreLanguageEnglish": "الإنجليزية",
+  "moreLanguageArabic": "العربية",
+  "moreAbout": "عن التطبيق",
+  "moreAboutTmdb": "بيانات الأفلام من TMDB",
+  "moreAboutVersion": "الإصدار {version}",
+
+  "failureNetwork": "مفيش اتصال بالإنترنت",
+  "failureServer": "خطأ في الخادم",
+  "failureUnknown": "حصل خطأ غير متوقع",
+  "failureCache": "خطأ في التخزين"
+}

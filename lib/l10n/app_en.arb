@@ -1,0 +1,79 @@
+{
+  "@@locale": "en",
+
+  "appName": "CineVault",
+  "@appName": { "description": "App name (brand)" },
+
+  "tryAgain": "Try again",
+  "back": "Back",
+  "clear": "Clear",
+  "seeAll": "See All",
+  "errorPrefix": "Error: {message}",
+  "@errorPrefix": {
+    "placeholders": {
+      "message": { "type": "String" }
+    }
+  },
+
+  "sectionTrending": "Trending Today",
+  "sectionPopular": "Popular",
+  "sectionTopRated": "Top Rated",
+  "sectionNowPlaying": "Now Playing",
+  "sectionUpcoming": "Upcoming",
+
+  "detailsOverview": "Overview",
+  "detailsOverviewNone": "No overview available.",
+  "detailsSimilarMovies": "Similar Movies",
+  "detailsCast": "Cast",
+  "playTrailer": "Play Trailer",
+  "openInYouTube": "Open in YouTube",
+  "trailerEmbedUnavailable": "This trailer can't be played here. Watch it on YouTube instead.",
+  "detailsInvalidMovieId": "Invalid movie id",
+  "detailsVotes": "{count, plural, =1{1 vote} other{{count} votes}}",
+  "@detailsVotes": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "searchHint": "Search for a movie...",
+  "searchRecent": "Recent searches",
+  "searchNothingFound": "No results for \"{query}\"",
+  "@searchNothingFound": {
+    "placeholders": {
+      "query": { "type": "String" }
+    }
+  },
+  "searchEmptyPrompt": "Find any movie",
+
+  "favoritesTitle": "Favorites",
+  "favoritesEmptyTitle": "No favorites yet",
+  "favoritesEmptyCta": "Search for a movie",
+
+  "tabHome": "Home",
+  "tabFavorites": "Favorites",
+  "tabMore": "More",
+
+  "moreTitle": "More",
+  "moreAppearance": "Appearance",
+  "moreTheme": "Theme",
+  "moreThemeLight": "Light",
+  "moreThemeDark": "Dark",
+  "moreThemeSystem": "System",
+  "moreLanguage": "Language",
+  "moreLanguageEnglish": "English",
+  "moreLanguageArabic": "Arabic",
+  "moreAbout": "About",
+  "moreAboutTmdb": "Movie data from TMDB",
+  "moreAboutVersion": "Version {version}",
+  "@moreAboutVersion": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+
+  "failureNetwork": "No internet connection",
+  "failureServer": "Server error",
+  "failureUnknown": "Something went wrong",
+  "failureCache": "Storage error"
+}

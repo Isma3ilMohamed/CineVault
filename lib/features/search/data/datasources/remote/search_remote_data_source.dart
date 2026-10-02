@@ -1,0 +1,47 @@
+import 'package:dio/dio.dart';
+
+import '../../../../../core/constants/app_constants.dart';
+import '../../../../../core/error/exceptions.dart';
+import '../../../../movies/data/models/movie_model.dart';
+
+/// ببساطة كدا: الـ search endpoint بيرجع نفس شكل الـ movie list
+/// فبنستخدم MoviesPageResponse من movies feature (cross-feature DTO reuse)
+///
+/// TMDB docs: /search/movie?query=...&page=...
+abstract class SearchRemoteDataSource {
+  Future<MoviesPageResponse> searchMovies({
+    required String query,
+    required int page,
+  });
+}
+
+class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
+  final Dio dio;
+
+  SearchRemoteDataSourceImpl(this.dio);
+
+  @override
+  Future<MoviesPageResponse> searchMovies({
+    required String query,
+    required int page,
+  }) async {
+    try {
+      final response = await dio.get(
+        ApiConstants.searchMovies,
+        queryParameters: {
+          'query': query,
+          'page': page,
+          'language': 'en-US',
+          'include_adult': false,
+        },
+      );
+      return MoviesPageResponse.fromJson(response.data as Map<String, dynamic>);
+    } on ServerException {
+      rethrow;
+    } on NetworkException {
+      rethrow;
+    } catch (e) {
+      throw ServerException(message: 'Search failed: ${e.toString()}');
+    }
+  }
+}

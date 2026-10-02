@@ -1,0 +1,34 @@
+import '../../domain/entities/genre.dart';
+
+/// DTO للـ TMDB genre endpoint response
+/// Response شكله: `{ "genres": [{ "id": 28, "name": "Action" }, ...] }`
+class GenreModel {
+  final int id;
+  final String name;
+
+  const GenreModel({required this.id, required this.name});
+
+  factory GenreModel.fromJson(Map<String, dynamic> json) {
+    return GenreModel(
+      id: json['id'] as int,
+      name: json['name'] as String? ?? '',
+    );
+  }
+
+  Genre toEntity() => Genre(id: id, name: name);
+}
+
+class GenresResponse {
+  final List<GenreModel> genres;
+
+  const GenresResponse({required this.genres});
+
+  factory GenresResponse.fromJson(Map<String, dynamic> json) {
+    return GenresResponse(
+      genres: (json['genres'] as List<dynamic>?)
+              ?.map((e) => GenreModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+    );
+  }
+}

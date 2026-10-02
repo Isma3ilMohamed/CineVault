@@ -1,0 +1,143 @@
+import '../../domain/entities/movie.dart';
+
+/// ببساطة كدا: ده الـ DTO (Data Transfer Object)
+/// بيستقبل JSON من الـ API ويحوله لـ Entity نقية
+///
+/// ليه مش بنستخدم الـ Entity مباشرة؟
+/// - الـ Entity في Domain ماينفعش تعرف حاجة عن JSON
+/// - لو الـ API اتغير، نغير الـ Model فقط، الـ Entity والـ UI زي ما هم
+///
+/// Compare مع Kee:
+///   - Model هنا = DTO في KMP
+///   - toEntity() = toDomain() في Kee
+class MovieModel {
+  final int id;
+  final String title;
+  final String overview;
+  final String? posterPath;
+  final String? backdropPath;
+  final double voteAverage;
+  final int voteCount;
+  final String? releaseDate;
+  final List<int> genreIds;
+  final String originalLanguage;
+  final double popularity;
+  final bool adult;
+
+  MovieModel({
+    required this.id,
+    required this.title,
+    required this.overview,
+    this.posterPath,
+    this.backdropPath,
+    required this.voteAverage,
+    required this.voteCount,
+    this.releaseDate,
+    required this.genreIds,
+    required this.originalLanguage,
+    required this.popularity,
+    required this.adult,
+  });
+
+  factory MovieModel.fromJson(Map<String, dynamic> json) {
+    return MovieModel(
+      id: json['id'] as int,
+      title: json['title'] as String? ?? '',
+      overview: json['overview'] as String? ?? '',
+      posterPath: json['poster_path'] as String?,
+      backdropPath: json['backdrop_path'] as String?,
+      voteAverage: (json['vote_average'] as num?)?.toDouble() ?? 0.0,
+      voteCount: json['vote_count'] as int? ?? 0,
+      releaseDate: json['release_date'] as String?,
+      genreIds: (json['genre_ids'] as List<dynamic>?)
+              ?.map((e) => e as int)
+              .toList() ??
+          [],
+      originalLanguage: json['original_language'] as String? ?? 'en',
+      popularity: (json['popularity'] as num?)?.toDouble() ?? 0.0,
+      adult: json['adult'] as bool? ?? false,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'overview': overview,
+        'poster_path': posterPath,
+        'backdrop_path': backdropPath,
+        'vote_average': voteAverage,
+        'vote_count': voteCount,
+        'release_date': releaseDate,
+        'genre_ids': genreIds,
+        'original_language': originalLanguage,
+        'popularity': popularity,
+        'adult': adult,
+      };
+
+  /// Convert DTO → Entity (Domain model)
+  Movie toEntity() {
+    return Movie(
+      id: id,
+      title: title,
+      overview: overview,
+      posterPath: posterPath,
+      backdropPath: backdropPath,
+      voteAverage: voteAverage,
+      voteCount: voteCount,
+      releaseDate:
+          releaseDate != null && releaseDate!.isNotEmpty
+              ? DateTime.tryParse(releaseDate!)
+              : null,
+      genreIds: genreIds,
+      originalLanguage: originalLanguage,
+      popularity: popularity,
+      adult: adult,
+    );
+  }
+
+  /// Convert Entity → DTO (لو محتاجين نخزن في cache)
+  factory MovieModel.fromEntity(Movie movie) {
+    return MovieModel(
+      id: movie.id,
+      title: movie.title,
+      overview: movie.overview,
+      posterPath: movie.posterPath,
+      backdropPath: movie.backdropPath,
+      voteAverage: movie.voteAverage,
+      voteCount: movie.voteCount,
+      releaseDate: movie.releaseDate?.toIso8601String().split('T').first,
+      genreIds: movie.genreIds,
+      originalLanguage: movie.originalLanguage,
+      popularity: movie.popularity,
+      adult: movie.adult,
+    );
+  }
+}
+
+/// Wrapper للـ paginated responses من TMDB
+/// TMDB بيرجع: { page, results: [...], total_pages, total_results }
+class MoviesPageResponse {
+  final int page;
+  final List<MovieModel> results;
+  final int totalPages;
+  final int totalResults;
+
+  MoviesPageResponse({
+    required this.page,
+    required this.results,
+    required this.totalPages,
+    required this.totalResults,
+  });
+
+  factory MoviesPageResponse.fromJson(Map<String, dynamic> json) {
+    return MoviesPageResponse(
+      page: json['page'] as int? ?? 1,
+      results: (json['results'] as List<dynamic>?)
+              ?.map((e) => MovieModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      totalPages: json['total_pages'] as int? ?? 1,
+      totalResults: json['total_results'] as int? ?? 0,
+    );
+  }
+}
