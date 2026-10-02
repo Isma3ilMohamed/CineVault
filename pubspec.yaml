@@ -6,6 +6,10 @@ version: 1.0.0+1
 environment:
   sdk: ^3.13.0
 
+# Pub workspace: one resolution for the app and every package below.
+# Add new packages here; melos picks them up automatically.
+workspace: []
+
 dependencies:
   flutter:
     sdk: flutter
@@ -61,9 +65,41 @@ dev_dependencies:
   bloc_test: ^9.1.7
   mocktail: ^1.0.4
 
+  # Workspace tooling
+  melos: ^8.6.0
+
 flutter:
   uses-material-design: true
   generate: true
   assets:
     - assets/images/
     - assets/icons/
+
+melos:
+  # The app lives at the workspace root (moves to app/ later); include it.
+  useRootAsPackage: true
+  scripts:
+    format:
+      description: Fail if any Dart file is not formatted.
+      run: dart format --set-exit-if-changed .
+    analyze:
+      description: Analyze the whole workspace with infos treated as failures.
+      run: flutter analyze --fatal-infos
+    test:
+      description: Run every test in the workspace.
+      run: dart run melos run test:dart && dart run melos run test:flutter
+    test:dart:
+      description: Tests of pure Dart packages.
+      exec: dart test
+      packageFilters:
+        dirExists: test
+        flutter: false
+    test:flutter:
+      description: Tests of Flutter packages and the app.
+      exec:
+        command: flutter test
+        # flutter holds a global startup lock; parallel runs just wait on it.
+        concurrency: 1
+      packageFilters:
+        dirExists: test
+        flutter: true
