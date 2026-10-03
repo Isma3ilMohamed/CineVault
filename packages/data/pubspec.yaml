@@ -1,0 +1,26 @@
+name: data
+description: Repository implementations, data sources and DTOs.
+publish_to: none
+version: 0.0.1
+
+environment:
+  sdk: ^3.13.0
+
+resolution: workspace
+
+dependencies:
+  core_result:
+    path: ../core/result
+  dio: ^5.7.0
+  domain:
+    path: ../domain
+  flutter:
+    sdk: flutter
+  hive: ^2.2.3
+  pretty_dio_logger: ^1.4.0
+  shared_preferences: ^2.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.4

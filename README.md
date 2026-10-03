@@ -41,6 +41,7 @@ cine_vault/                     # Workspace root, and (for now) the app itself
 │   │   ├── result/             # core_result: Result, sealed Failure (pure Dart)
 │   │   └── base/               # core_base: EffectEmitter, EventGuard (pure Dart)
 │   │                           #            + BlocEffectListener (widgets.dart)
+│   ├── data/                   # data: repositories, data sources, DTOs (processCall / guard)
 │   ├── domain/                 # domain: entities, repository contracts, use cases (pure Dart)
 │   └── lints/                  # cine_vault_lints: analyzer plugin (not a workspace member)
 ├── config/                     # Per-flavor build config (*.env git-ignored)

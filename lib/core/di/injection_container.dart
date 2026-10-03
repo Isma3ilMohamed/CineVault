@@ -1,24 +1,13 @@
 import 'package:cine_vault/core/config/app_config.dart';
-import 'package:cine_vault/core/network/dio_client.dart';
-import 'package:cine_vault/core/network/network_info.dart';
-import 'package:cine_vault/features/favorites/data/datasources/local/favorites_local_data_source.dart';
-import 'package:cine_vault/features/favorites/data/repositories/favorites_repository_impl.dart';
 import 'package:cine_vault/features/favorites/presentation/bloc/favorites_bloc.dart';
 import 'package:cine_vault/features/favorites/presentation/cubit/favorite_ids_cubit.dart';
-import 'package:cine_vault/features/movies/data/datasources/remote/movie_remote_data_source.dart';
-import 'package:cine_vault/features/movies/data/repositories/movie_repository_impl.dart';
 import 'package:cine_vault/features/movies/presentation/bloc/movie_details_bloc.dart';
 import 'package:cine_vault/features/movies/presentation/bloc/movie_list_bloc.dart';
 import 'package:cine_vault/features/movies/presentation/bloc/movies_bloc.dart';
 import 'package:cine_vault/features/movies/presentation/cubit/genres_cubit.dart';
-import 'package:cine_vault/features/search/data/datasources/local/recent_searches_local_data_source.dart';
-import 'package:cine_vault/features/search/data/datasources/remote/search_remote_data_source.dart';
-import 'package:cine_vault/features/search/data/repositories/search_repository_impl.dart';
 import 'package:cine_vault/features/search/presentation/bloc/search_bloc.dart';
-import 'package:cine_vault/features/settings/data/datasources/local/settings_local_data_source.dart';
-import 'package:cine_vault/features/settings/data/repositories/settings_repository_impl.dart';
 import 'package:cine_vault/features/settings/presentation/cubit/settings_cubit.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:data/data.dart';
 import 'package:domain/domain.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -27,10 +16,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 final GetIt sl = GetIt.instance;
 
 Future<void> initDependencies(AppConfig config) async {
-  sl
-    ..registerSingleton<AppConfig>(config)
-    //! External
-    ..registerLazySingleton(Connectivity.new);
+  sl.registerSingleton<AppConfig>(config);
+
+  //! External
 
   final prefs = await SharedPreferences.getInstance();
   sl.registerLazySingleton<SharedPreferences>(() => prefs);
@@ -40,8 +28,13 @@ Future<void> initDependencies(AppConfig config) async {
   sl.registerLazySingleton<Box<dynamic>>(() => favoritesBox);
 
   //! Core
-  sl.registerLazySingleton(() => DioClient(sl()));
-  sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
+  sl.registerLazySingleton(
+    () => DioClient(
+      baseUrl: config.tmdbBaseUrl,
+      accessToken: config.tmdbAccessToken,
+      enableNetworkLogs: config.enableNetworkLogs,
+    ),
+  );
 
   //! Features - Movies
   // Data sources
@@ -50,9 +43,7 @@ Future<void> initDependencies(AppConfig config) async {
   );
 
   // Repository
-  sl.registerLazySingleton<MovieRepository>(
-    () => MovieRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
-  );
+  sl.registerLazySingleton<MovieRepository>(() => MovieRepositoryImpl(remoteDataSource: sl()));
 
   // Use cases
   sl.registerLazySingleton(() => GetMoviesByCategory(sl()));
@@ -90,7 +81,7 @@ Future<void> initDependencies(AppConfig config) async {
 
   // Repository
   sl.registerLazySingleton<SearchRepository>(
-    () => SearchRepositoryImpl(remoteDataSource: sl(), localDataSource: sl(), networkInfo: sl()),
+    () => SearchRepositoryImpl(remoteDataSource: sl(), localDataSource: sl()),
   );
 
   // Use cases

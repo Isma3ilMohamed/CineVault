@@ -342,11 +342,24 @@ class MovieDetailsRouteData extends GoRouteData {
 - **`injection_container.dart`** في `core` بيعمل import لكل الـ features → `injectable` + module لكل package، والـ composition في `app`.
 - Global cubits متسجلة بطرق مختلفة (`create:` مع lazy singleton، و`.value` مع singleton) → قاعدة واحدة.
 
+### 🧱 الـ Data layer (Phase 4) — زي `processCall` في Kotlin
+```
+DataSource  ── processCall(() => dio.get(...), decode: X.fromJson) ──▶ DTO | throws AppException
+            ── storageCall('read favorites', () => box...)        ──▶ T   | throws CacheException
+Repository  ── guard(() async => (await ds.x()).toEntity())        ──▶ Result<T, Failure>
+```
+- **`sealed AppException`:** `NoInternet` · `Server(statusCode)` · `Parsing` · `Cache` · `Unknown`. التحويل لـ `Failure` بيحصل بـ `switch` بيغطي كل الأنواع (`AppExceptionToFailure`).
+- **`processCall`:**
+  - بيحوّل `DioException` لـ `AppException` في مكان الـ call نفسه.
+  - بيمسك الـ `TypeError` حوالين خطوة الـ `decode` بس (لما الـ JSON ييجي بشكل غير المتوقع)، عشان مايخبيش bugs تانية.
+  - بيحتفظ بالـ stack trace الأصلي بـ `Error.throwWithStackTrace`. ده المقابل لـ `inline` في Kotlin.
+- **`guard`:** أي حاجة مش `AppException` بتتعتبر bug، فبيعمل لها log وبيرجّع `UnknownFailure`، عشان item واحد بايظ مايوقعش الشاشة.
+
 ### ⚠️ Errors
 - `Failure` معمولة `abstract` → **`sealed`** عشان الـ `switch` exhaustive.
 - رسايل الـ Failure **عربي ومتكتبة في الكود** وبتتعرض مباشرة (`failure.message`) → الـ i18n بايظ. الـ presentation تعمل `switch` على نوع الـ Failure وتجيب النص من `AppLocalizations`.
-- try/catch متكرر ×5 في `MovieRepositoryImpl` + `_getMoviesList` بـ `dynamic` → `Future<Result<T>> guard<T>(Future<T> Function())` واحد في `data`.
-- `NetworkInfo.isConnected` قبل كل request — connectivity ≠ internet، وDio بيرمي أصلاً → يتشال.
+- ✅ ~~try/catch متكرر~~ (Phase 4): `processCall` في الـ remote data sources، و`storageCall` في الـ local، و`guard` في الـ repositories، والتلاتة بيستخدموا `sealed AppException` واحدة. الـ repositories نزلت من 353 لـ 169 سطر، ومن غير ولا `try/catch`.
+- ✅ ~~`NetworkInfo.isConnected`~~ (Phase 4): اتشال هو و`connectivity_plus`. انقطاع النت بقى بيتعرف من الـ `DioException` نفسها، وبيتحول لـ `NoInternetException`.
 
 ### 🧹 Readability
 - `Color(0xFFE50914)` متكرر 18 مرة → token في `core/ui`.
@@ -367,7 +380,7 @@ class MovieDetailsRouteData extends GoRouteData {
 | **1** | melos workspace · `core/result` (sealed Failure) · `core/base` (EffectEmitter, EventGuard, BlocEffectListener) + tests | ✅ 18 test في الـ packages · `melos run analyze/test` خضرا |
 | **2** | `lints` package — أول 4 قواعد (content pure · bloc pure · provider only in route · no navigation in features) | ✅ 22 test للـ plugin · الـ 4 قواعد اتجرّبوا end-to-end بـ `dart analyze` على ملف مخالف · الـ workspace نضيف |
 | **3** | `domain` pure Dart · نقل الـ entities · `GetMoviesByCategory` · `GetMovieTrailer` + tests | ✅ `packages/domain` (17 test) · import أي package مش متعرّفة كـ dependency = **error** |
-| **4** | `data` · `guard()` · interceptor بـ `reject` · repo tests | |
+| **4** | `data` · `processCall` / `storageCall` / `guard` · `sealed AppException` · repo tests | ✅ `packages/data` (30 test) · `ErrorInterceptor` و`NetworkInfo` اتشالوا · الـ DTOs و`AppException` داخلية في الـ package |
 | **5** | **`movie_details`** كنموذج كامل بالـ 6 ملفات + bloc test + golden | ده الـ reference لباقي الـ features |
 | **6** | `home` · `movie_list` · `search` · `favorites` · `settings` على نفس النموذج | |
 | **7** | `navigation` typed routes · `injectable` · `app` composition · باقي قواعد الـ lint | `app_router.dart` < 80 سطر |

@@ -11,6 +11,7 @@ environment:
 workspace:
   - packages/core/base
   - packages/core/result
+  - packages/data
   - packages/domain
 
 dependencies:
@@ -25,6 +26,8 @@ dependencies:
     path: packages/core/base
   core_result:
     path: packages/core/result
+  data:
+    path: packages/data
   domain:
     path: packages/domain
 
@@ -34,19 +37,12 @@ dependencies:
   bloc_concurrency: ^0.2.5
   equatable: ^2.0.5
 
-  # Networking (Dio only - Retrofit later if needed)
-  dio: ^5.7.0
-  pretty_dio_logger: ^1.4.0
-
   # Dependency Injection
   get_it: ^8.0.0
 
-  # Local Storage
+  # Local storage instances, opened at startup and handed to packages/data
   shared_preferences: ^2.3.2
-  # Hive: NoSQL key-value store with reactive streams (Phase 5 — favorites)
-  hive: ^2.2.3
   hive_flutter: ^1.1.0
-  path_provider: ^2.1.4
 
   # Navigation
   go_router: ^14.6.1
@@ -60,7 +56,6 @@ dependencies:
 
   # Utils
   intl: ^0.20.2
-  connectivity_plus: ^6.1.0
 
 dev_dependencies:
   flutter_test:
