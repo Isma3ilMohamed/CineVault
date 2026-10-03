@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cine_vault/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:cine_vault/features/settings/presentation/widgets/theme_reveal_controller.dart';
 import 'package:cine_vault/l10n/generated/app_localizations.dart';
+import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -71,8 +72,8 @@ class _ThemeToggleTile extends StatelessWidget {
 
   Future<void> _handleTap(BuildContext context, Offset position) async {
     final cubit = context.read<SettingsCubit>();
-    final isDark = cubit.state.themeMode == ThemeMode.dark;
-    final newMode = isDark ? ThemeMode.light : ThemeMode.dark;
+    final isDark = cubit.state.themeMode == AppThemeMode.dark;
+    final newMode = isDark ? AppThemeMode.light : AppThemeMode.dark;
 
     await ThemeRevealController(boundaryKey).reveal(
       context: context,
@@ -84,8 +85,8 @@ class _ThemeToggleTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final themeMode = context.select<SettingsCubit, ThemeMode>((c) => c.state.themeMode);
-    final isDark = themeMode == ThemeMode.dark;
+    final themeMode = context.select<SettingsCubit, AppThemeMode>((c) => c.state.themeMode);
+    final isDark = themeMode == AppThemeMode.dark;
 
     return _TapPositionDetector(
       onTap: (position) => _handleTap(context, position),
@@ -123,16 +124,16 @@ class _LanguageTiles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final currentLocale = context.select<SettingsCubit, Locale?>((c) => c.state.locale);
+    final currentLanguage = context.select<SettingsCubit, String?>((c) => c.state.languageCode);
 
     // null → system. We show the active language based on what's resolved.
-    final activeCode = currentLocale?.languageCode ?? Localizations.localeOf(context).languageCode;
+    final activeCode = currentLanguage ?? Localizations.localeOf(context).languageCode;
 
     return RadioGroup<String>(
       groupValue: activeCode,
       onChanged: (code) {
         if (code == null) return;
-        unawaited(context.read<SettingsCubit>().setLocale(Locale(code)));
+        unawaited(context.read<SettingsCubit>().setLanguage(code));
       },
       child: Column(
         children: [

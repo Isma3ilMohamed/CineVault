@@ -1,11 +1,10 @@
 import 'dart:async';
 
-import 'package:cine_vault/features/movies/domain/entities/movie.dart';
-import 'package:cine_vault/features/movies/domain/entities/movie_category.dart';
 import 'package:cine_vault/features/movies/presentation/bloc/movies_bloc.dart';
 import 'package:cine_vault/features/movies/presentation/widgets/featured_carousel.dart';
 import 'package:cine_vault/features/movies/presentation/widgets/movies_section.dart';
 import 'package:cine_vault/l10n/generated/app_localizations.dart';
+import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

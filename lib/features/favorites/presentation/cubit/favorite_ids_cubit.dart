@@ -1,8 +1,6 @@
 import 'dart:async';
 
-import 'package:cine_vault/features/favorites/domain/usecases/toggle_favorite.dart';
-import 'package:cine_vault/features/favorites/domain/usecases/watch_favorite_ids.dart';
-import 'package:cine_vault/features/movies/domain/entities/movie.dart';
+import 'package:domain/domain.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FavoriteIdsCubit extends Cubit<Set<int>> {

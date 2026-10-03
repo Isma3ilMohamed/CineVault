@@ -2,12 +2,8 @@ import 'package:cine_vault/core/error/exceptions.dart';
 import 'package:cine_vault/core/network/network_info.dart';
 import 'package:cine_vault/features/movies/data/datasources/remote/movie_remote_data_source.dart';
 import 'package:cine_vault/features/movies/data/models/movie_model.dart';
-import 'package:cine_vault/features/movies/domain/entities/cast_member.dart';
-import 'package:cine_vault/features/movies/domain/entities/genre.dart';
-import 'package:cine_vault/features/movies/domain/entities/movie.dart';
-import 'package:cine_vault/features/movies/domain/entities/video.dart';
-import 'package:cine_vault/features/movies/domain/repositories/movie_repository.dart';
 import 'package:core_result/core_result.dart';
+import 'package:domain/domain.dart';
 
 class MovieRepositoryImpl implements MovieRepository {
   MovieRepositoryImpl({required this.remoteDataSource, required this.networkInfo});

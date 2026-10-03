@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cine_vault/core/extensions/tmdb_display.dart';
 import 'package:cine_vault/features/favorites/presentation/widgets/favorite_heart_button.dart';
-import 'package:cine_vault/features/movies/domain/entities/movie.dart';
+import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 

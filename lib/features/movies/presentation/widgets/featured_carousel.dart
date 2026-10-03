@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cine_vault/features/movies/domain/entities/movie.dart';
+import 'package:cine_vault/core/extensions/tmdb_display.dart';
+import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 
 class FeaturedCarousel extends StatelessWidget {

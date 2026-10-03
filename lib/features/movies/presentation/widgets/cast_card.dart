@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cine_vault/features/movies/domain/entities/cast_member.dart';
+import 'package:cine_vault/core/extensions/tmdb_display.dart';
+import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 

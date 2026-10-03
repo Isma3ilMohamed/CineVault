@@ -11,6 +11,7 @@ environment:
 workspace:
   - packages/core/base
   - packages/core/result
+  - packages/domain
 
 dependencies:
   flutter:
@@ -24,6 +25,8 @@ dependencies:
     path: packages/core/base
   core_result:
     path: packages/core/result
+  domain:
+    path: packages/domain
 
   # State Management
   flutter_bloc: ^8.1.6

@@ -1,4 +1,4 @@
-import 'package:cine_vault/features/movies/domain/entities/cast_member.dart';
+import 'package:domain/domain.dart';
 
 /// Only `cast` is parsed from the credits response; `crew` is ignored.
 class CastMemberModel {

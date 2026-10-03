@@ -1,4 +1,4 @@
-import 'package:cine_vault/features/movies/domain/entities/movie.dart';
+import 'package:domain/domain.dart';
 
 class MovieModel {
   MovieModel({

@@ -1,5 +1,5 @@
-import 'package:cine_vault/features/movies/domain/entities/movie.dart';
 import 'package:cine_vault/features/movies/presentation/widgets/movie_card.dart';
+import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 
 class MoviesSection extends StatelessWidget {

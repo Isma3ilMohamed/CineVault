@@ -1,4 +1,4 @@
-import 'package:cine_vault/features/movies/domain/entities/genre.dart';
+import 'package:domain/domain.dart';
 
 class GenreModel {
   const GenreModel({required this.id, required this.name});

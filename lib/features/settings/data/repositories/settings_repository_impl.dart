@@ -1,9 +1,7 @@
 import 'package:cine_vault/core/error/exceptions.dart';
 import 'package:cine_vault/features/settings/data/datasources/local/settings_local_data_source.dart';
-import 'package:cine_vault/features/settings/domain/entities/app_settings.dart';
-import 'package:cine_vault/features/settings/domain/repositories/settings_repository.dart';
 import 'package:core_result/core_result.dart';
-import 'package:flutter/material.dart';
+import 'package:domain/domain.dart';
 
 class SettingsRepositoryImpl implements SettingsRepository {
   SettingsRepositoryImpl({required this.localDataSource});
@@ -13,7 +11,10 @@ class SettingsRepositoryImpl implements SettingsRepository {
   Future<Result<AppSettings>> getSettings() async {
     try {
       return Ok(
-        AppSettings(themeMode: localDataSource.getThemeMode(), locale: localDataSource.getLocale()),
+        AppSettings(
+          themeMode: localDataSource.getThemeMode(),
+          languageCode: localDataSource.getLanguageCode(),
+        ),
       );
     } on CacheException catch (e) {
       return Err(CacheFailure(message: e.message));
@@ -23,7 +24,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
   }
 
   @override
-  Future<Result<void>> saveThemeMode(ThemeMode mode) async {
+  Future<Result<void>> saveThemeMode(AppThemeMode mode) async {
     try {
       await localDataSource.saveThemeMode(mode);
       return const Ok(null);
@@ -35,9 +36,9 @@ class SettingsRepositoryImpl implements SettingsRepository {
   }
 
   @override
-  Future<Result<void>> saveLocale(Locale? locale) async {
+  Future<Result<void>> saveLanguageCode(String? languageCode) async {
     try {
-      await localDataSource.saveLocale(locale);
+      await localDataSource.saveLanguageCode(languageCode);
       return const Ok(null);
     } on CacheException catch (e) {
       return Err(CacheFailure(message: e.message));

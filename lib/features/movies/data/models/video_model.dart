@@ -1,4 +1,4 @@
-import 'package:cine_vault/features/movies/domain/entities/video.dart';
+import 'package:domain/domain.dart';
 
 class VideoModel {
   const VideoModel({

@@ -3,23 +3,10 @@ import 'package:cine_vault/core/network/dio_client.dart';
 import 'package:cine_vault/core/network/network_info.dart';
 import 'package:cine_vault/features/favorites/data/datasources/local/favorites_local_data_source.dart';
 import 'package:cine_vault/features/favorites/data/repositories/favorites_repository_impl.dart';
-import 'package:cine_vault/features/favorites/domain/repositories/favorites_repository.dart';
-import 'package:cine_vault/features/favorites/domain/usecases/is_favorite.dart';
-import 'package:cine_vault/features/favorites/domain/usecases/toggle_favorite.dart';
-import 'package:cine_vault/features/favorites/domain/usecases/watch_favorite_ids.dart';
-import 'package:cine_vault/features/favorites/domain/usecases/watch_favorites.dart';
 import 'package:cine_vault/features/favorites/presentation/bloc/favorites_bloc.dart';
 import 'package:cine_vault/features/favorites/presentation/cubit/favorite_ids_cubit.dart';
 import 'package:cine_vault/features/movies/data/datasources/remote/movie_remote_data_source.dart';
 import 'package:cine_vault/features/movies/data/repositories/movie_repository_impl.dart';
-import 'package:cine_vault/features/movies/domain/entities/movie_category.dart';
-import 'package:cine_vault/features/movies/domain/repositories/movie_repository.dart';
-import 'package:cine_vault/features/movies/domain/usecases/get_genres.dart';
-import 'package:cine_vault/features/movies/domain/usecases/get_movie_credits.dart';
-import 'package:cine_vault/features/movies/domain/usecases/get_movie_details.dart';
-import 'package:cine_vault/features/movies/domain/usecases/get_movie_videos.dart';
-import 'package:cine_vault/features/movies/domain/usecases/get_popular_movies.dart';
-import 'package:cine_vault/features/movies/domain/usecases/get_similar_movies.dart';
 import 'package:cine_vault/features/movies/presentation/bloc/movie_details_bloc.dart';
 import 'package:cine_vault/features/movies/presentation/bloc/movie_list_bloc.dart';
 import 'package:cine_vault/features/movies/presentation/bloc/movies_bloc.dart';
@@ -27,20 +14,12 @@ import 'package:cine_vault/features/movies/presentation/cubit/genres_cubit.dart'
 import 'package:cine_vault/features/search/data/datasources/local/recent_searches_local_data_source.dart';
 import 'package:cine_vault/features/search/data/datasources/remote/search_remote_data_source.dart';
 import 'package:cine_vault/features/search/data/repositories/search_repository_impl.dart';
-import 'package:cine_vault/features/search/domain/repositories/search_repository.dart';
-import 'package:cine_vault/features/search/domain/usecases/clear_recent_searches.dart';
-import 'package:cine_vault/features/search/domain/usecases/get_recent_searches.dart';
-import 'package:cine_vault/features/search/domain/usecases/save_recent_search.dart';
-import 'package:cine_vault/features/search/domain/usecases/search_movies.dart';
 import 'package:cine_vault/features/search/presentation/bloc/search_bloc.dart';
 import 'package:cine_vault/features/settings/data/datasources/local/settings_local_data_source.dart';
 import 'package:cine_vault/features/settings/data/repositories/settings_repository_impl.dart';
-import 'package:cine_vault/features/settings/domain/repositories/settings_repository.dart';
-import 'package:cine_vault/features/settings/domain/usecases/get_settings.dart';
-import 'package:cine_vault/features/settings/domain/usecases/save_locale.dart';
-import 'package:cine_vault/features/settings/domain/usecases/save_theme_mode.dart';
 import 'package:cine_vault/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:domain/domain.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -160,13 +139,13 @@ Future<void> initDependencies(AppConfig config) async {
   sl.registerLazySingleton<SettingsRepository>(() => SettingsRepositoryImpl(localDataSource: sl()));
   sl.registerLazySingleton(() => GetSettings(sl()));
   sl.registerLazySingleton(() => SaveThemeMode(sl()));
-  sl.registerLazySingleton(() => SaveLocale(sl()));
+  sl.registerLazySingleton(() => SaveLanguage(sl()));
 
   // Awaited so the persisted theme/locale are loaded before the first frame
   final settingsCubit = await SettingsCubit.create(
     getSettings: sl(),
     saveThemeMode: sl(),
-    saveLocale: sl(),
+    saveLanguage: sl(),
   );
   sl.registerSingleton<SettingsCubit>(settingsCubit);
 }

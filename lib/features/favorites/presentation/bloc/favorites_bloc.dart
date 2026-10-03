@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:cine_vault/features/favorites/domain/usecases/watch_favorites.dart';
-import 'package:cine_vault/features/movies/domain/entities/movie.dart';
+import 'package:domain/domain.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

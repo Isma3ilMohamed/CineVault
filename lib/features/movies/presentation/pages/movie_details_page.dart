@@ -1,14 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cine_vault/core/extensions/tmdb_display.dart';
 import 'package:cine_vault/features/favorites/presentation/widgets/favorite_heart_button.dart';
-import 'package:cine_vault/features/movies/domain/entities/cast_member.dart';
-import 'package:cine_vault/features/movies/domain/entities/movie.dart';
-import 'package:cine_vault/features/movies/domain/entities/video.dart';
 import 'package:cine_vault/features/movies/presentation/bloc/movie_details_bloc.dart';
 import 'package:cine_vault/features/movies/presentation/cubit/genres_cubit.dart';
 import 'package:cine_vault/features/movies/presentation/widgets/cast_card.dart';
 import 'package:cine_vault/features/movies/presentation/widgets/movie_card.dart';
 import 'package:cine_vault/features/movies/presentation/widgets/trailer_player_modal.dart';
 import 'package:cine_vault/l10n/generated/app_localizations.dart';
+import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

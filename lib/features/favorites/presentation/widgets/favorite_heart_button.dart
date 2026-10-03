@@ -1,5 +1,5 @@
 import 'package:cine_vault/features/favorites/presentation/cubit/favorite_ids_cubit.dart';
-import 'package:cine_vault/features/movies/domain/entities/movie.dart';
+import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -1,5 +1,5 @@
 import 'package:cine_vault/features/movies/data/models/movie_model.dart';
-import 'package:cine_vault/features/movies/domain/entities/movie.dart';
+import 'package:domain/domain.dart';
 
 /// Stored in Hive as a plain map (no codegen), keyed by movieId.
 class FavoriteMovieModel {

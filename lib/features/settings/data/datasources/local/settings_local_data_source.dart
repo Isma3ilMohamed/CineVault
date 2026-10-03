@@ -1,15 +1,15 @@
 import 'package:cine_vault/core/error/exceptions.dart';
-import 'package:flutter/material.dart';
+import 'package:domain/domain.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Persisted as strings: theme_mode is 'light' | 'dark' | 'system';
-/// locale is a language code, or absent to follow the system.
+/// Persisted as strings: theme_mode is an [AppThemeMode] name ('light' |
+/// 'dark' | 'system'); locale is a language code, or absent to follow the device.
 abstract class SettingsLocalDataSource {
-  ThemeMode getThemeMode();
-  Locale? getLocale();
+  AppThemeMode getThemeMode();
+  String? getLanguageCode();
 
-  Future<void> saveThemeMode(ThemeMode mode);
-  Future<void> saveLocale(Locale? locale);
+  Future<void> saveThemeMode(AppThemeMode mode);
+  Future<void> saveLanguageCode(String? languageCode);
 }
 
 class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
@@ -20,52 +20,41 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
   final SharedPreferences prefs;
 
   @override
-  ThemeMode getThemeMode() {
+  AppThemeMode getThemeMode() {
     try {
       final value = prefs.getString(_themeModeKey);
-      return switch (value) {
-        'light' => ThemeMode.light,
-        'dark' => ThemeMode.dark,
-        'system' => ThemeMode.system,
-        _ => ThemeMode.dark,
-      };
+      return AppThemeMode.values.asNameMap()[value] ?? AppThemeMode.dark;
     } catch (e) {
       throw CacheException(message: 'Failed to read theme mode: $e');
     }
   }
 
   @override
-  Locale? getLocale() {
+  String? getLanguageCode() {
     try {
       final code = prefs.getString(_localeKey);
-      if (code == null || code.isEmpty) return null;
-      return Locale(code);
+      return (code == null || code.isEmpty) ? null : code;
     } catch (e) {
       throw CacheException(message: 'Failed to read locale: $e');
     }
   }
 
   @override
-  Future<void> saveThemeMode(ThemeMode mode) async {
+  Future<void> saveThemeMode(AppThemeMode mode) async {
     try {
-      final value = switch (mode) {
-        ThemeMode.light => 'light',
-        ThemeMode.dark => 'dark',
-        ThemeMode.system => 'system',
-      };
-      await prefs.setString(_themeModeKey, value);
+      await prefs.setString(_themeModeKey, mode.name);
     } catch (e) {
       throw CacheException(message: 'Failed to save theme mode: $e');
     }
   }
 
   @override
-  Future<void> saveLocale(Locale? locale) async {
+  Future<void> saveLanguageCode(String? languageCode) async {
     try {
-      if (locale == null) {
+      if (languageCode == null) {
         await prefs.remove(_localeKey);
       } else {
-        await prefs.setString(_localeKey, locale.languageCode);
+        await prefs.setString(_localeKey, languageCode);
       }
     } catch (e) {
       throw CacheException(message: 'Failed to save locale: $e');

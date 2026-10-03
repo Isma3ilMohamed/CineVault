@@ -1,10 +1,9 @@
 import 'package:cine_vault/core/error/exceptions.dart';
 import 'package:cine_vault/core/network/network_info.dart';
-import 'package:cine_vault/features/movies/domain/entities/movie.dart';
 import 'package:cine_vault/features/search/data/datasources/local/recent_searches_local_data_source.dart';
 import 'package:cine_vault/features/search/data/datasources/remote/search_remote_data_source.dart';
-import 'package:cine_vault/features/search/domain/repositories/search_repository.dart';
 import 'package:core_result/core_result.dart';
+import 'package:domain/domain.dart';
 
 class SearchRepositoryImpl implements SearchRepository {
   SearchRepositoryImpl({

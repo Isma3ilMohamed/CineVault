@@ -1,7 +1,5 @@
-import 'package:cine_vault/features/movies/domain/entities/movie.dart';
-import 'package:cine_vault/features/movies/domain/entities/movie_category.dart';
-import 'package:cine_vault/features/movies/domain/repositories/movie_repository.dart';
 import 'package:core_result/core_result.dart';
+import 'package:domain/domain.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

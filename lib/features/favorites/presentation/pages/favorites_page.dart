@@ -1,7 +1,7 @@
 import 'package:cine_vault/features/favorites/presentation/bloc/favorites_bloc.dart';
-import 'package:cine_vault/features/movies/domain/entities/movie.dart';
 import 'package:cine_vault/features/movies/presentation/widgets/movie_card.dart';
 import 'package:cine_vault/l10n/generated/app_localizations.dart';
+import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
