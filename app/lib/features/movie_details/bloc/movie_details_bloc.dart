@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:cine_vault/core/result/core_result.dart';
+import 'package:cine_vault/data/repositories/movie_repository.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -10,37 +11,26 @@ part 'movie_details_state.dart';
 
 @injectable
 class MovieDetailsBloc extends Bloc<MovieDetailsEvent, MovieDetailsState> {
-  MovieDetailsBloc({
-    @factoryParam required this.movieId,
-    required this.getMovieDetails,
-    required this.getSimilarMovies,
-    required this.getMovieCredits,
-    required this.getMovieTrailer,
-    required this.getGenres,
-  }) : super(const MovieDetailsState.initial()) {
+  MovieDetailsBloc({@factoryParam required this.movieId, required this.movieRepository})
+    : super(const MovieDetailsState.initial()) {
     on<MovieDetailsStarted>((_, emit) => _load(emit));
     on<MovieDetailsRetried>((_, emit) => _load(emit));
   }
 
   final int movieId;
-  final GetMovieDetails getMovieDetails;
-  final GetSimilarMovies getSimilarMovies;
-  final GetMovieCredits getMovieCredits;
-  final GetMovieTrailer getMovieTrailer;
-  final GetGenres getGenres;
+  final MovieRepository movieRepository;
 
   /// Only the details request is critical; similar movies, cast, trailer and
   /// genres fall back to empty/null on failure.
   Future<void> _load(Emitter<MovieDetailsState> emit) async {
     emit(const MovieDetailsState.loading());
 
-    final params = MovieIdParams(movieId: movieId);
     final (details, similar, cast, trailer, genres) = await (
-      getMovieDetails(params),
-      getSimilarMovies(SimilarMoviesParams(movieId: movieId)),
-      getMovieCredits(params),
-      getMovieTrailer(params),
-      getGenres(const NoParams()),
+      movieRepository.getMovieDetails(movieId: movieId),
+      movieRepository.getSimilarMovies(movieId: movieId),
+      movieRepository.getMovieCredits(movieId: movieId),
+      movieRepository.getMovieTrailer(movieId: movieId),
+      movieRepository.getGenres(),
     ).wait;
 
     switch (details) {

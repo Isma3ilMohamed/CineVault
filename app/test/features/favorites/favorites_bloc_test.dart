@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
+import 'package:cine_vault/data/repositories/favorites_repository.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/favorites/bloc/favorites_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,23 +9,23 @@ import 'package:mocktail/mocktail.dart';
 
 import 'fixtures.dart';
 
-class _MockWatchFavorites extends Mock implements WatchFavorites {}
+class _MockFavoritesRepository extends Mock implements FavoritesRepository {}
 
 void main() {
-  late _MockWatchFavorites watchFavorites;
+  late _MockFavoritesRepository repository;
   late StreamController<List<Movie>> storage;
 
   setUp(() {
-    watchFavorites = _MockWatchFavorites();
+    repository = _MockFavoritesRepository();
     storage = StreamController<List<Movie>>();
-    when(() => watchFavorites()).thenAnswer((_) => storage.stream);
+    when(() => repository.watchFavorites()).thenAnswer((_) => storage.stream);
   });
 
   tearDown(() => storage.close());
 
   blocTest<FavoritesBloc, FavoritesState>(
     'follows storage after started',
-    build: () => FavoritesBloc(watchFavorites: watchFavorites),
+    build: () => FavoritesBloc(favoritesRepository: repository),
     act: (bloc) async {
       bloc.add(const FavoritesEvent.started());
       await Future<void>.delayed(Duration.zero);
@@ -39,7 +40,8 @@ void main() {
   );
 
   test('closing the bloc cancels the storage subscription', () async {
-    final bloc = FavoritesBloc(watchFavorites: watchFavorites)..add(const FavoritesEvent.started());
+    final bloc = FavoritesBloc(favoritesRepository: repository)
+      ..add(const FavoritesEvent.started());
     await Future<void>.delayed(Duration.zero);
     expect(storage.hasListener, isTrue);
 

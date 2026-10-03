@@ -38,36 +38,6 @@ import 'package:cine_vault/data/sources/search_remote_data_source.dart'
 import 'package:cine_vault/data/sources/settings_local_data_source.dart'
     as _i250;
 import 'package:cine_vault/domain/domain.dart' as _i227;
-import 'package:cine_vault/domain/usecases/favorites/is_favorite.dart' as _i981;
-import 'package:cine_vault/domain/usecases/favorites/toggle_favorite.dart'
-    as _i417;
-import 'package:cine_vault/domain/usecases/favorites/watch_favorite_ids.dart'
-    as _i903;
-import 'package:cine_vault/domain/usecases/favorites/watch_favorites.dart'
-    as _i641;
-import 'package:cine_vault/domain/usecases/movies/get_genres.dart' as _i996;
-import 'package:cine_vault/domain/usecases/movies/get_movie_credits.dart'
-    as _i1000;
-import 'package:cine_vault/domain/usecases/movies/get_movie_details.dart'
-    as _i988;
-import 'package:cine_vault/domain/usecases/movies/get_movie_trailer.dart'
-    as _i176;
-import 'package:cine_vault/domain/usecases/movies/get_movies_by_category.dart'
-    as _i891;
-import 'package:cine_vault/domain/usecases/movies/get_similar_movies.dart'
-    as _i895;
-import 'package:cine_vault/domain/usecases/search/clear_recent_searches.dart'
-    as _i583;
-import 'package:cine_vault/domain/usecases/search/get_recent_searches.dart'
-    as _i57;
-import 'package:cine_vault/domain/usecases/search/save_recent_search.dart'
-    as _i467;
-import 'package:cine_vault/domain/usecases/search/search_movies.dart' as _i943;
-import 'package:cine_vault/domain/usecases/settings/get_settings.dart' as _i729;
-import 'package:cine_vault/domain/usecases/settings/save_language.dart'
-    as _i692;
-import 'package:cine_vault/domain/usecases/settings/save_theme_mode.dart'
-    as _i59;
 import 'package:cine_vault/features/favorites/bloc/favorites_bloc.dart'
     as _i508;
 import 'package:cine_vault/features/favorites/cubit/favorite_ids_cubit.dart'
@@ -108,7 +78,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i86.FavoritesLocalDataSource>(
       () => _i86.FavoritesLocalDataSourceImpl(gh<_i979.Box<dynamic>>()),
     );
-    gh.lazySingleton<_i227.FavoritesRepository>(
+    gh.lazySingleton<_i271.FavoritesRepository>(
       () => _i147.FavoritesRepositoryImpl(
         localDataSource: gh<_i86.FavoritesLocalDataSource>(),
       ),
@@ -127,124 +97,60 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i460.SharedPreferences>(),
       ),
     );
-    gh.lazySingleton<_i227.SettingsRepository>(
+    gh.lazySingleton<_i733.FavoriteIdsCubit>(
+      () => _i733.FavoriteIdsCubit(
+        favoritesRepository: gh<_i271.FavoritesRepository>(),
+      ),
+    );
+    gh.factory<_i508.FavoritesBloc>(
+      () => _i508.FavoritesBloc(
+        favoritesRepository: gh<_i271.FavoritesRepository>(),
+      ),
+    );
+    gh.lazySingleton<_i263.SettingsRepository>(
       () => _i937.SettingsRepositoryImpl(
         localDataSource: gh<_i250.SettingsLocalDataSource>(),
       ),
     );
     gh.lazySingleton<_i361.Dio>(() => dataModule.dio(gh<_i375.DioClient>()));
-    gh.lazySingleton<_i981.IsFavorite>(
-      () => _i981.IsFavorite(gh<_i271.FavoritesRepository>()),
-    );
-    gh.lazySingleton<_i417.ToggleFavorite>(
-      () => _i417.ToggleFavorite(gh<_i271.FavoritesRepository>()),
-    );
-    gh.lazySingleton<_i903.WatchFavoriteIds>(
-      () => _i903.WatchFavoriteIds(gh<_i271.FavoritesRepository>()),
-    );
-    gh.lazySingleton<_i641.WatchFavorites>(
-      () => _i641.WatchFavorites(gh<_i271.FavoritesRepository>()),
-    );
-    gh.factory<_i508.FavoritesBloc>(
-      () => _i508.FavoritesBloc(watchFavorites: gh<_i227.WatchFavorites>()),
-    );
     gh.lazySingleton<_i244.MovieRemoteDataSource>(
       () => _i244.MovieRemoteDataSourceImpl(gh<_i361.Dio>()),
     );
-    gh.lazySingleton<_i729.GetSettings>(
-      () => _i729.GetSettings(gh<_i263.SettingsRepository>()),
-    );
-    gh.lazySingleton<_i692.SaveLanguage>(
-      () => _i692.SaveLanguage(gh<_i263.SettingsRepository>()),
-    );
-    gh.lazySingleton<_i59.SaveThemeMode>(
-      () => _i59.SaveThemeMode(gh<_i263.SettingsRepository>()),
-    );
-    gh.lazySingleton<_i157.SearchRemoteDataSource>(
-      () => _i157.SearchRemoteDataSourceImpl(gh<_i361.Dio>()),
-    );
-    gh.lazySingleton<_i733.FavoriteIdsCubit>(
-      () => _i733.FavoriteIdsCubit(
-        watchFavoriteIds: gh<_i227.WatchFavoriteIds>(),
-        toggleFavorite: gh<_i227.ToggleFavorite>(),
-      ),
-    );
-    gh.lazySingleton<_i227.MovieRepository>(
+    gh.lazySingleton<_i202.MovieRepository>(
       () => _i609.MovieRepositoryImpl(
         remoteDataSource: gh<_i244.MovieRemoteDataSource>(),
       ),
     );
-    gh.lazySingleton<_i996.GetGenres>(
-      () => _i996.GetGenres(gh<_i202.MovieRepository>()),
+    gh.lazySingleton<_i157.SearchRemoteDataSource>(
+      () => _i157.SearchRemoteDataSourceImpl(gh<_i361.Dio>()),
     );
-    gh.lazySingleton<_i1000.GetMovieCredits>(
-      () => _i1000.GetMovieCredits(gh<_i202.MovieRepository>()),
+    await gh.singletonAsync<_i28.SettingsCubit>(
+      () => settingsModule.settingsCubit(gh<_i263.SettingsRepository>()),
+      preResolve: true,
     );
-    gh.lazySingleton<_i988.GetMovieDetails>(
-      () => _i988.GetMovieDetails(gh<_i202.MovieRepository>()),
+    gh.factory<_i236.HomeBloc>(
+      () => _i236.HomeBloc(movieRepository: gh<_i202.MovieRepository>()),
     );
-    gh.lazySingleton<_i176.GetMovieTrailer>(
-      () => _i176.GetMovieTrailer(gh<_i202.MovieRepository>()),
-    );
-    gh.lazySingleton<_i891.GetMoviesByCategory>(
-      () => _i891.GetMoviesByCategory(gh<_i202.MovieRepository>()),
-    );
-    gh.lazySingleton<_i895.GetSimilarMovies>(
-      () => _i895.GetSimilarMovies(gh<_i202.MovieRepository>()),
+    gh.factoryParam<_i515.MovieListBloc, _i227.MovieCategory, dynamic>(
+      (category, _) => _i515.MovieListBloc(
+        category: category,
+        movieRepository: gh<_i202.MovieRepository>(),
+      ),
     );
     gh.factoryParam<_i901.MovieDetailsBloc, int, dynamic>(
       (movieId, _) => _i901.MovieDetailsBloc(
         movieId: movieId,
-        getMovieDetails: gh<_i227.GetMovieDetails>(),
-        getSimilarMovies: gh<_i227.GetSimilarMovies>(),
-        getMovieCredits: gh<_i227.GetMovieCredits>(),
-        getMovieTrailer: gh<_i227.GetMovieTrailer>(),
-        getGenres: gh<_i227.GetGenres>(),
+        movieRepository: gh<_i202.MovieRepository>(),
       ),
     );
-    gh.lazySingleton<_i227.SearchRepository>(
+    gh.lazySingleton<_i315.SearchRepository>(
       () => _i898.SearchRepositoryImpl(
         remoteDataSource: gh<_i157.SearchRemoteDataSource>(),
         localDataSource: gh<_i626.RecentSearchesLocalDataSource>(),
       ),
     );
-    gh.factory<_i236.HomeBloc>(
-      () =>
-          _i236.HomeBloc(getMoviesByCategory: gh<_i227.GetMoviesByCategory>()),
-    );
-    await gh.singletonAsync<_i28.SettingsCubit>(
-      () => settingsModule.settingsCubit(
-        gh<_i227.GetSettings>(),
-        gh<_i227.SaveThemeMode>(),
-        gh<_i227.SaveLanguage>(),
-      ),
-      preResolve: true,
-    );
-    gh.factoryParam<_i515.MovieListBloc, _i227.MovieCategory, dynamic>(
-      (category, _) => _i515.MovieListBloc(
-        category: category,
-        getMoviesByCategory: gh<_i227.GetMoviesByCategory>(),
-      ),
-    );
-    gh.lazySingleton<_i583.ClearRecentSearches>(
-      () => _i583.ClearRecentSearches(gh<_i315.SearchRepository>()),
-    );
-    gh.lazySingleton<_i57.GetRecentSearches>(
-      () => _i57.GetRecentSearches(gh<_i315.SearchRepository>()),
-    );
-    gh.lazySingleton<_i467.SaveRecentSearch>(
-      () => _i467.SaveRecentSearch(gh<_i315.SearchRepository>()),
-    );
-    gh.lazySingleton<_i943.SearchMovies>(
-      () => _i943.SearchMovies(gh<_i315.SearchRepository>()),
-    );
     gh.factory<_i719.SearchBloc>(
-      () => _i719.SearchBloc(
-        searchMovies: gh<_i227.SearchMovies>(),
-        getRecentSearches: gh<_i227.GetRecentSearches>(),
-        saveRecentSearch: gh<_i227.SaveRecentSearch>(),
-        clearRecentSearches: gh<_i227.ClearRecentSearches>(),
-      ),
+      () => _i719.SearchBloc(searchRepository: gh<_i315.SearchRepository>()),
     );
     return this;
   }

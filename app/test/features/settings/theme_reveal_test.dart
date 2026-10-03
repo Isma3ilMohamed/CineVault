@@ -1,5 +1,6 @@
 import 'package:cine_vault/core/result/core_result.dart';
 import 'package:cine_vault/core/ui.dart';
+import 'package:cine_vault/data/repositories/settings_repository.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/settings/settings.dart';
 import 'package:cine_vault/features/settings/view/theme_reveal/theme_reveal_overlay.dart';
@@ -9,19 +10,16 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-class _MockSaveThemeMode extends Mock implements SaveThemeMode {}
-
-class _MockSaveLanguage extends Mock implements SaveLanguage {}
+class _MockSettingsRepository extends Mock implements SettingsRepository {}
 
 void main() {
-  setUpAll(() => registerFallbackValue(const SaveThemeModeParams(mode: AppThemeMode.dark)));
+  setUpAll(() => registerFallbackValue(AppThemeMode.dark));
 
   Future<SettingsCubit> pumpSettings(WidgetTester tester, {required bool withBoundary}) async {
-    final saveThemeMode = _MockSaveThemeMode();
-    when(() => saveThemeMode(any())).thenAnswer((_) async => const Ok(null));
+    final repository = _MockSettingsRepository();
+    when(() => repository.saveThemeMode(any())).thenAnswer((_) async => const Ok(null));
     final cubit = SettingsCubit(
-      saveThemeMode: saveThemeMode,
-      saveLanguage: _MockSaveLanguage(),
+      settingsRepository: repository,
       initial: const AppSettings.defaults(),
     );
     await tester.pumpWidget(

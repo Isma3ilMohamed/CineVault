@@ -1,4 +1,4 @@
-import 'package:cine_vault/domain/domain.dart';
+import 'package:cine_vault/data/repositories/settings_repository.dart';
 import 'package:cine_vault/features/settings/cubit/settings_cubit.dart';
 import 'package:injectable/injectable.dart';
 
@@ -9,13 +9,6 @@ abstract class SettingsModule {
   /// locale instead of flashing the defaults.
   @preResolve
   @singleton
-  Future<SettingsCubit> settingsCubit(
-    GetSettings getSettings,
-    SaveThemeMode saveThemeMode,
-    SaveLanguage saveLanguage,
-  ) => SettingsCubit.create(
-    getSettings: getSettings,
-    saveThemeMode: saveThemeMode,
-    saveLanguage: saveLanguage,
-  );
+  Future<SettingsCubit> settingsCubit(SettingsRepository settingsRepository) =>
+      SettingsCubit.create(settingsRepository: settingsRepository);
 }

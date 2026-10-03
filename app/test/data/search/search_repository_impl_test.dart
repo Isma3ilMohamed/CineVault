@@ -23,7 +23,7 @@ void main() {
   });
 
   test('a blank query returns no results without calling the API', () async {
-    final result = await repository.searchMovies(query: '   ', page: 1);
+    final result = await repository.searchMovies(query: '   ');
 
     expect(result.valueOrNull, isEmpty);
     verifyZeroInteractions(remote);
@@ -34,7 +34,7 @@ void main() {
       (_) async => MoviesPageResponse(page: 1, results: const [], totalPages: 1, totalResults: 0),
     );
 
-    await repository.searchMovies(query: '  dune ', page: 1);
+    await repository.searchMovies(query: '  dune ');
 
     verify(() => remote.searchMovies(query: 'dune', page: 1)).called(1);
   });

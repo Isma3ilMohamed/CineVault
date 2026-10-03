@@ -1,5 +1,6 @@
 import 'package:cine_vault/core/result/core_result.dart';
 import 'package:cine_vault/data/error/guard.dart';
+import 'package:cine_vault/data/repositories/search_repository.dart';
 import 'package:cine_vault/data/sources/recent_searches_local_data_source.dart';
 import 'package:cine_vault/data/sources/search_remote_data_source.dart';
 import 'package:cine_vault/domain/domain.dart';
@@ -12,7 +13,7 @@ class SearchRepositoryImpl implements SearchRepository {
   final RecentSearchesLocalDataSource localDataSource;
 
   @override
-  Future<Result<List<Movie>>> searchMovies({required String query, required int page}) {
+  Future<Result<List<Movie>>> searchMovies({required String query, int page = 1}) {
     final trimmed = query.trim();
     if (trimmed.isEmpty) return Future.value(const Ok(<Movie>[]));
 

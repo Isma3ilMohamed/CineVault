@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:cine_vault/core/result/core_result.dart';
+import 'package:cine_vault/data/repositories/movie_repository.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/movie_list/bloc/movie_list_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,22 +10,20 @@ import 'package:mocktail/mocktail.dart';
 
 import 'fixtures.dart';
 
-class _MockGetMoviesByCategory extends Mock implements GetMoviesByCategory {}
+class _MockMovieRepository extends Mock implements MovieRepository {}
 
 void main() {
-  late _MockGetMoviesByCategory getMovies;
+  late _MockMovieRepository repository;
 
-  setUpAll(
-    () => registerFallbackValue(const MoviesByCategoryParams(category: MovieCategory.popular)),
-  );
+  setUpAll(() => registerFallbackValue(MovieCategory.popular));
 
-  setUp(() => getMovies = _MockGetMoviesByCategory());
+  setUp(() => repository = _MockMovieRepository());
 
   MovieListBloc build() =>
-      MovieListBloc(category: MovieCategory.topRated, getMoviesByCategory: getMovies);
+      MovieListBloc(category: MovieCategory.topRated, movieRepository: repository);
 
   void stubPage(int page, Result<List<Movie>> result) =>
-      when(() => getMovies(MoviesByCategoryParams(category: MovieCategory.topRated, page: page)))
+      when(() => repository.getMoviesByCategory(MovieCategory.topRated, page: page))
           .thenAnswer((_) async => result);
 
   blocTest<MovieListBloc, MovieListState>(
@@ -74,7 +73,7 @@ void main() {
 
   test('extra load-more requests while a page is loading are dropped', () async {
     final page2 = Completer<Result<List<Movie>>>();
-    when(() => getMovies(const MoviesByCategoryParams(category: MovieCategory.topRated, page: 2)))
+    when(() => repository.getMoviesByCategory(MovieCategory.topRated, page: 2))
         .thenAnswer((_) => page2.future);
     final bloc = build()
       ..emit(MovieListState.loaded(movies: [movie(1)], page: 1, hasReachedMax: false))
@@ -85,7 +84,7 @@ void main() {
     page2.complete(Ok([movie(2)]));
     await Future<void>.delayed(Duration.zero);
 
-    verify(() => getMovies(any())).called(1);
+    verify(() => repository.getMoviesByCategory(any(), page: any(named: 'page'))).called(1);
     expect(bloc.state, isA<MovieListLoaded>().having((s) => s.page, 'page', 2));
     await bloc.close();
   });

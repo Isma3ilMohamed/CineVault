@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:cine_vault/core/result/core_result.dart';
+import 'package:cine_vault/data/repositories/search_repository.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -19,13 +20,8 @@ part 'search_state.dart';
 /// Typing is debounced with a cancellable [Timer] before it becomes a request.
 @injectable
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
-  SearchBloc({
-    required this.searchMovies,
-    required this.getRecentSearches,
-    required this.saveRecentSearch,
-    required this.clearRecentSearches,
-    @ignoreParam this._debounce = _defaultDebounce,
-  }) : super(const SearchState.idle()) {
+  SearchBloc({required this.searchRepository, @ignoreParam this._debounce = _defaultDebounce})
+    : super(const SearchState.idle()) {
     on<SearchStarted>((_, emit) => _emitIdleWithRecents(emit));
     on<SearchQueryChanged>(_onQueryChanged);
     on<SearchRequested>(_onRequested, transformer: restartable());
@@ -41,10 +37,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   static const _defaultDebounce = Duration(milliseconds: 400);
   static const _minQueryLength = 2;
 
-  final SearchMovies searchMovies;
-  final GetRecentSearches getRecentSearches;
-  final SaveRecentSearch saveRecentSearch;
-  final ClearRecentSearches clearRecentSearches;
+  final SearchRepository searchRepository;
   final Duration _debounce;
 
   Timer? _debounceTimer;
@@ -73,7 +66,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     }
 
     emit(SearchState.loading(query: query));
-    final result = await searchMovies(SearchParams(query: query));
+    final result = await searchRepository.searchMovies(query: query);
 
     // Cancelled by a newer request while awaiting: drop the stale result.
     if (emit.isDone) return;
@@ -88,7 +81,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
               : SearchState.loaded(query: query, results: movies, page: 1, hasReachedMax: false),
         );
         // Saving a recent is best-effort; a local storage failure is ignored.
-        await saveRecentSearch(SaveRecentSearchParams(query: query));
+        await searchRepository.saveRecentSearch(query);
     }
   }
 
@@ -100,7 +93,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     emit(loading);
 
     final nextPage = current.page + 1;
-    final result = await searchMovies(SearchParams(query: current.query, page: nextPage));
+    final result = await searchRepository.searchMovies(query: current.query, page: nextPage);
 
     // A new search (or clear) happened while loading: don't resurrect old results.
     if (!identical(state, loading)) return;
@@ -123,12 +116,12 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     RecentSearchesCleared event,
     Emitter<SearchState> emit,
   ) async {
-    await clearRecentSearches(const NoParams());
+    await searchRepository.clearRecentSearches();
     if (state is SearchIdle) emit(const SearchState.idle());
   }
 
   Future<void> _emitIdleWithRecents(Emitter<SearchState> emit) async {
-    final result = await getRecentSearches(const NoParams());
+    final result = await searchRepository.getRecentSearches();
     if (emit.isDone) return;
     emit(SearchState.idle(recentSearches: result.getOrElse(() => const <String>[])));
   }

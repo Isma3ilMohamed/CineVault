@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:cine_vault/data/repositories/favorites_repository.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:injectable/injectable.dart';
 
@@ -10,9 +11,8 @@ import 'package:injectable/injectable.dart';
 /// any screen updates the hearts on every other screen.
 @lazySingleton
 class FavoriteIdsCubit extends Cubit<Set<int>> {
-  FavoriteIdsCubit({required this.watchFavoriteIds, required this.toggleFavorite})
-    : super(const <int>{}) {
-    _subscription = watchFavoriteIds().listen(
+  FavoriteIdsCubit({required this.favoritesRepository}) : super(const <int>{}) {
+    _subscription = favoritesRepository.watchFavoriteIds().listen(
       emit,
       onError: (_) {
         // Keep the last known ids.
@@ -20,8 +20,7 @@ class FavoriteIdsCubit extends Cubit<Set<int>> {
     );
   }
 
-  final WatchFavoriteIds watchFavoriteIds;
-  final ToggleFavorite toggleFavorite;
+  final FavoritesRepository favoritesRepository;
 
   StreamSubscription<Set<int>>? _subscription;
 
@@ -30,7 +29,7 @@ class FavoriteIdsCubit extends Cubit<Set<int>> {
   Future<void> toggle(Movie movie) async {
     final ids = state;
     emit(ids.contains(movie.id) ? ids.difference({movie.id}) : ids.union({movie.id}));
-    await toggleFavorite(ToggleFavoriteParams(movie: movie));
+    await favoritesRepository.toggleFavorite(movie);
   }
 
   @override

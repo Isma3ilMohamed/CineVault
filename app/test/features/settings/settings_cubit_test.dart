@@ -1,64 +1,49 @@
 import 'package:cine_vault/core/result/core_result.dart';
+import 'package:cine_vault/data/repositories/settings_repository.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/settings/settings.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-class _MockGetSettings extends Mock implements GetSettings {}
-
-class _MockSaveThemeMode extends Mock implements SaveThemeMode {}
-
-class _MockSaveLanguage extends Mock implements SaveLanguage {}
+class _MockSettingsRepository extends Mock implements SettingsRepository {}
 
 void main() {
-  late _MockGetSettings getSettings;
-  late _MockSaveThemeMode saveThemeMode;
-  late _MockSaveLanguage saveLanguage;
+  late _MockSettingsRepository repository;
 
-  setUpAll(() {
-    registerFallbackValue(const NoParams());
-    registerFallbackValue(const SaveThemeModeParams(mode: AppThemeMode.dark));
-    registerFallbackValue(const SaveLanguageParams(languageCode: null));
-  });
+  setUpAll(() => registerFallbackValue(AppThemeMode.dark));
 
   setUp(() {
-    getSettings = _MockGetSettings();
-    saveThemeMode = _MockSaveThemeMode();
-    saveLanguage = _MockSaveLanguage();
-    when(() => saveThemeMode(any())).thenAnswer((_) async => const Ok(null));
-    when(() => saveLanguage(any())).thenAnswer((_) async => const Ok(null));
+    repository = _MockSettingsRepository();
+    when(() => repository.saveThemeMode(any())).thenAnswer((_) async => const Ok(null));
+    when(() => repository.saveLanguageCode(any())).thenAnswer((_) async => const Ok(null));
   });
 
-  Future<SettingsCubit> create() => SettingsCubit.create(
-    getSettings: getSettings,
-    saveThemeMode: saveThemeMode,
-    saveLanguage: saveLanguage,
-  );
+  Future<SettingsCubit> create() => SettingsCubit.create(settingsRepository: repository);
 
   test('create starts from the saved settings, or the defaults if they fail', () async {
-    when(() => getSettings(any())).thenAnswer(
+    when(() => repository.getSettings()).thenAnswer(
       (_) async => const Ok(AppSettings(themeMode: AppThemeMode.light, languageCode: 'ar')),
     );
     expect((await create()).state.languageCode, 'ar');
 
-    when(() => getSettings(any()))
+    when(() => repository.getSettings())
         .thenAnswer((_) async => const Err(CacheFailure(message: 'corrupt')));
     expect((await create()).state, const AppSettings.defaults());
   });
 
   test('setThemeMode updates and saves, and skips saving the same mode', () async {
-    when(() => getSettings(any())).thenAnswer((_) async => const Ok(AppSettings.defaults()));
+    when(() => repository.getSettings()).thenAnswer((_) async => const Ok(AppSettings.defaults()));
     final cubit = await create();
 
     await cubit.setThemeMode(AppThemeMode.light);
     await cubit.setThemeMode(AppThemeMode.light);
 
     expect(cubit.state.themeMode, AppThemeMode.light);
-    verify(() => saveThemeMode(const SaveThemeModeParams(mode: AppThemeMode.light))).called(1);
+    verify(() => repository.saveThemeMode(AppThemeMode.light)).called(1);
   });
 
   test('setLanguage(null) follows the device language', () async {
-    when(() => getSettings(any())).thenAnswer(
+    when(() => repository.getSettings()).thenAnswer(
       (_) async => const Ok(AppSettings(themeMode: AppThemeMode.dark, languageCode: 'ar')),
     );
     final cubit = await create();
@@ -66,6 +51,6 @@ void main() {
     await cubit.setLanguage(null);
 
     expect(cubit.state.languageCode, isNull);
-    verify(() => saveLanguage(const SaveLanguageParams(languageCode: null))).called(1);
+    verify(() => repository.saveLanguageCode(null)).called(1);
   });
 }

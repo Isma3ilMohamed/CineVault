@@ -1,6 +1,7 @@
 import 'package:cine_vault/core/result/core_result.dart';
 import 'package:cine_vault/data/error/guard.dart';
 import 'package:cine_vault/data/models/favorite_movie_model.dart';
+import 'package:cine_vault/data/repositories/favorites_repository.dart';
 import 'package:cine_vault/data/sources/favorites_local_data_source.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:injectable/injectable.dart';

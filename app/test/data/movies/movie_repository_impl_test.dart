@@ -41,7 +41,7 @@ void main() {
       ),
     );
 
-    final result = await repository.getPopularMovies(page: 2);
+    final result = await repository.getMoviesByCategory(MovieCategory.popular, page: 2);
 
     expect(result.valueOrNull?.map((m) => m.id), [1, 2]);
     expect(result.valueOrNull?.first.title, 'Movie 1');
@@ -70,7 +70,7 @@ void main() {
 
     expect((await repository.getMovieDetails(movieId: 7)).failureOrNull, isA<NetworkFailure>());
     expect(
-      (await repository.getTopRatedMovies(page: 1)).failureOrNull,
+      (await repository.getMoviesByCategory(MovieCategory.topRated)).failureOrNull,
       const ServerFailure(message: 'Invalid API key', statusCode: 401),
     );
   });

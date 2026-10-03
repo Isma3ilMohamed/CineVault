@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:cine_vault/data/repositories/settings_repository.dart';
 import 'package:cine_vault/domain/domain.dart';
 
 /// App-wide theme and language. One instance, provided above MaterialApp,
@@ -10,26 +11,16 @@ import 'package:cine_vault/domain/domain.dart';
 /// For the circular theme reveal, [setThemeMode] must be called only after the
 /// old-theme snapshot overlay is shown, so the rebuild happens underneath it.
 class SettingsCubit extends Cubit<AppSettings> {
-  SettingsCubit({
-    required this.saveThemeMode,
-    required this.saveLanguage,
-    required AppSettings initial,
-  }) : super(initial);
+  SettingsCubit({required this.settingsRepository, required AppSettings initial}) : super(initial);
 
-  final SaveThemeMode saveThemeMode;
-  final SaveLanguage saveLanguage;
+  final SettingsRepository settingsRepository;
 
   /// Loads persisted settings before runApp so the first frame already uses
   /// the saved theme and locale instead of flashing the defaults.
-  static Future<SettingsCubit> create({
-    required GetSettings getSettings,
-    required SaveThemeMode saveThemeMode,
-    required SaveLanguage saveLanguage,
-  }) async {
-    final result = await getSettings(const NoParams());
+  static Future<SettingsCubit> create({required SettingsRepository settingsRepository}) async {
+    final result = await settingsRepository.getSettings();
     return SettingsCubit(
-      saveThemeMode: saveThemeMode,
-      saveLanguage: saveLanguage,
+      settingsRepository: settingsRepository,
       initial: result.getOrElse(() => const AppSettings.defaults()),
     );
   }
@@ -37,13 +28,13 @@ class SettingsCubit extends Cubit<AppSettings> {
   Future<void> setThemeMode(AppThemeMode mode) async {
     if (mode == state.themeMode) return;
     emit(state.copyWith(themeMode: mode));
-    await saveThemeMode(SaveThemeModeParams(mode: mode));
+    await settingsRepository.saveThemeMode(mode);
   }
 
   /// A null [languageCode] follows the device language.
   Future<void> setLanguage(String? languageCode) async {
     if (languageCode == state.languageCode) return;
     emit(state.copyWith(languageCode: languageCode, followDeviceLanguage: languageCode == null));
-    await saveLanguage(SaveLanguageParams(languageCode: languageCode));
+    await settingsRepository.saveLanguageCode(languageCode);
   }
 }

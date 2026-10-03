@@ -1,9 +1,11 @@
 import 'package:cine_vault/core/result/core_result.dart';
 import 'package:cine_vault/data/error/guard.dart';
 import 'package:cine_vault/data/models/movie_model.dart';
+import 'package:cine_vault/data/repositories/movie_repository.dart';
 import 'package:cine_vault/data/sources/movie_remote_data_source.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:injectable/injectable.dart';
+import 'package:meta/meta.dart';
 
 @LazySingleton(as: MovieRepository)
 class MovieRepositoryImpl implements MovieRepository {
@@ -11,27 +13,19 @@ class MovieRepositoryImpl implements MovieRepository {
   final MovieRemoteDataSource remoteDataSource;
 
   @override
-  Future<Result<List<Movie>>> getPopularMovies({required int page}) =>
-      _movies(() => remoteDataSource.getPopularMovies(page: page));
+  Future<Result<List<Movie>>> getMoviesByCategory(MovieCategory category, {int page = 1}) =>
+      _movies(
+        () => switch (category) {
+          MovieCategory.trending => remoteDataSource.getTrendingDayMovies(page: page),
+          MovieCategory.popular => remoteDataSource.getPopularMovies(page: page),
+          MovieCategory.topRated => remoteDataSource.getTopRatedMovies(page: page),
+          MovieCategory.nowPlaying => remoteDataSource.getNowPlayingMovies(page: page),
+          MovieCategory.upcoming => remoteDataSource.getUpcomingMovies(page: page),
+        },
+      );
 
   @override
-  Future<Result<List<Movie>>> getTopRatedMovies({required int page}) =>
-      _movies(() => remoteDataSource.getTopRatedMovies(page: page));
-
-  @override
-  Future<Result<List<Movie>>> getUpcomingMovies({required int page}) =>
-      _movies(() => remoteDataSource.getUpcomingMovies(page: page));
-
-  @override
-  Future<Result<List<Movie>>> getNowPlayingMovies({required int page}) =>
-      _movies(() => remoteDataSource.getNowPlayingMovies(page: page));
-
-  @override
-  Future<Result<List<Movie>>> getTrendingDayMovies({required int page}) =>
-      _movies(() => remoteDataSource.getTrendingDayMovies(page: page));
-
-  @override
-  Future<Result<List<Movie>>> getSimilarMovies({required int movieId, required int page}) =>
+  Future<Result<List<Movie>>> getSimilarMovies({required int movieId, int page = 1}) =>
       _movies(() => remoteDataSource.getSimilarMovies(movieId: movieId, page: page));
 
   @override
@@ -52,10 +46,20 @@ class MovieRepositoryImpl implements MovieRepository {
   });
 
   @override
-  Future<Result<List<Video>>> getMovieVideos({required int movieId}) => guard(() async {
+  Future<Result<Video?>> getMovieTrailer({required int movieId}) => guard(() async {
     final response = await remoteDataSource.getMovieVideos(movieId: movieId);
-    return response.results.map((v) => v.toEntity()).toList();
+    return pickTrailer(response.results.map((v) => v.toEntity()).toList());
   });
+
+  /// Only YouTube videos with a key are playable. Preference: an official
+  /// trailer, then any trailer, then any video.
+  @visibleForTesting
+  static Video? pickTrailer(List<Video> videos) {
+    final playable = videos.where((v) => v.isYouTube && v.key.isNotEmpty).toList();
+    return playable.where((v) => v.isTrailer && v.official).firstOrNull ??
+        playable.where((v) => v.isTrailer).firstOrNull ??
+        playable.firstOrNull;
+  }
 
   Future<Result<List<Movie>>> _movies(Future<MoviesPageResponse> Function() fetch) =>
       guard(() async => (await fetch()).results.map((m) => m.toEntity()).toList());

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cine_vault/core/result/core_result.dart';
+import 'package:cine_vault/data/repositories/search_repository.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/search/bloc/search_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,41 +9,18 @@ import 'package:mocktail/mocktail.dart';
 
 import 'fixtures.dart';
 
-class _MockSearchMovies extends Mock implements SearchMovies {}
-
-class _MockGetRecentSearches extends Mock implements GetRecentSearches {}
-
-class _MockSaveRecentSearch extends Mock implements SaveRecentSearch {}
-
-class _MockClearRecentSearches extends Mock implements ClearRecentSearches {}
+class _MockSearchRepository extends Mock implements SearchRepository {}
 
 void main() {
-  late _MockSearchMovies searchMovies;
-  late _MockGetRecentSearches getRecentSearches;
-  late _MockSaveRecentSearch saveRecentSearch;
+  late _MockSearchRepository repository;
   late SearchBloc bloc;
 
-  setUpAll(() {
-    registerFallbackValue(const SearchParams(query: ''));
-    registerFallbackValue(const SaveRecentSearchParams(query: ''));
-    registerFallbackValue(const NoParams());
-  });
-
   setUp(() {
-    searchMovies = _MockSearchMovies();
-    getRecentSearches = _MockGetRecentSearches();
-    saveRecentSearch = _MockSaveRecentSearch();
+    repository = _MockSearchRepository();
+    when(() => repository.getRecentSearches()).thenAnswer((_) async => const Ok(['batman']));
+    when(() => repository.saveRecentSearch(any())).thenAnswer((_) async => const Ok(null));
 
-    when(() => getRecentSearches(any())).thenAnswer((_) async => const Ok(['batman']));
-    when(() => saveRecentSearch(any())).thenAnswer((_) async => const Ok(null));
-
-    bloc = SearchBloc(
-      searchMovies: searchMovies,
-      getRecentSearches: getRecentSearches,
-      saveRecentSearch: saveRecentSearch,
-      clearRecentSearches: _MockClearRecentSearches(),
-      debounce: Duration.zero,
-    );
+    bloc = SearchBloc(searchRepository: repository, debounce: Duration.zero);
   });
 
   tearDown(() => bloc.close());
@@ -59,10 +37,8 @@ void main() {
   test('a slow response for an old query never overwrites newer results', () async {
     final slowBatman = Completer<Result<List<Movie>>>();
     final fastSuperman = Completer<Result<List<Movie>>>();
-    when(() => searchMovies(const SearchParams(query: 'batman')))
-        .thenAnswer((_) => slowBatman.future);
-    when(() => searchMovies(const SearchParams(query: 'superman')))
-        .thenAnswer((_) => fastSuperman.future);
+    when(() => repository.searchMovies(query: 'batman')).thenAnswer((_) => slowBatman.future);
+    when(() => repository.searchMovies(query: 'superman')).thenAnswer((_) => fastSuperman.future);
 
     final states = <SearchState>[];
     final sub = bloc.stream.listen(states.add);
@@ -84,7 +60,8 @@ void main() {
 
   test('clearing while a search is in flight stays idle', () async {
     final pending = Completer<Result<List<Movie>>>();
-    when(() => searchMovies(any())).thenAnswer((_) => pending.future);
+    when(() => repository.searchMovies(query: any(named: 'query')))
+        .thenAnswer((_) => pending.future);
 
     bloc.add(const SearchEvent.queryChanged('batman'));
     await pump();
@@ -100,12 +77,9 @@ void main() {
 
   test('load more finishing after a new search does not restore old results', () async {
     final page2 = Completer<Result<List<Movie>>>();
-    when(() => searchMovies(const SearchParams(query: 'batman')))
-        .thenAnswer((_) async => Ok([movie(1)]));
-    when(() => searchMovies(const SearchParams(query: 'batman', page: 2)))
-        .thenAnswer((_) => page2.future);
-    when(() => searchMovies(const SearchParams(query: 'superman')))
-        .thenAnswer((_) async => Ok([movie(2)]));
+    when(() => repository.searchMovies(query: 'batman')).thenAnswer((_) async => Ok([movie(1)]));
+    when(() => repository.searchMovies(query: 'batman', page: 2)).thenAnswer((_) => page2.future);
+    when(() => repository.searchMovies(query: 'superman')).thenAnswer((_) async => Ok([movie(2)]));
 
     bloc.add(const SearchEvent.queryChanged('batman'));
     await pump();
@@ -121,7 +95,7 @@ void main() {
 
   test('a failed search keeps the query and failure, and retry runs it again', () async {
     var calls = 0;
-    when(() => searchMovies(const SearchParams(query: 'batman')))
+    when(() => repository.searchMovies(query: 'batman'))
         .thenAnswer((_) async => calls++ == 0 ? const Err(NetworkFailure()) : Ok([movie(1)]));
 
     bloc.add(const SearchEvent.queryChanged('batman'));
@@ -136,6 +110,6 @@ void main() {
   test('retry outside the error state does nothing', () async {
     bloc.add(const SearchEvent.retried());
     await pump();
-    verifyNever(() => searchMovies(any()));
+    verifyNever(() => repository.searchMovies(query: any(named: 'query')));
   });
 }

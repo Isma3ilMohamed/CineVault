@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:cine_vault/core/result/core_result.dart';
+import 'package:cine_vault/data/repositories/movie_repository.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -10,7 +11,7 @@ part 'movie_list_state.dart';
 
 @injectable
 class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
-  MovieListBloc({@factoryParam required this.category, required this.getMoviesByCategory})
+  MovieListBloc({@factoryParam required this.category, required this.movieRepository})
     : super(const MovieListState.initial()) {
     on<MovieListStarted>((_, emit) => _loadFirstPage(emit));
     on<MovieListRetried>((_, emit) => _loadFirstPage(emit));
@@ -18,10 +19,10 @@ class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
   }
 
   final MovieCategory category;
-  final GetMoviesByCategory getMoviesByCategory;
+  final MovieRepository movieRepository;
 
   Future<Result<List<Movie>>> _fetch(int page) =>
-      getMoviesByCategory(MoviesByCategoryParams(category: category, page: page));
+      movieRepository.getMoviesByCategory(category, page: page);
 
   Future<void> _loadFirstPage(Emitter<MovieListState> emit) async {
     emit(const MovieListState.loading());

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:cine_vault/core/result/core_result.dart';
+import 'package:cine_vault/data/repositories/movie_repository.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/home/bloc/home_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,21 +10,19 @@ import 'package:mocktail/mocktail.dart';
 
 import 'fixtures.dart';
 
-class _MockGetMoviesByCategory extends Mock implements GetMoviesByCategory {}
+class _MockMovieRepository extends Mock implements MovieRepository {}
 
 void main() {
-  late _MockGetMoviesByCategory getMovies;
+  late _MockMovieRepository repository;
 
-  setUpAll(
-    () => registerFallbackValue(const MoviesByCategoryParams(category: MovieCategory.popular)),
-  );
+  setUpAll(() => registerFallbackValue(MovieCategory.popular));
 
-  setUp(() => getMovies = _MockGetMoviesByCategory());
+  setUp(() => repository = _MockMovieRepository());
 
-  HomeBloc build() => HomeBloc(getMoviesByCategory: getMovies);
+  HomeBloc build() => HomeBloc(movieRepository: repository);
 
   void stubAll(Result<List<Movie>> result) =>
-      when(() => getMovies(any())).thenAnswer((_) async => result);
+      when(() => repository.getMoviesByCategory(any())).thenAnswer((_) async => result);
 
   final sections = {
     for (final category in MovieCategory.values) category: [movie(1)],
@@ -37,7 +36,7 @@ void main() {
     expect: () => [const HomeState.loading(), HomeState.loaded(sections: sections)],
     verify: (_) {
       for (final category in MovieCategory.values) {
-        verify(() => getMovies(MoviesByCategoryParams(category: category))).called(1);
+        verify(() => repository.getMoviesByCategory(category)).called(1);
       }
     },
   );
@@ -46,7 +45,7 @@ void main() {
     'one failing category fails the screen with its failure',
     setUp: () {
       stubAll(Ok([movie(1)]));
-      when(() => getMovies(const MoviesByCategoryParams(category: MovieCategory.upcoming)))
+      when(() => repository.getMoviesByCategory(MovieCategory.upcoming))
           .thenAnswer((_) async => const Err(NetworkFailure()));
     },
     build: build,
@@ -84,7 +83,7 @@ void main() {
 
   test('a second refresh while one is running is ignored', () async {
     final pending = Completer<Result<List<Movie>>>();
-    when(() => getMovies(any())).thenAnswer((_) => pending.future);
+    when(() => repository.getMoviesByCategory(any())).thenAnswer((_) => pending.future);
     final bloc = build()
       ..emit(HomeState.loaded(sections: sections))
       ..add(const HomeEvent.refreshed());
@@ -94,7 +93,7 @@ void main() {
     await Future<void>.delayed(Duration.zero);
 
     // One refresh = one request per category.
-    verify(() => getMovies(any())).called(MovieCategory.values.length);
+    verify(() => repository.getMoviesByCategory(any())).called(MovieCategory.values.length);
     pending.complete(Ok([movie(1)]));
     await bloc.close();
   });

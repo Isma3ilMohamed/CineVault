@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:cine_vault/core/result/core_result.dart';
+import 'package:cine_vault/data/repositories/movie_repository.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -10,13 +11,13 @@ part 'home_state.dart';
 
 @injectable
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc({required this.getMoviesByCategory}) : super(const HomeState.initial()) {
+  HomeBloc({required this.movieRepository}) : super(const HomeState.initial()) {
     on<HomeStarted>((_, emit) => _load(emit));
     on<HomeRetried>((_, emit) => _load(emit));
     on<HomeRefreshed>(_onRefreshed);
   }
 
-  final GetMoviesByCategory getMoviesByCategory;
+  final MovieRepository movieRepository;
 
   Future<void> _load(Emitter<HomeState> emit) async {
     emit(const HomeState.loading());
@@ -47,8 +48,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Future<Result<Map<MovieCategory, List<Movie>>>> _fetchSections() async {
     const categories = MovieCategory.values;
     final results = await Future.wait([
-      for (final category in categories)
-        getMoviesByCategory(MoviesByCategoryParams(category: category)),
+      for (final category in categories) movieRepository.getMoviesByCategory(category),
     ]);
 
     final sections = <MovieCategory, List<Movie>>{};
