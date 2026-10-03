@@ -1,7 +1,6 @@
 import 'package:cine_vault/data/models/favorite_movie_model.dart';
 import 'package:cine_vault/data/storage/storage_call.dart';
 import 'package:hive/hive.dart';
-import 'package:injectable/injectable.dart';
 
 /// Hive box "favorites": key = movieId, value = movie JSON plus `_added_at`.
 /// Every method throws a `CacheException` on failure.
@@ -21,7 +20,6 @@ abstract class FavoritesLocalDataSource {
   Stream<void> watch();
 }
 
-@LazySingleton(as: FavoritesLocalDataSource)
 class FavoritesLocalDataSourceImpl implements FavoritesLocalDataSource {
   FavoritesLocalDataSourceImpl(this.box);
   static const String boxName = 'favorites';

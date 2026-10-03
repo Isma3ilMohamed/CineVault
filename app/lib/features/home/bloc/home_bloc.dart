@@ -3,13 +3,11 @@ import 'package:cine_vault/core/result/core_result.dart';
 import 'package:cine_vault/data/repositories/movie_repository.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:injectable/injectable.dart';
 
 part 'home_bloc.freezed.dart';
 part 'home_event.dart';
 part 'home_state.dart';
 
-@injectable
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc({required this.movieRepository}) : super(const HomeState.initial()) {
     on<HomeStarted>((_, emit) => _load(emit));

@@ -4,10 +4,8 @@ import 'package:cine_vault/data/models/movie_model.dart';
 import 'package:cine_vault/data/repositories/movie_repository.dart';
 import 'package:cine_vault/data/sources/movie_remote_data_source.dart';
 import 'package:cine_vault/domain/domain.dart';
-import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 
-@LazySingleton(as: MovieRepository)
 class MovieRepositoryImpl implements MovieRepository {
   MovieRepositoryImpl({required this.remoteDataSource});
   final MovieRemoteDataSource remoteDataSource;

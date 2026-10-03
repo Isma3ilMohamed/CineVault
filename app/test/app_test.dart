@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:cine_vault/app.dart';
-import 'package:cine_vault/core/config/app_config.dart';
-import 'package:cine_vault/core/di/injection.dart';
+import 'package:cine_vault/app/app.dart';
+import 'package:cine_vault/app/config/app_config.dart';
+import 'package:cine_vault/app/di.dart';
 import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/features/favorites/favorites.dart';
 import 'package:dio/dio.dart';

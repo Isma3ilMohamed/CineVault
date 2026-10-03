@@ -1,13 +1,11 @@
 import 'package:cine_vault/data/network/auth_interceptor.dart';
 import 'package:cine_vault/data/network/network_config.dart';
 import 'package:dio/dio.dart';
-import 'package:injectable/injectable.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 /// The app's single HTTP client.
 ///
 /// Errors are not mapped here: `processCall` does that at each call site.
-@lazySingleton
 class DioClient {
   DioClient(NetworkConfig config)
     : dio = Dio(

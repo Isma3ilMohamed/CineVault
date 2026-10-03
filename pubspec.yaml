@@ -29,8 +29,8 @@ melos:
       run: dart pub get --directory packages/lints && dart analyze --fatal-infos
     generate:
       description: >-
-        Regenerate code in every package that uses build_runner (freezed,
-        injectable), then format it with the workspace's page width.
+        Regenerate code in every package that uses build_runner (freezed),
+        then format it with the workspace's page width.
       run: dart run melos run generate:build && dart format .
     generate:build:
       description: build_runner in each package that depends on it.

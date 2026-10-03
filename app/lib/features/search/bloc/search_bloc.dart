@@ -6,7 +6,6 @@ import 'package:cine_vault/core/result/core_result.dart';
 import 'package:cine_vault/data/repositories/search_repository.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:injectable/injectable.dart';
 
 part 'search_bloc.freezed.dart';
 part 'search_event.dart';
@@ -18,9 +17,8 @@ part 'search_state.dart';
 /// response for an old query can never overwrite newer results.
 ///
 /// Typing is debounced with a cancellable [Timer] before it becomes a request.
-@injectable
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
-  SearchBloc({required this.searchRepository, @ignoreParam this._debounce = _defaultDebounce})
+  SearchBloc({required this.searchRepository, this._debounce = _defaultDebounce})
     : super(const SearchState.idle()) {
     on<SearchStarted>((_, emit) => _emitIdleWithRecents(emit));
     on<SearchQueryChanged>(_onQueryChanged);

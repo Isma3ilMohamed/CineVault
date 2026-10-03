@@ -1,4 +1,4 @@
-import 'package:cine_vault/core/di/injection.dart';
+import 'package:cine_vault/app/di.dart';
 import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/core/widgets/movie_ui/movie_ui.dart';
 import 'package:cine_vault/domain/domain.dart';

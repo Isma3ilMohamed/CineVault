@@ -5,7 +5,6 @@ import 'package:cine_vault/data/models/video_model.dart';
 import 'package:cine_vault/data/network/process_call.dart';
 import 'package:cine_vault/data/network/tmdb_endpoints.dart';
 import 'package:dio/dio.dart';
-import 'package:injectable/injectable.dart';
 
 /// TMDB movie endpoints. Every method throws an `AppException` on failure.
 abstract class MovieRemoteDataSource {
@@ -21,7 +20,6 @@ abstract class MovieRemoteDataSource {
   Future<VideosResponse> getMovieVideos({required int movieId});
 }
 
-@LazySingleton(as: MovieRemoteDataSource)
 class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
   MovieRemoteDataSourceImpl(this.dio);
   final Dio dio;

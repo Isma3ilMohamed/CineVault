@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cine_vault/core/di/injection.dart';
+import 'package:cine_vault/app/di.dart';
 import 'package:cine_vault/features/favorites/view/favorite_button.dart';
 import 'package:cine_vault/features/movie_details/bloc/movie_details_bloc.dart';
 import 'package:cine_vault/features/movie_details/view/movie_details_view.dart';

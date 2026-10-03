@@ -1,6 +1,6 @@
-import 'package:cine_vault/app.dart';
-import 'package:cine_vault/core/config/app_config.dart';
-import 'package:cine_vault/core/di/injection.dart';
+import 'package:cine_vault/app/app.dart';
+import 'package:cine_vault/app/config/app_config.dart';
+import 'package:cine_vault/app/di.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';

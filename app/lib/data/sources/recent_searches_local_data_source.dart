@@ -1,5 +1,4 @@
 import 'package:cine_vault/data/storage/storage_call.dart';
-import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Stored newest first, de-duplicated case-insensitively, capped at 10 entries.
@@ -12,7 +11,6 @@ abstract class RecentSearchesLocalDataSource {
   Future<void> clearRecentSearches();
 }
 
-@LazySingleton(as: RecentSearchesLocalDataSource)
 class RecentSearchesLocalDataSourceImpl implements RecentSearchesLocalDataSource {
   RecentSearchesLocalDataSourceImpl(this.prefs);
   static const String _key = 'recent_searches';

@@ -3,15 +3,13 @@ import 'package:cine_vault/core/result/core_result.dart';
 import 'package:cine_vault/data/repositories/movie_repository.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:injectable/injectable.dart';
 
 part 'movie_details_bloc.freezed.dart';
 part 'movie_details_event.dart';
 part 'movie_details_state.dart';
 
-@injectable
 class MovieDetailsBloc extends Bloc<MovieDetailsEvent, MovieDetailsState> {
-  MovieDetailsBloc({@factoryParam required this.movieId, required this.movieRepository})
+  MovieDetailsBloc({required this.movieId, required this.movieRepository})
     : super(const MovieDetailsState.initial()) {
     on<MovieDetailsStarted>((_, emit) => _load(emit));
     on<MovieDetailsRetried>((_, emit) => _load(emit));

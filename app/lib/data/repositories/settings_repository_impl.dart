@@ -3,9 +3,7 @@ import 'package:cine_vault/data/error/guard.dart';
 import 'package:cine_vault/data/repositories/settings_repository.dart';
 import 'package:cine_vault/data/sources/settings_local_data_source.dart';
 import 'package:cine_vault/domain/domain.dart';
-import 'package:injectable/injectable.dart';
 
-@LazySingleton(as: SettingsRepository)
 class SettingsRepositoryImpl implements SettingsRepository {
   SettingsRepositoryImpl({required this.localDataSource});
   final SettingsLocalDataSource localDataSource;

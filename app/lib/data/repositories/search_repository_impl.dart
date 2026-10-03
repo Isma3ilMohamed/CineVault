@@ -4,9 +4,7 @@ import 'package:cine_vault/data/repositories/search_repository.dart';
 import 'package:cine_vault/data/sources/recent_searches_local_data_source.dart';
 import 'package:cine_vault/data/sources/search_remote_data_source.dart';
 import 'package:cine_vault/domain/domain.dart';
-import 'package:injectable/injectable.dart';
 
-@LazySingleton(as: SearchRepository)
 class SearchRepositoryImpl implements SearchRepository {
   SearchRepositoryImpl({required this.remoteDataSource, required this.localDataSource});
   final SearchRemoteDataSource remoteDataSource;
