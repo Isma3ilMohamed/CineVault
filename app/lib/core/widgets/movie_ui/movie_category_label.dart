@@ -1,5 +1,5 @@
 import 'package:cine_vault/core/widgets/movie_ui/l10n/generated/movie_ui_localizations.dart';
-import 'package:domain/domain.dart';
+import 'package:cine_vault/domain/domain.dart';
 import 'package:flutter/widgets.dart';
 
 extension MovieCategoryLabel on MovieCategory {

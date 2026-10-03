@@ -1,4 +1,4 @@
-import 'package:domain/domain.dart';
+import 'package:cine_vault/domain/domain.dart';
 import 'package:flutter/widgets.dart';
 
 /// Builds the favorite toggle for a movie at the given icon size.

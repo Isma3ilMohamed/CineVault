@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:cine_vault/core/result/core_result.dart';
+import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/favorites/favorites.dart';
-import 'package:core_result/core_result.dart';
-import 'package:domain/domain.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

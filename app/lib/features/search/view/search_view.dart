@@ -1,10 +1,10 @@
+import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/core/widgets/movie_ui/movie_ui.dart';
+import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/search/bloc/search_bloc.dart';
 import 'package:cine_vault/features/search/l10n/generated/search_localizations.dart';
 import 'package:cine_vault/features/search/view/widgets/recent_searches_list.dart';
 import 'package:cine_vault/features/search/view/widgets/search_field.dart';
-import 'package:core_ui/core_ui.dart';
-import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -1,6 +1,6 @@
+import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/favorites/cubit/favorite_ids_cubit.dart';
 import 'package:cine_vault/features/favorites/view/widgets/favorite_heart.dart';
-import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

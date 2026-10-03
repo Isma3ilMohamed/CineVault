@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:domain/domain.dart';
+import 'package:cine_vault/domain/domain.dart';
 import 'package:injectable/injectable.dart';
 
 /// App-wide set of favorite movie ids, behind every heart button.

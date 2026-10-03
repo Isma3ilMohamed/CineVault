@@ -1,4 +1,4 @@
-import 'package:core_ui/core_ui.dart';
+import 'package:cine_vault/core/ui.dart';
 import 'package:flutter/material.dart';
 
 /// Filled or outlined heart on a dark circle, animating between the two.

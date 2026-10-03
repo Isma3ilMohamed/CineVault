@@ -1,5 +1,5 @@
+import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/features/movie_details/l10n/generated/movie_details_localizations.dart';
-import 'package:core_ui/core_ui.dart';
 import 'package:flutter/material.dart';
 
 /// Rating, vote count and release year.

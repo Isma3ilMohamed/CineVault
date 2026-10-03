@@ -1,4 +1,4 @@
-import 'package:domain/domain.dart';
+import 'package:cine_vault/domain/domain.dart';
 
 /// Every location in the app. Nothing else writes a path by hand: screens
 /// navigate with these constants and builders, and the router matches them.

@@ -1,10 +1,10 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:cine_vault/core/result/core_result.dart';
+import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/core/widgets/movie_ui/movie_ui.dart';
 import 'package:cine_vault/features/search/bloc/search_bloc.dart';
 import 'package:cine_vault/features/search/search.dart';
 import 'package:cine_vault/features/search/view/search_view.dart';
-import 'package:core_result/core_result.dart';
-import 'package:core_ui/core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

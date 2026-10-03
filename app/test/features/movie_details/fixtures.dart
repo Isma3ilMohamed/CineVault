@@ -1,4 +1,4 @@
-import 'package:domain/domain.dart';
+import 'package:cine_vault/domain/domain.dart';
 
 Movie movie(int id, {List<int> genreIds = const [28, 878]}) => Movie(
   id: id,

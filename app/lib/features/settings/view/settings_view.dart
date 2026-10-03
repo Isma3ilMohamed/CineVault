@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:cine_vault/core/ui.dart';
+import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/settings/cubit/settings_cubit.dart';
 import 'package:cine_vault/features/settings/l10n/generated/settings_localizations.dart';
 import 'package:cine_vault/features/settings/view/theme_reveal/theme_reveal_boundary.dart';
 import 'package:cine_vault/features/settings/view/theme_reveal/theme_reveal_controller.dart';
-import 'package:core_ui/core_ui.dart';
-import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

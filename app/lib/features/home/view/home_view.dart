@@ -1,11 +1,11 @@
+import 'package:cine_vault/core/result/core_result.dart';
+import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/core/widgets/movie_ui/movie_ui.dart';
+import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/home/bloc/home_bloc.dart';
 import 'package:cine_vault/features/home/l10n/generated/home_localizations.dart';
 import 'package:cine_vault/features/home/view/widgets/featured_carousel.dart';
 import 'package:cine_vault/features/home/view/widgets/movie_section.dart';
-import 'package:core_result/core_result.dart';
-import 'package:core_ui/core_ui.dart';
-import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

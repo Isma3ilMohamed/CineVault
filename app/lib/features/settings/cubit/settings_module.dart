@@ -1,5 +1,5 @@
+import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/settings/cubit/settings_cubit.dart';
-import 'package:domain/domain.dart';
 import 'package:injectable/injectable.dart';
 
 /// Provides the app-wide SettingsCubit; picked up by the app's injector.

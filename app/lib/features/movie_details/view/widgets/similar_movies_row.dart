@@ -1,5 +1,5 @@
 import 'package:cine_vault/core/widgets/movie_ui/movie_ui.dart';
-import 'package:domain/domain.dart';
+import 'package:cine_vault/domain/domain.dart';
 import 'package:flutter/material.dart';
 
 /// Horizontal row of similar movies, each with the favorite toggle.

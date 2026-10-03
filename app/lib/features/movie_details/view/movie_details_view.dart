@@ -1,4 +1,7 @@
+import 'package:cine_vault/core/result/core_result.dart';
+import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/core/widgets/movie_ui/movie_ui.dart';
+import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/movie_details/bloc/movie_details_bloc.dart';
 import 'package:cine_vault/features/movie_details/l10n/generated/movie_details_localizations.dart';
 import 'package:cine_vault/features/movie_details/view/widgets/cast_row.dart';
@@ -7,9 +10,6 @@ import 'package:cine_vault/features/movie_details/view/widgets/genre_chips.dart'
 import 'package:cine_vault/features/movie_details/view/widgets/meta_row.dart';
 import 'package:cine_vault/features/movie_details/view/widgets/similar_movies_row.dart';
 import 'package:cine_vault/features/movie_details/view/widgets/trailer_player_modal.dart';
-import 'package:core_result/core_result.dart';
-import 'package:core_ui/core_ui.dart';
-import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

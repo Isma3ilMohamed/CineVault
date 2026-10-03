@@ -1,4 +1,4 @@
-import 'package:domain/domain.dart';
+import 'package:cine_vault/domain/domain.dart';
 import 'package:flutter/material.dart';
 
 /// Bridges the Flutter-free [AppSettings] to what MaterialApp expects.

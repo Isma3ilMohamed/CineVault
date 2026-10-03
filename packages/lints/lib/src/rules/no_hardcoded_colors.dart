@@ -41,13 +41,19 @@ class _Visitor extends SimpleAstVisitor<void> {
   final AnalysisRule rule;
   final RuleContext context;
 
-  static const _themeDirectory = '/packages/core/ui/lib/src/theme/';
+  /// Where the tokens are defined: the app's theme folder (and the old
+  /// core_ui package path, kept for the rule's own tests).
+  static const _themeDirectories = [
+    '/lib/core/theme/',
+    '/packages/core/ui/lib/src/theme/',
+  ];
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
     final path = context.currentUnit?.file.path;
     if (path == null || !isHandWrittenSource(path)) return;
-    if (path.replaceAll(r'\', '/').contains(_themeDirectory)) return;
+    final normalized = path.replaceAll(r'\', '/');
+    if (_themeDirectories.any(normalized.contains)) return;
 
     final element = node.constructorName.type.element;
     if (element == null || element.name != 'Color') return;

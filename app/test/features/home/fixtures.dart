@@ -1,4 +1,4 @@
-import 'package:domain/domain.dart';
+import 'package:cine_vault/domain/domain.dart';
 
 Movie movie(int id) => Movie(
   id: id,

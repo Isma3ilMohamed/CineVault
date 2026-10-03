@@ -1,6 +1,0 @@
-arb-dir: lib/src/l10n
-template-arb-file: core_ui_en.arb
-output-localization-file: core_ui_localizations.dart
-output-class: CoreUiLocalizations
-nullable-getter: false
-output-dir: lib/src/l10n/generated

@@ -1,8 +1,8 @@
+import 'package:cine_vault/core/result/core_result.dart';
+import 'package:cine_vault/core/ui.dart';
+import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/settings/settings.dart';
 import 'package:cine_vault/features/settings/view/theme_reveal/theme_reveal_overlay.dart';
-import 'package:core_result/core_result.dart';
-import 'package:core_ui/core_ui.dart';
-import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

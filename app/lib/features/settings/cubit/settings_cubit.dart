@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:domain/domain.dart';
+import 'package:cine_vault/domain/domain.dart';
 
 /// App-wide theme and language. One instance, provided above MaterialApp,
 /// which rebuilds from it.

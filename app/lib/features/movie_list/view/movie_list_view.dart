@@ -1,7 +1,7 @@
+import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/core/widgets/movie_ui/movie_ui.dart';
+import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/movie_list/bloc/movie_list_bloc.dart';
-import 'package:core_ui/core_ui.dart';
-import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

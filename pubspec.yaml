@@ -9,11 +9,7 @@ environment:
 # Add new packages here; melos picks them up automatically.
 workspace:
   - app
-  - packages/core/result
   - packages/core/testing
-  - packages/core/ui
-  - packages/data
-  - packages/domain
 
 dev_dependencies:
   # Shared lint config for every member (analysis_options.yaml includes it).

@@ -1,5 +1,5 @@
+import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/features/search/l10n/generated/search_localizations.dart';
-import 'package:core_ui/core_ui.dart';
 import 'package:flutter/material.dart';
 
 /// Borderless search input for the app bar, with a clear button once it has text.

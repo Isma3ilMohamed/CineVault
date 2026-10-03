@@ -1,9 +1,9 @@
+import 'package:cine_vault/core/ui.dart';
+import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:cine_vault/routing/app_router.dart';
 import 'package:cine_vault/routing/app_routes.dart';
 import 'package:cine_vault/routing/route_error_screen.dart';
-import 'package:core_ui/core_ui.dart';
-import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';

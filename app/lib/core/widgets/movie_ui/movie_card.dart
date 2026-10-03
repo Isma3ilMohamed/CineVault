@@ -1,6 +1,6 @@
+import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/core/widgets/movie_ui/favorite_button_builder.dart';
-import 'package:core_ui/core_ui.dart';
-import 'package:domain/domain.dart';
+import 'package:cine_vault/domain/domain.dart';
 import 'package:flutter/material.dart';
 
 /// [PosterCard] for a [Movie], with the favorite toggle in its leading slot.

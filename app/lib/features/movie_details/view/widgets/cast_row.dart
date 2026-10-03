@@ -1,6 +1,6 @@
+import 'package:cine_vault/core/ui.dart';
+import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/movie_details/view/widgets/cast_card.dart';
-import 'package:core_ui/core_ui.dart';
-import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 
 /// Horizontal row of the first cast members.
