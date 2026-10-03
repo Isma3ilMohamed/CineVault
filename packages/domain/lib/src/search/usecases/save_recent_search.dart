@@ -2,7 +2,9 @@ import 'package:core_result/core_result.dart';
 import 'package:domain/src/search/search_repository.dart';
 import 'package:domain/src/usecase.dart';
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 
+@lazySingleton
 class SaveRecentSearch implements UseCase<void, SaveRecentSearchParams> {
   const SaveRecentSearch(this.repository);
   final SearchRepository repository;

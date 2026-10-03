@@ -3,7 +3,9 @@ import 'package:domain/src/favorites/favorites_repository.dart';
 import 'package:domain/src/movies/entities/movie.dart';
 import 'package:domain/src/usecase.dart';
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 
+@lazySingleton
 class ToggleFavorite implements UseCase<bool, ToggleFavoriteParams> {
   const ToggleFavorite(this.repository);
   final FavoritesRepository repository;

@@ -3,7 +3,9 @@ import 'package:domain/src/movies/entities/movie.dart';
 import 'package:domain/src/movies/movie_repository.dart';
 import 'package:domain/src/usecase.dart';
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 
+@lazySingleton
 class GetMovieDetails implements UseCase<Movie, MovieIdParams> {
   const GetMovieDetails(this.repository);
   final MovieRepository repository;

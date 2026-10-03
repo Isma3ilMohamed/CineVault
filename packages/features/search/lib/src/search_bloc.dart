@@ -5,6 +5,7 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:core_base/core_base.dart';
 import 'package:core_result/core_result.dart';
 import 'package:domain/domain.dart';
+import 'package:injectable/injectable.dart';
 import 'package:search/src/search_contract.dart';
 
 /// Every way of starting a search (typing, tapping a recent, retrying,
@@ -13,13 +14,14 @@ import 'package:search/src/search_contract.dart';
 /// response for an old query can never overwrite newer results.
 ///
 /// Typing is debounced with a cancellable [Timer] before it becomes a request.
+@injectable
 class SearchBloc extends Bloc<SearchEvent, SearchState> with EventGuard<SearchEvent, SearchState> {
   SearchBloc({
     required this.searchMovies,
     required this.getRecentSearches,
     required this.saveRecentSearch,
     required this.clearRecentSearches,
-    this._debounce = _defaultDebounce,
+    @ignoreParam this._debounce = _defaultDebounce,
   }) : super(const SearchState.idle()) {
     on<SearchStarted>((_, emit) => _emitIdleWithRecents(emit));
     on<SearchQueryChanged>(_onQueryChanged);

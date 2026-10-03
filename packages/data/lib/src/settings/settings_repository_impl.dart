@@ -2,7 +2,9 @@ import 'package:core_result/core_result.dart';
 import 'package:data/src/error/guard.dart';
 import 'package:data/src/settings/settings_local_data_source.dart';
 import 'package:domain/domain.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: SettingsRepository)
 class SettingsRepositoryImpl implements SettingsRepository {
   SettingsRepositoryImpl({required this.localDataSource});
   final SettingsLocalDataSource localDataSource;

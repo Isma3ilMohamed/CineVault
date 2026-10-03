@@ -2,12 +2,14 @@ import 'package:bloc/bloc.dart';
 import 'package:core_base/core_base.dart';
 import 'package:core_result/core_result.dart';
 import 'package:domain/domain.dart';
+import 'package:injectable/injectable.dart';
 import 'package:movie_details/src/movie_details_contract.dart';
 
+@injectable
 class MovieDetailsBloc extends Bloc<MovieDetailsEvent, MovieDetailsState>
     with EventGuard<MovieDetailsEvent, MovieDetailsState> {
   MovieDetailsBloc({
-    required this.movieId,
+    @factoryParam required this.movieId,
     required this.getMovieDetails,
     required this.getSimilarMovies,
     required this.getMovieCredits,

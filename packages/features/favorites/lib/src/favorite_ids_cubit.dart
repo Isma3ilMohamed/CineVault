@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:domain/domain.dart';
+import 'package:injectable/injectable.dart';
 
 /// App-wide set of favorite movie ids, behind every heart button.
 ///
 /// One instance for the whole app (provided above the router), so a toggle on
 /// any screen updates the hearts on every other screen.
+@lazySingleton
 class FavoriteIdsCubit extends Cubit<Set<int>> {
   FavoriteIdsCubit({required this.watchFavoriteIds, required this.toggleFavorite})
     : super(const <int>{}) {

@@ -4,8 +4,10 @@ import 'package:domain/src/movies/entities/movie_category.dart';
 import 'package:domain/src/movies/movie_repository.dart';
 import 'package:domain/src/usecase.dart';
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 
 /// One page of movies for a [MovieCategory] list.
+@lazySingleton
 class GetMoviesByCategory implements UseCase<List<Movie>, MoviesByCategoryParams> {
   const GetMoviesByCategory(this.repository);
   final MovieRepository repository;

@@ -3,7 +3,9 @@ import 'package:domain/src/movies/entities/cast_member.dart';
 import 'package:domain/src/movies/movie_repository.dart';
 import 'package:domain/src/movies/usecases/get_movie_details.dart';
 import 'package:domain/src/usecase.dart';
+import 'package:injectable/injectable.dart';
 
+@lazySingleton
 class GetMovieCredits implements UseCase<List<CastMember>, MovieIdParams> {
   const GetMovieCredits(this.repository);
   final MovieRepository repository;

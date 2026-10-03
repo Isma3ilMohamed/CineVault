@@ -3,7 +3,9 @@ import 'package:data/src/error/guard.dart';
 import 'package:data/src/search/recent_searches_local_data_source.dart';
 import 'package:data/src/search/search_remote_data_source.dart';
 import 'package:domain/domain.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: SearchRepository)
 class SearchRepositoryImpl implements SearchRepository {
   SearchRepositoryImpl({required this.remoteDataSource, required this.localDataSource});
   final SearchRemoteDataSource remoteDataSource;

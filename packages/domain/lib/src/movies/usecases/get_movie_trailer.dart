@@ -3,11 +3,13 @@ import 'package:domain/src/movies/entities/video.dart';
 import 'package:domain/src/movies/movie_repository.dart';
 import 'package:domain/src/movies/usecases/get_movie_details.dart';
 import 'package:domain/src/usecase.dart';
+import 'package:injectable/injectable.dart';
 
 /// The best trailer to play for a movie, or `null` when there is none.
 ///
 /// Only YouTube videos are playable. Preference: an official trailer, then any
 /// trailer, then any video.
+@lazySingleton
 class GetMovieTrailer implements UseCase<Video?, MovieIdParams> {
   const GetMovieTrailer(this.repository);
   final MovieRepository repository;

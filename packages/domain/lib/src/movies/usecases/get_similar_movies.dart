@@ -3,7 +3,9 @@ import 'package:domain/src/movies/entities/movie.dart';
 import 'package:domain/src/movies/movie_repository.dart';
 import 'package:domain/src/usecase.dart';
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 
+@lazySingleton
 class GetSimilarMovies implements UseCase<List<Movie>, SimilarMoviesParams> {
   const GetSimilarMovies(this.repository);
   final MovieRepository repository;

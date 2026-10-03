@@ -3,7 +3,9 @@ import 'package:data/src/error/guard.dart';
 import 'package:data/src/favorites/favorite_movie_model.dart';
 import 'package:data/src/favorites/favorites_local_data_source.dart';
 import 'package:domain/domain.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: FavoritesRepository)
 class FavoritesRepositoryImpl implements FavoritesRepository {
   FavoritesRepositoryImpl({required this.localDataSource});
   final FavoritesLocalDataSource localDataSource;

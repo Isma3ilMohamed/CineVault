@@ -3,7 +3,9 @@ import 'package:data/src/error/guard.dart';
 import 'package:data/src/movies/models/movie_model.dart';
 import 'package:data/src/movies/movie_remote_data_source.dart';
 import 'package:domain/domain.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: MovieRepository)
 class MovieRepositoryImpl implements MovieRepository {
   MovieRepositoryImpl({required this.remoteDataSource});
   final MovieRemoteDataSource remoteDataSource;

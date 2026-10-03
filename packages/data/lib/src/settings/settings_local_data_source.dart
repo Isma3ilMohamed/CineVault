@@ -1,5 +1,6 @@
 import 'package:data/src/storage/storage_call.dart';
 import 'package:domain/domain.dart';
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Persisted as strings: theme_mode is an [AppThemeMode] name ('light' |
@@ -13,6 +14,7 @@ abstract class SettingsLocalDataSource {
   Future<void> saveLanguageCode(String? languageCode);
 }
 
+@LazySingleton(as: SettingsLocalDataSource)
 class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
   SettingsLocalDataSourceImpl(this.prefs);
   static const String _themeModeKey = 'theme_mode';

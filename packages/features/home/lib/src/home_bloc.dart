@@ -3,7 +3,9 @@ import 'package:core_base/core_base.dart';
 import 'package:core_result/core_result.dart';
 import 'package:domain/domain.dart';
 import 'package:home/src/home_contract.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class HomeBloc extends Bloc<HomeEvent, HomeState>
     with EventGuard<HomeEvent, HomeState>, EffectEmitter<HomeState, HomeEffect> {
   HomeBloc({required this.getMoviesByCategory}) : super(const HomeState.initial()) {

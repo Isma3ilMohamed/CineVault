@@ -3,7 +3,9 @@ import 'package:domain/src/movies/entities/movie.dart';
 import 'package:domain/src/search/search_repository.dart';
 import 'package:domain/src/usecase.dart';
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 
+@lazySingleton
 class SearchMovies implements UseCase<List<Movie>, SearchParams> {
   const SearchMovies(this.repository);
   final SearchRepository repository;

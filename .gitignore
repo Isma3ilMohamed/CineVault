@@ -103,7 +103,5 @@ app.*.map.json
 config/*.env
 !config/*.env.example
 
-# Generated files
-*.g.dart
-*.freezed.dart
-*.config.dart
+# Generated code (freezed, go_router_builder, injectable, l10n) is committed
+# on purpose, so a fresh clone builds without running build_runner first.

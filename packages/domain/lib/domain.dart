@@ -2,6 +2,7 @@
 /// Pure Dart: no Flutter, no data-layer types.
 library;
 
+export 'src/domain_injection.module.dart';
 export 'src/favorites/favorites_repository.dart';
 export 'src/favorites/usecases/is_favorite.dart';
 export 'src/favorites/usecases/toggle_favorite.dart';

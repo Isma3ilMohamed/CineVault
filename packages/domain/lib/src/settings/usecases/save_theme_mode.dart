@@ -3,7 +3,9 @@ import 'package:domain/src/settings/app_settings.dart';
 import 'package:domain/src/settings/settings_repository.dart';
 import 'package:domain/src/usecase.dart';
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 
+@lazySingleton
 class SaveThemeMode implements UseCase<void, SaveThemeModeParams> {
   const SaveThemeMode(this.repository);
   final SettingsRepository repository;

@@ -2,7 +2,9 @@ import 'package:bloc/bloc.dart';
 import 'package:core_base/core_base.dart';
 import 'package:domain/domain.dart';
 import 'package:favorites/src/favorites_contract.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState>
     with EventGuard<FavoritesEvent, FavoritesState> {
   FavoritesBloc({required this.watchFavorites}) : super(const FavoritesState.initial()) {

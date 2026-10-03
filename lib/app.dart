@@ -1,4 +1,4 @@
-import 'package:cine_vault/core/di/injection_container.dart';
+import 'package:cine_vault/core/di/injection.dart';
 import 'package:cine_vault/core/router/app_router.dart';
 import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:core_ui/core_ui.dart';
@@ -39,8 +39,8 @@ class _CineVaultAppState extends State<CineVaultApp> {
     return MultiBlocProvider(
       providers: [
         // App-wide singletons owned by GetIt, so `.value`: the provider must not close them.
-        BlocProvider<FavoriteIdsCubit>.value(value: sl<FavoriteIdsCubit>()),
-        BlocProvider<SettingsCubit>.value(value: sl<SettingsCubit>()),
+        BlocProvider<FavoriteIdsCubit>.value(value: getIt<FavoriteIdsCubit>()),
+        BlocProvider<SettingsCubit>.value(value: getIt<SettingsCubit>()),
       ],
       child: BlocBuilder<SettingsCubit, AppSettings>(
         builder: (context, settings) {

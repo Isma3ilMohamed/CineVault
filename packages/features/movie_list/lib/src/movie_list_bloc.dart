@@ -2,11 +2,13 @@ import 'package:bloc/bloc.dart';
 import 'package:core_base/core_base.dart';
 import 'package:core_result/core_result.dart';
 import 'package:domain/domain.dart';
+import 'package:injectable/injectable.dart';
 import 'package:movie_list/src/movie_list_contract.dart';
 
+@injectable
 class MovieListBloc extends Bloc<MovieListEvent, MovieListState>
     with EventGuard<MovieListEvent, MovieListState> {
-  MovieListBloc({required this.category, required this.getMoviesByCategory})
+  MovieListBloc({@factoryParam required this.category, required this.getMoviesByCategory})
     : super(const MovieListState.initial()) {
     on<MovieListStarted>((_, emit) => _loadFirstPage(emit));
     on<MovieListRetried>((_, emit) => _loadFirstPage(emit));

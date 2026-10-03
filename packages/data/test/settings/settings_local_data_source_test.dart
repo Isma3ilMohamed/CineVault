@@ -1,4 +1,4 @@
-import 'package:data/data.dart';
+import 'package:data/src/settings/settings_local_data_source.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
