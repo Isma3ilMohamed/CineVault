@@ -11,6 +11,7 @@ workspace:
   - app
   - packages/core/base
   - packages/core/result
+  - packages/core/testing
   - packages/core/ui
   - packages/data
   - packages/domain
