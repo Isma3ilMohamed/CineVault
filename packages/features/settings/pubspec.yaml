@@ -1,0 +1,34 @@
+name: settings
+description: Settings ("More") screen and the app-wide theme and language state (feature package, see the feature anatomy).
+publish_to: none
+version: 0.0.1
+
+environment:
+  sdk: ^3.13.0
+
+resolution: workspace
+
+dependencies:
+  bloc: ^8.1.4
+  core_ui:
+    path: ../../core/ui
+  domain:
+    path: ../../domain
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.6
+  flutter_localizations:
+    sdk: flutter
+  get_it: ^8.0.0
+  intl: ^0.20.2
+
+dev_dependencies:
+  bloc_test: ^9.1.7
+  core_result:
+    path: ../../core/result
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.4
+
+flutter:
+  generate: true

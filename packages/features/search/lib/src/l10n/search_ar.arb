@@ -1,0 +1,8 @@
+{
+  "@@locale": "ar",
+  "searchHint": "ابحث عن فيلم...",
+  "searchRecent": "عمليات البحث الأخيرة",
+  "searchClearRecent": "مسح",
+  "searchNothingFound": "مفيش نتائج لـ \"{query}\"",
+  "searchEmptyPrompt": "دور على أي فيلم"
+}

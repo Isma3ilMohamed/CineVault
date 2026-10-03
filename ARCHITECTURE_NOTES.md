@@ -205,7 +205,7 @@ linter:
 ### الطبقة 3 — قواعدنا: analyzer plugin (`cine_vault_lints`) ✅ (Phase 2)
 analyzer plugin بالـ API الجديد (`analysis_server_plugin`، Dart ≥ 3.10) في `packages/lints`، متفعّل من `plugins:` في الـ root `analysis_options.yaml`. **ده اللي بيفرض الـ Feature Anatomy.**
 
-- **النطاق:** الملفات تحت `packages/features/<name>/lib/` بس. ودور الملف بيتحدد من اسمه (`_route` · `_navigation` · `_screen` · `_content` · `_contract` · `_bloc` · `widgets/`). الكود القديم في `lib/` مش بيتفحص لحد ما يتنقل.
+- **النطاق:** الملفات تحت `packages/features/<name>/lib/` بس. ودور الملف بيتحدد من اسمه (`_route` · `_navigation` · `_screen` · `_content` · `_contract` · `_bloc` / `_cubit` · `widgets/`). الكود القديم في `lib/` مش بيتفحص لحد ما يتنقل.
 - **الـ severity:** warning، يعني بتقع في `melos run analyze`، وبتظهر في الـ IDE.
 - **⚠ `dart analyze` مش `flutter analyze`:** على Flutter 3.47، `flutter analyze` **مبيطلّعش** الـ diagnostics بتاعة الـ plugins (اتجرّب). وكمان الـ plugins **بتشتغل بس لما الـ analyze يتعمل من root الـ workspace** (تحليل فولدر فرعي مش بيشغّلها).
 - **الـ package برّه الـ workspace بقصد:** الـ analysis server بيعمل resolution للـ plugin في synthetic package لوحدها، و`analyzer` بيمشي مع إصدار الـ SDK.
@@ -327,20 +327,20 @@ class MovieDetailsRouteData extends GoRouteData {
 |---|---|---|---|
 | 1 | **Race في البحث** — `_SearchExecuted` بيشتغل concurrent؛ request قديم يرجع متأخر يكتب فوق الأحدث | `search_bloc.dart` | `restartable()` + debounce transformer بدل الـ `Timer` |
 | 2 | **Interceptor بيعمل `throw`** جوه `onError` — Dio 5 بيلفها في `DioException`، فالـ `on NetworkException` مش بيلقطها والمستخدم يشوف `"Unexpected error: DioException..."` (**محتاج تأكيد بتجربة offline**) | `error_interceptor.dart` | الـ interceptor يعمل `handler.reject(...)`، والـ mapping من `DioException` → Failure في `guard()` |
-| 3 | `RefreshIndicator` بيقفل فوراً — `onRefresh` مش بيستنى | `home_page.dart` | `await bloc.stream.firstWhere(...)` أو `Completer` في الـ event |
-| 4 | Load-more بيضيف على `popularMovies` اللي الـ carousel بيعرضها | `movies_bloc.dart` | الـ carousel ياخد snapshot منفصل |
+| 3 | ✅ ~~`RefreshIndicator` بيقفل فوراً~~ (Phase 6) | `home` | الـ Screen بيستنى `isRefreshing` يرجع `false`. والـ refresh اللي بيفشل بقى بيسيب المحتوى ويطلّع snackbar (effect) بدل ما يقلب الشاشة كلها error |
+| 4 | ✅ ~~Load-more بيضيف على `popularMovies`~~ (Phase 6) | `home` | `LoadMorePopularMovies` طلع ميت (محدش بيبعته)، فاتشال |
 | 5 | `.env` (فيه TMDB key) bundled في الـ assets | `pubspec.yaml` | `--dart-define-from-file` |
-| 6 | أول load بيتعمل من `build()` بـ `addPostFrameCallback` (نفس bug `LaunchedEffect(state)`) | `home_page.dart` | الـ Route يبعت `Started` مرة واحدة |
+| 6 | ✅ ~~أول load من `build()` بـ `addPostFrameCallback`~~ (Phase 6) | `home` | الـ Route بيبعت `started` مرة واحدة، و`EventGuard` بيرفض أي `started` تاني |
 
 ### 🏗️ Architecture
-- **Circular dependency** `movies` ⇄ `favorites`: `MovieCard` → `FavoriteHeartButton` → … ← `favorites_page` → `MovieCard`. الحل: `MovieCard` في `core/ui` بـ `trailing: Widget?`.
+- ✅ ~~**Circular dependency** `movies` ⇄ `favorites`~~ (Phase 6): `MovieCard` في `shared/movie_ui` بـ slot اسمه `FavoriteButtonBuilder`، والـ router هو اللي بيحط فيه `FavoriteButton`. مفيش feature بتعتمد على feature.
 - **`Movie` entity** مستخدمة في 4 features → مكانها `domain`.
 - ✅ ~~**Domain فيها Flutter**~~ (Phase 3): `AppThemeMode` + `languageCode`، والتحويل لـ Flutter في `app_settings_flutter.dart`. الـ strings المحفوظة متغيرتش، فمش محتاجين migration (وفيه test بيثبت ده).
-- ✅ ~~**`Movie.fullPosterUrl`**~~ (Phase 3): الـ URLs و`formattedRating` و`releaseYear` اتنقلوا لـ extension في `lib/core/extensions/tmdb_display.dart`، وهتتنقل لـ `core_ui` في Phase 5. الـ `'N/A'` لسه مش مترجمة (Phase 6).
+- ✅ ~~**`Movie.fullPosterUrl`**~~ (Phase 3 → 6): بقت `TmdbImages` / `MovieFormat` في `core_ui`. `MovieFormat.year` بيرجّع `null` والـ widget بيعرض `notAvailable` المترجمة.
 - ✅ ~~**UseCases بتتخطّى**~~ (Phase 3): `GetMoviesByCategory` حل محل `GetPopularMovies` والـ `switch` اللي كان في `MovieListBloc`. ومفيش bloc بقى بيلمس الـ repository.
 - ✅ ~~**منطق اختيار الـ trailer**~~ (Phase 3): `GetMovieTrailer` حل محل `GetMovieVideos` + الـ `firstWhere` المتداخلة. وبقى بيتجاهل كمان الـ videos اللي من غير key.
 - **`injection_container.dart`** في `core` بيعمل import لكل الـ features → `injectable` + module لكل package، والـ composition في `app`.
-- Global cubits متسجلة بطرق مختلفة (`create:` مع lazy singleton، و`.value` مع singleton) → قاعدة واحدة.
+- ✅ ~~Global cubits متسجلة بطرق مختلفة~~ (Phase 6): الاتنين singletons في GetIt، والـ app بيعملهم provide بـ `.value` (الـ provider مايقفلهمش). و`GenresCubit` طلع ميت (بيتحمّل ومحدش بيقراه)، فاتشال.
 
 ### 🎬 أول feature package: `movie_details` (Phase 5) — **المرجع لباقي الـ features**
 ```
@@ -381,6 +381,28 @@ cd packages/features/movie_details && flutter test --update-goldens
 - **الـ genres عمرها ما ظهرت في الـ details:** TMDB بترجّع `genres: [{id, name}]` مش `genre_ids`. `MovieModel` بقى بيقرا الاتنين، وعليه regression test، واتأكدت منه على الـ API الحقيقي وعلى الـ simulator.
 - **الـ golden tests من أول تشغيل لقطت overflow في `MetaRow`** (عدد الـ votes الكبير، أو لما الـ text size يكبر). اتصلح بـ `Flexible` + ellipsis.
 
+### 🧩 باقي الـ features (Phase 6)
+```
+packages/
+├── shared/movie_ui/        MovieCard · MovieGrid (pagination) · MovieCategory.label · FavoriteButtonBuilder
+└── features/
+    ├── home/               HomeBloc + EffectEmitter (refreshFailed → snackbar)
+    ├── movie_list/         MovieListBloc (category param) — مفيش ARB، الـ strings من core_ui و movie_ui
+    ├── search/             SearchBloc (restartable + debounce) · SearchContent stateful للـ controller بس
+    ├── favorites/          FavoritesBloc (emit.forEach) + FavoriteIdsCubit و FavoriteButton على مستوى الـ app
+    └── settings/           SettingsCubit على مستوى الـ app · theme reveal في الـ Screen
+```
+**القرارات:**
+- **`shared/` طبقة جديدة** (زي Panda): widgets بتعتمد على `domain` و`core_ui`، ومستخدمة في أكتر من feature. ماتنفعش في `core_ui` لأن `core` مبيعتمدش على `domain`. الـ grid اللي فيه pagination كان متكرر 3 مرات.
+- **أول `EffectEmitter` حقيقي:** `HomeEffect.refreshFailed`. الـ Route هو اللي بيسمعه وبيعرض الـ snackbar.
+- **State على مستوى الـ app = Cubit من غير contract:** `FavoriteIdsCubit` و`SettingsCubit` مش view model لشاشة. بيتعملهم export من الـ feature، والـ app بيعملهم provide فوق الـ router. والـ lint بقى يعامل `*_cubit.dart` زي `*_bloc.dart` (pure Dart).
+- **`FavoriteButton`** هو الملف الوحيد اللي برّه الـ anatomy: binding صغير للـ cubit (`favorite_button.dart`)، والرسم نفسه في `widgets/favorite_heart.dart` تحت الـ lint.
+- **`EventGuard` في load-more بيسمح بأي loaded state بقصد:** الـ grid بيفضل يبعت scrolls لحد ما يعمل rebuild، والـ bloc بيرمي الزيادة. لو رفضناه كان الـ assert هيضرب في debug على حاجة طبيعية.
+- **event داخلي في search:** `SearchEvent.requested` لازم يبقى public (الـ freezed sealed class مقفولة على الـ library)، فمكتوب عليه إنه للـ bloc بس.
+- **Settings من غير `_navigation`:** الشاشة مالهاش exits، والـ Route مابيعملش provide (الـ cubit global).
+
+**🐛 اتلقطوا واتصلحوا:** "See All" كانت hardcoded إنجليزي · الـ carousel وعنوان الـ recent searches كانوا ثابتين على الشمال في RTL · bugs 3 و4 و6 فوق · `GenresCubit` و`LoadMorePopularMovies` كود ميت.
+
 ### 🧱 الـ Data layer (Phase 4) — زي `processCall` في Kotlin
 ```
 DataSource  ── processCall(() => dio.get(...), decode: X.fromJson) ──▶ DTO | throws AppException
@@ -397,17 +419,17 @@ Repository  ── guard(() async => (await ds.x()).toEntity())        ──▶
 
 ### ⚠️ Errors
 - `Failure` معمولة `abstract` → **`sealed`** عشان الـ `switch` exhaustive.
-- رسايل الـ Failure **عربي ومتكتبة في الكود** وبتتعرض مباشرة (`failure.message`) → الـ i18n بايظ. الـ presentation تعمل `switch` على نوع الـ Failure وتجيب النص من `AppLocalizations`.
+- ✅ ~~رسايل الـ Failure عربي في الكود~~ (Phase 6): كل الـ states بتشيل `Failure`، والـ UI بيعرض `failure.localizedMessage(context)`. الـ defaults في `core_result` بقت إنجليزي وللـ logs بس.
 - ✅ ~~try/catch متكرر~~ (Phase 4): `processCall` في الـ remote data sources، و`storageCall` في الـ local، و`guard` في الـ repositories، والتلاتة بيستخدموا `sealed AppException` واحدة. الـ repositories نزلت من 353 لـ 169 سطر، ومن غير ولا `try/catch`.
 - ✅ ~~`NetworkInfo.isConnected`~~ (Phase 4): اتشال هو و`connectivity_plus`. انقطاع النت بقى بيتعرف من الـ `DioException` نفسها، وبيتحول لـ `NoInternetException`.
 
 ### 🧹 Readability
-- `Color(0xFFE50914)` متكرر 18 مرة → token في `core/ui`.
+- ✅ ~~`Color(0xFFE50914)` متكرر 18 مرة~~ (Phase 5–6): `context.appColors.brand`. فاضل بس جوه `core_ui/theme`.
 - ~~76 ملف فيهم تعليقات عربي.~~ ✅ اتشالت (2026-10-02): الكومنتات التعليمية اتمسحت، واللي بيشرح "ليه" اتحوّل لسطر إنجليزي.
-- `_buildX()` methods في كل الـ pages → private widgets.
-- Modifiers مش موحدة (`movies_event` classes عادية، `search`/`details` `final class`).
+- ✅ ~~`_buildX()` methods~~ (Phase 6): اتحولت لـ private widgets أو لـ `widgets/`.
+- ✅ ~~Modifiers مش موحدة~~ (Phase 6): كل الـ contracts بقت `freezed`.
 - `List<Movie>` في الـ states → `IList` (`fast_immutable_collections`).
-- `copyWith` يدوي في كل state.
+- ✅ ~~`copyWith` يدوي~~ (Phase 6): `freezed`.
 
 ---
 
@@ -422,7 +444,7 @@ Repository  ── guard(() async => (await ds.x()).toEntity())        ──▶
 | **3** | `domain` pure Dart · نقل الـ entities · `GetMoviesByCategory` · `GetMovieTrailer` + tests | ✅ `packages/domain` (17 test) · import أي package مش متعرّفة كـ dependency = **error** |
 | **4** | `data` · `processCall` / `storageCall` / `guard` · `sealed AppException` · repo tests | ✅ `packages/data` (30 test) · `ErrorInterceptor` و`NetworkInfo` اتشالوا · الـ DTOs و`AppException` داخلية في الـ package |
 | **5** | **`movie_details`** كنموذج كامل بالـ 6 ملفات + bloc test + golden | ✅ `packages/features/movie_details` (12 test: bloc + 6 goldens en/ar) · `packages/core/ui` (5 test) · الـ lint plugin شغال على الكود ومفيش ولا warning |
-| **6** | `home` · `movie_list` · `search` · `favorites` · `settings` على نفس النموذج | |
+| **6** | `home` · `movie_list` · `search` · `favorites` · `settings` على نفس النموذج | ✅ 6 feature packages + `shared/movie_ui` · `lib/features` اتشال · 164 test (bloc + 32 golden en/ar) · الـ lint plugin شغال على كل الـ features ومفيش ولا warning |
 | **7** | `navigation` typed routes · `injectable` · `app` composition · باقي قواعد الـ lint | `app_router.dart` < 80 سطر |
 
 ---
@@ -436,7 +458,7 @@ Repository  ── guard(() async => (await ds.x()).toEntity())        ──▶
 | melos من Phase 1 | ✅ melos 8 فوق Dart pub workspaces (Phase 1) |
 | التطبيق في root الـ workspace مؤقتاً | ✅ Phase 1 — النقل لـ `app/` في Phase 7 (معاه `android/` و `ios/`) |
 | `AuthFailure` · `ValidationFailure` | ❌ اتشالوا (مش مستخدمين؛ مع `sealed` كل type زيادة = case إجباري). يرجعوا لما نحتاجهم |
-| رسايل الـ Failure العربي في الكود | ⏳ فاضلة لحد Phase 6: الـ states هتشيل `Failure` والـ UI يترجمها بمفاتيح `failure*` الموجودة في الـ ARB |
+| رسايل الـ Failure العربي في الكود | ✅ Phase 6: الـ states بتشيل `Failure` والـ UI بيترجمها من `core_ui` |
 | Flavors: `staging` · `production` | ✅ متعملة في Phase 0 |
 | analyzer plugin ولا `custom_lint` | ✅ analyzer plugin (Phase 2). شغال مع `dart analyze` والـ IDE، **مش** مع `flutter analyze` |
 | `EventGuard` يفضل ولا يتشال | ✅ يفضل، ويتجرّب فعلياً في `movie_details` (Phase 5) |

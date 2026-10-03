@@ -22,8 +22,7 @@ final class ServerFailure extends Failure {
 
 /// No connection, or the request timed out.
 final class NetworkFailure extends Failure {
-  // TODO(phase-6): user-facing text moves to l10n; keep the current text until then.
-  const NetworkFailure({super.message = 'مفيش اتصال بالإنترنت'});
+  const NetworkFailure({super.message = 'No internet connection'});
 }
 
 /// Reading or writing local storage failed.
@@ -33,6 +32,5 @@ final class CacheFailure extends Failure {
 
 /// Anything not covered above.
 final class UnknownFailure extends Failure {
-  // TODO(phase-6): user-facing text moves to l10n; keep the current text until then.
-  const UnknownFailure({super.message = 'حصل خطأ غير متوقع'});
+  const UnknownFailure({super.message = 'Unexpected error'});
 }

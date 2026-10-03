@@ -1,0 +1,14 @@
+{
+  "@@locale": "ar",
+  "moreTitle": "المزيد",
+  "moreAppearance": "المظهر",
+  "moreTheme": "الثيم",
+  "moreThemeLight": "فاتح",
+  "moreThemeDark": "داكن",
+  "moreLanguage": "اللغة",
+  "moreLanguageEnglish": "الإنجليزية",
+  "moreLanguageArabic": "العربية",
+  "moreAbout": "عن التطبيق",
+  "moreAboutTmdb": "بيانات الأفلام من TMDB",
+  "moreAboutVersion": "الإصدار {version}"
+}

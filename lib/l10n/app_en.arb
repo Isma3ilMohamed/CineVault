@@ -1,12 +1,6 @@
 {
   "@@locale": "en",
 
-  "appName": "CineVault",
-  "@appName": { "description": "App name (brand)" },
-
-  "tryAgain": "Try again",
-  "clear": "Clear",
-  "seeAll": "See All",
   "errorPrefix": "Error: {message}",
   "@errorPrefix": {
     "placeholders": {
@@ -14,48 +8,10 @@
     }
   },
 
-  "sectionTrending": "Trending Today",
-  "sectionPopular": "Popular",
-  "sectionTopRated": "Top Rated",
-  "sectionNowPlaying": "Now Playing",
-  "sectionUpcoming": "Upcoming",
-
   "detailsInvalidMovieId": "Invalid movie id",
-
-  "searchHint": "Search for a movie...",
-  "searchRecent": "Recent searches",
-  "searchNothingFound": "No results for \"{query}\"",
-  "@searchNothingFound": {
-    "placeholders": {
-      "query": { "type": "String" }
-    }
-  },
-  "searchEmptyPrompt": "Find any movie",
-
-  "favoritesTitle": "Favorites",
-  "favoritesEmptyTitle": "No favorites yet",
-  "favoritesEmptyCta": "Search for a movie",
+  "invalidCategory": "Invalid category",
 
   "tabHome": "Home",
   "tabFavorites": "Favorites",
-  "tabMore": "More",
-
-  "moreTitle": "More",
-  "moreAppearance": "Appearance",
-  "moreTheme": "Theme",
-  "moreThemeLight": "Light",
-  "moreThemeDark": "Dark",
-  "moreThemeSystem": "System",
-  "moreLanguage": "Language",
-  "moreLanguageEnglish": "English",
-  "moreLanguageArabic": "Arabic",
-  "moreAbout": "About",
-  "moreAboutTmdb": "Movie data from TMDB",
-  "moreAboutVersion": "Version {version}",
-  "@moreAboutVersion": {
-    "placeholders": {
-      "version": { "type": "String" }
-    }
-  }
-
+  "tabMore": "More"
 }

@@ -1,24 +1,22 @@
-import 'package:cine_vault/core/di/injection_container.dart';
+import 'dart:async';
+
 import 'package:cine_vault/core/widgets/app_shell.dart';
-import 'package:cine_vault/features/favorites/presentation/bloc/favorites_bloc.dart';
-import 'package:cine_vault/features/favorites/presentation/pages/favorites_page.dart';
-import 'package:cine_vault/features/favorites/presentation/widgets/favorite_heart_button.dart';
-import 'package:cine_vault/features/movies/presentation/bloc/movie_list_bloc.dart';
-import 'package:cine_vault/features/movies/presentation/bloc/movies_bloc.dart';
-import 'package:cine_vault/features/movies/presentation/pages/home_page.dart';
-import 'package:cine_vault/features/movies/presentation/pages/movie_list_page.dart';
-import 'package:cine_vault/features/search/presentation/bloc/search_bloc.dart';
-import 'package:cine_vault/features/search/presentation/pages/search_page.dart';
-import 'package:cine_vault/features/settings/presentation/pages/more_page.dart';
 import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:domain/domain.dart';
+import 'package:favorites/favorites.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:home/home.dart';
 import 'package:movie_details/movie_details.dart';
+import 'package:movie_list/movie_list.dart';
+import 'package:search/search.dart';
+import 'package:settings/settings.dart';
 
 /// `router(themeBoundaryKey)`: the key must sit on the RepaintBoundary wrapping
-/// the app; MorePage passes it to ThemeRevealController for the theme toggle.
+/// the app; the settings screen snapshots it for the theme toggle.
+///
+/// Every screen is a feature Route; this file only maps their exit callbacks
+/// to locations. Typed routes replace the strings in Phase 7.
 class AppRouter {
   AppRouter._();
 
@@ -41,8 +39,12 @@ class AppRouter {
                 GoRoute(
                   path: '/home',
                   name: 'home',
-                  builder: (context, state) =>
-                      BlocProvider(create: (_) => sl<MoviesBloc>(), child: const HomePage()),
+                  builder: (context, state) => HomeRoute(
+                    favoriteButton: _favoriteButton,
+                    onOpenMovie: (id, heroTag) => _openMovie(context, id, heroTag),
+                    onOpenCategory: (category) => unawaited(context.push('/list/${category.slug}')),
+                    onOpenSearch: () => unawaited(context.push('/search')),
+                  ),
                 ),
               ],
             ),
@@ -52,9 +54,9 @@ class AppRouter {
                 GoRoute(
                   path: '/favorites',
                   name: 'favorites',
-                  builder: (context, state) => BlocProvider(
-                    create: (_) => sl<FavoritesBloc>()..add(const FavoritesSubscribed()),
-                    child: const FavoritesPage(),
+                  builder: (context, state) => FavoritesRoute(
+                    onOpenMovie: (id, heroTag) => _openMovie(context, id, heroTag),
+                    onOpenSearch: () => unawaited(context.push('/search')),
                   ),
                 ),
               ],
@@ -65,7 +67,7 @@ class AppRouter {
                 GoRoute(
                   path: '/more',
                   name: 'more',
-                  builder: (context, state) => MorePage(themeBoundaryKey: themeBoundaryKey),
+                  builder: (context, state) => SettingsRoute(themeBoundaryKey: themeBoundaryKey),
                 ),
               ],
             ),
@@ -75,9 +77,10 @@ class AppRouter {
           parentNavigatorKey: _rootNavigatorKey,
           path: '/search',
           name: 'search',
-          builder: (context, state) => BlocProvider(
-            create: (_) => sl<SearchBloc>()..add(const SearchStarted()),
-            child: const SearchPage(),
+          builder: (context, state) => SearchRoute(
+            favoriteButton: _favoriteButton,
+            onBack: context.pop,
+            onOpenMovie: (id, heroTag) => _openMovie(context, id, heroTag),
           ),
         ),
         GoRoute(
@@ -87,11 +90,13 @@ class AppRouter {
           builder: (context, state) {
             final category = MovieCategory.fromSlug(state.pathParameters['category']);
             if (category == null) {
-              return const Scaffold(body: Center(child: Text('Invalid category')));
+              return _InvalidRoute((l10n) => l10n.invalidCategory);
             }
-            return BlocProvider(
-              create: (_) => sl<MovieListBloc>(param1: category)..add(const MovieListStarted()),
-              child: MovieListPage(category: category),
+            return MovieListRoute(
+              category: category,
+              favoriteButton: _favoriteButton,
+              onBack: context.pop,
+              onOpenMovie: (id, heroTag) => _openMovie(context, id, heroTag),
             );
           },
         ),
@@ -100,19 +105,18 @@ class AppRouter {
           path: '/movie/:id',
           name: 'movieDetails',
           builder: (context, state) {
-            final rawId = state.pathParameters['id'];
-            final movieId = int.tryParse(rawId ?? '');
+            final movieId = int.tryParse(state.pathParameters['id'] ?? '');
             if (movieId == null) {
-              return const _InvalidMovieRoute();
+              return _InvalidRoute((l10n) => l10n.detailsInvalidMovieId);
             }
             final extra = state.extra;
             final heroTag = (extra is Map<String, Object?>) ? extra['heroTag'] as String? : null;
             return MovieDetailsRoute(
               movieId: movieId,
               heroTag: heroTag,
+              favoriteButton: _favoriteButton,
               onBack: context.pop,
-              onOpenMovie: (id, tag) => context.push('/movie/$id', extra: {'heroTag': tag}),
-              favoriteButton: (_, movie, size) => FavoriteHeartButton(movie: movie, size: size),
+              onOpenMovie: (id, heroTag) => _openMovie(context, id, heroTag),
             );
           },
         ),
@@ -122,13 +126,23 @@ class AppRouter {
       ),
     );
   }
+
+  static void _openMovie(BuildContext context, int movieId, String heroTag) {
+    unawaited(context.push('/movie/$movieId', extra: {'heroTag': heroTag}));
+  }
+
+  /// Fills every feature's favorite-button slot with the favorites feature's button.
+  static Widget _favoriteButton(BuildContext context, Movie movie, double size) =>
+      FavoriteButton(movie: movie, size: size);
 }
 
-class _InvalidMovieRoute extends StatelessWidget {
-  const _InvalidMovieRoute();
+class _InvalidRoute extends StatelessWidget {
+  const _InvalidRoute(this.message);
+
+  final String Function(AppLocalizations l10n) message;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text(AppLocalizations.of(context).detailsInvalidMovieId)));
+    return Scaffold(body: Center(child: Text(message(AppLocalizations.of(context)))));
   }
 }

@@ -1,45 +1,12 @@
 {
   "@@locale": "ar",
 
-  "appName": "CineVault",
-
-  "tryAgain": "حاول تاني",
-  "clear": "مسح",
-  "seeAll": "عرض الكل",
   "errorPrefix": "خطأ: {message}",
 
-  "sectionTrending": "الرائج اليوم",
-  "sectionPopular": "الأكثر شهرة",
-  "sectionTopRated": "الأعلى تقييماً",
-  "sectionNowPlaying": "يُعرض الآن",
-  "sectionUpcoming": "قريباً",
-
   "detailsInvalidMovieId": "رقم فيلم غير صالح",
-
-  "searchHint": "ابحث عن فيلم...",
-  "searchRecent": "عمليات البحث الأخيرة",
-  "searchNothingFound": "مفيش نتائج لـ \"{query}\"",
-  "searchEmptyPrompt": "دور على أي فيلم",
-
-  "favoritesTitle": "المفضلة",
-  "favoritesEmptyTitle": "مفيش أفلام مفضلة لسه",
-  "favoritesEmptyCta": "ابحث عن فيلم",
+  "invalidCategory": "قسم غير صالح",
 
   "tabHome": "الرئيسية",
   "tabFavorites": "المفضلة",
-  "tabMore": "المزيد",
-
-  "moreTitle": "المزيد",
-  "moreAppearance": "المظهر",
-  "moreTheme": "الثيم",
-  "moreThemeLight": "فاتح",
-  "moreThemeDark": "داكن",
-  "moreThemeSystem": "حسب النظام",
-  "moreLanguage": "اللغة",
-  "moreLanguageEnglish": "الإنجليزية",
-  "moreLanguageArabic": "العربية",
-  "moreAbout": "عن التطبيق",
-  "moreAboutTmdb": "بيانات الأفلام من TMDB",
-  "moreAboutVersion": "الإصدار {version}"
-
+  "tabMore": "المزيد"
 }

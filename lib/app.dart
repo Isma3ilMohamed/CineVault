@@ -1,19 +1,18 @@
-import 'dart:async';
-
 import 'package:cine_vault/core/di/injection_container.dart';
 import 'package:cine_vault/core/router/app_router.dart';
-import 'package:cine_vault/features/favorites/presentation/cubit/favorite_ids_cubit.dart';
-import 'package:cine_vault/features/movies/presentation/cubit/genres_cubit.dart';
-import 'package:cine_vault/features/settings/presentation/app_settings_flutter.dart';
-import 'package:cine_vault/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
+import 'package:favorites/favorites.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:home/home.dart';
 import 'package:movie_details/movie_details.dart';
+import 'package:movie_ui/movie_ui.dart';
+import 'package:search/search.dart';
+import 'package:settings/settings.dart';
 
 class CineVaultApp extends StatefulWidget {
   const CineVaultApp({super.key});
@@ -39,17 +38,9 @@ class _CineVaultAppState extends State<CineVaultApp> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<FavoriteIdsCubit>(create: (_) => sl<FavoriteIdsCubit>()),
+        // App-wide singletons owned by GetIt, so `.value`: the provider must not close them.
+        BlocProvider<FavoriteIdsCubit>.value(value: sl<FavoriteIdsCubit>()),
         BlocProvider<SettingsCubit>.value(value: sl<SettingsCubit>()),
-        BlocProvider<GenresCubit>(
-          create: (_) {
-            // Fire-and-forget: lookups return empty until loaded, then the UI
-            // re-renders via context.select.
-            final cubit = sl<GenresCubit>();
-            unawaited(cubit.load());
-            return cubit;
-          },
-        ),
       ],
       child: BlocBuilder<SettingsCubit, AppSettings>(
         builder: (context, settings) {
@@ -64,7 +55,12 @@ class _CineVaultAppState extends State<CineVaultApp> {
             localizationsDelegates: const [
               AppLocalizations.delegate,
               CoreUiLocalizations.delegate,
+              MovieUiLocalizations.delegate,
+              HomeLocalizations.delegate,
               MovieDetailsLocalizations.delegate,
+              SearchLocalizations.delegate,
+              FavoritesLocalizations.delegate,
+              SettingsLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,

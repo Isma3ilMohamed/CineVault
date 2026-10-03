@@ -1,0 +1,19 @@
+{
+  "@@locale": "en",
+  "moreTitle": "More",
+  "moreAppearance": "Appearance",
+  "moreTheme": "Theme",
+  "moreThemeLight": "Light",
+  "moreThemeDark": "Dark",
+  "moreLanguage": "Language",
+  "moreLanguageEnglish": "English",
+  "moreLanguageArabic": "Arabic",
+  "moreAbout": "About",
+  "moreAboutTmdb": "Movie data from TMDB",
+  "moreAboutVersion": "Version {version}",
+  "@moreAboutVersion": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  }
+}

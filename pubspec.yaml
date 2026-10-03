@@ -14,7 +14,12 @@ workspace:
   - packages/core/ui
   - packages/data
   - packages/domain
+  - packages/features/favorites
+  - packages/features/home
   - packages/features/movie_details
+  - packages/features/movie_list
+  - packages/features/search
+  - packages/features/settings
   - packages/shared/movie_ui
 
 dependencies:
@@ -25,24 +30,29 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   # Workspace packages
-  core_base:
-    path: packages/core/base
-  core_result:
-    path: packages/core/result
   core_ui:
     path: packages/core/ui
   data:
     path: packages/data
   domain:
     path: packages/domain
+  favorites:
+    path: packages/features/favorites
+  home:
+    path: packages/features/home
   movie_details:
     path: packages/features/movie_details
+  movie_list:
+    path: packages/features/movie_list
+  movie_ui:
+    path: packages/shared/movie_ui
+  search:
+    path: packages/features/search
+  settings:
+    path: packages/features/settings
 
   # State Management
   flutter_bloc: ^8.1.6
-  bloc: ^8.1.4
-  bloc_concurrency: ^0.2.5
-  equatable: ^2.0.5
 
   # Dependency Injection
   get_it: ^8.0.0
@@ -53,13 +63,6 @@ dependencies:
 
   # Navigation
   go_router: ^14.6.1
-
-  # UI
-  cached_network_image: ^3.4.1
-  shimmer: ^3.0.0
-  carousel_slider: ^5.0.0
-  youtube_player_iframe: ^5.2.0
-  url_launcher: ^6.3.1
 
   # Utils
   intl: ^0.20.2
@@ -72,10 +75,6 @@ dev_dependencies:
   # Code Generation
   build_runner: ^2.4.13
   json_serializable: ^6.8.0
-
-  # Testing
-  bloc_test: ^9.1.7
-  mocktail: ^1.0.4
 
   # Workspace tooling
   melos: ^8.6.0

@@ -1,0 +1,11 @@
+{
+  "@@locale": "en",
+  "homeSeeAll": "See All",
+  "homeSearch": "Search",
+  "homeRefreshFailed": "Couldn't refresh: {reason}",
+  "@homeRefreshFailed": {
+    "placeholders": {
+      "reason": { "type": "String" }
+    }
+  }
+}

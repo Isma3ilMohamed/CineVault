@@ -1,0 +1,6 @@
+{
+  "@@locale": "ar",
+  "homeSeeAll": "عرض الكل",
+  "homeSearch": "بحث",
+  "homeRefreshFailed": "معرفناش نحدّث: {reason}"
+}

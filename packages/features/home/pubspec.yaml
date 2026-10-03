@@ -1,0 +1,42 @@
+name: home
+description: Home screen with the featured carousel and category rows (feature package, see the feature anatomy).
+publish_to: none
+version: 0.0.1
+
+environment:
+  sdk: ^3.13.0
+
+resolution: workspace
+
+dependencies:
+  bloc: ^8.1.4
+  carousel_slider: ^5.0.0
+  core_base:
+    path: ../../core/base
+  core_result:
+    path: ../../core/result
+  core_ui:
+    path: ../../core/ui
+  domain:
+    path: ../../domain
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.6
+  flutter_localizations:
+    sdk: flutter
+  freezed_annotation: ^3.1.0
+  get_it: ^8.0.0
+  intl: ^0.20.2
+  movie_ui:
+    path: ../../shared/movie_ui
+
+dev_dependencies:
+  bloc_test: ^9.1.7
+  build_runner: ^2.16.1
+  flutter_test:
+    sdk: flutter
+  freezed: ^4.0.1
+  mocktail: ^1.0.4
+
+flutter:
+  generate: true

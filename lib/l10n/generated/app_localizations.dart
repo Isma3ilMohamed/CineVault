@@ -93,65 +93,11 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[Locale('ar'), Locale('en')];
 
-  /// App name (brand)
-  ///
-  /// In en, this message translates to:
-  /// **'CineVault'**
-  String get appName;
-
-  /// No description provided for @tryAgain.
-  ///
-  /// In en, this message translates to:
-  /// **'Try again'**
-  String get tryAgain;
-
-  /// No description provided for @clear.
-  ///
-  /// In en, this message translates to:
-  /// **'Clear'**
-  String get clear;
-
-  /// No description provided for @seeAll.
-  ///
-  /// In en, this message translates to:
-  /// **'See All'**
-  String get seeAll;
-
   /// No description provided for @errorPrefix.
   ///
   /// In en, this message translates to:
   /// **'Error: {message}'**
   String errorPrefix(String message);
-
-  /// No description provided for @sectionTrending.
-  ///
-  /// In en, this message translates to:
-  /// **'Trending Today'**
-  String get sectionTrending;
-
-  /// No description provided for @sectionPopular.
-  ///
-  /// In en, this message translates to:
-  /// **'Popular'**
-  String get sectionPopular;
-
-  /// No description provided for @sectionTopRated.
-  ///
-  /// In en, this message translates to:
-  /// **'Top Rated'**
-  String get sectionTopRated;
-
-  /// No description provided for @sectionNowPlaying.
-  ///
-  /// In en, this message translates to:
-  /// **'Now Playing'**
-  String get sectionNowPlaying;
-
-  /// No description provided for @sectionUpcoming.
-  ///
-  /// In en, this message translates to:
-  /// **'Upcoming'**
-  String get sectionUpcoming;
 
   /// No description provided for @detailsInvalidMovieId.
   ///
@@ -159,47 +105,11 @@ abstract class AppLocalizations {
   /// **'Invalid movie id'**
   String get detailsInvalidMovieId;
 
-  /// No description provided for @searchHint.
+  /// No description provided for @invalidCategory.
   ///
   /// In en, this message translates to:
-  /// **'Search for a movie...'**
-  String get searchHint;
-
-  /// No description provided for @searchRecent.
-  ///
-  /// In en, this message translates to:
-  /// **'Recent searches'**
-  String get searchRecent;
-
-  /// No description provided for @searchNothingFound.
-  ///
-  /// In en, this message translates to:
-  /// **'No results for \"{query}\"'**
-  String searchNothingFound(String query);
-
-  /// No description provided for @searchEmptyPrompt.
-  ///
-  /// In en, this message translates to:
-  /// **'Find any movie'**
-  String get searchEmptyPrompt;
-
-  /// No description provided for @favoritesTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Favorites'**
-  String get favoritesTitle;
-
-  /// No description provided for @favoritesEmptyTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'No favorites yet'**
-  String get favoritesEmptyTitle;
-
-  /// No description provided for @favoritesEmptyCta.
-  ///
-  /// In en, this message translates to:
-  /// **'Search for a movie'**
-  String get favoritesEmptyCta;
+  /// **'Invalid category'**
+  String get invalidCategory;
 
   /// No description provided for @tabHome.
   ///
@@ -218,78 +128,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'More'**
   String get tabMore;
-
-  /// No description provided for @moreTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'More'**
-  String get moreTitle;
-
-  /// No description provided for @moreAppearance.
-  ///
-  /// In en, this message translates to:
-  /// **'Appearance'**
-  String get moreAppearance;
-
-  /// No description provided for @moreTheme.
-  ///
-  /// In en, this message translates to:
-  /// **'Theme'**
-  String get moreTheme;
-
-  /// No description provided for @moreThemeLight.
-  ///
-  /// In en, this message translates to:
-  /// **'Light'**
-  String get moreThemeLight;
-
-  /// No description provided for @moreThemeDark.
-  ///
-  /// In en, this message translates to:
-  /// **'Dark'**
-  String get moreThemeDark;
-
-  /// No description provided for @moreThemeSystem.
-  ///
-  /// In en, this message translates to:
-  /// **'System'**
-  String get moreThemeSystem;
-
-  /// No description provided for @moreLanguage.
-  ///
-  /// In en, this message translates to:
-  /// **'Language'**
-  String get moreLanguage;
-
-  /// No description provided for @moreLanguageEnglish.
-  ///
-  /// In en, this message translates to:
-  /// **'English'**
-  String get moreLanguageEnglish;
-
-  /// No description provided for @moreLanguageArabic.
-  ///
-  /// In en, this message translates to:
-  /// **'Arabic'**
-  String get moreLanguageArabic;
-
-  /// No description provided for @moreAbout.
-  ///
-  /// In en, this message translates to:
-  /// **'About'**
-  String get moreAbout;
-
-  /// No description provided for @moreAboutTmdb.
-  ///
-  /// In en, this message translates to:
-  /// **'Movie data from TMDB'**
-  String get moreAboutTmdb;
-
-  /// No description provided for @moreAboutVersion.
-  ///
-  /// In en, this message translates to:
-  /// **'Version {version}'**
-  String moreAboutVersion(String version);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

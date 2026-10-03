@@ -26,7 +26,6 @@ Future<Result<T>> guard<T>(Future<T> Function() body) async {
 
 extension AppExceptionToFailure on AppException {
   Failure toFailure() => switch (this) {
-    // TODO(phase-6): user-facing text moves to l10n; the default keeps today's message.
     NoInternetException() => const NetworkFailure(),
     ServerException(:final message, :final statusCode) => ServerFailure(
       message: message,
