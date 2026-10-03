@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A newer push to the same branch or PR cancels the run in progress.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Same version as local development; bump both together.
+  FLUTTER_VERSION: 3.47.4
+
+jobs:
+  checks:
+    name: Format, analyze, test
+    # macOS because the golden files were generated on macOS.
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve the workspace
+        run: flutter pub get
+
+      - name: Format
+        run: dart run melos run format
+
+      # dart analyze (not flutter analyze) so the cine_vault_lints rules run.
+      - name: Analyze
+        run: dart run melos run analyze
+
+      - name: Test (bloc, golden, lint plugin)
+        run: dart run melos run test
+
+      - name: Generated code is up to date
+        run: |
+          dart run melos run generate
+          git diff --exit-code || (echo "::error::Generated code is stale. Run 'dart run melos run generate' and commit." && exit 1)
+
+  build-android:
+    name: Build Android (staging)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      # The build only needs the defines to exist; the placeholder token is
+      # never used because the app is not run.
+      - name: Config from the example
+        run: cp app/config/staging.env.example app/config/staging.env
+
+      - name: Build
+        working-directory: app
+        run: flutter build apk --debug --flavor staging --dart-define-from-file=config/staging.env
+
+  build-ios:
+    name: Build iOS (staging, simulator)
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Config from the example
+        run: cp app/config/staging.env.example app/config/staging.env
+
+      - name: Build
+        working-directory: app
+        run: flutter build ios --simulator --debug --flavor staging --dart-define-from-file=config/staging.env
