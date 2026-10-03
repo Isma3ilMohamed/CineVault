@@ -37,10 +37,11 @@ cine_vault/                     # Workspace root, and (for now) the app itself
 ├── lib/                        # App: features not yet moved into packages
 ├── test/                       # App tests
 ├── packages/
-│   └── core/
-│       ├── result/             # core_result: Result, sealed Failure (pure Dart)
-│       └── base/               # core_base: EffectEmitter, EventGuard (pure Dart)
-│                               #            + BlocEffectListener (widgets.dart)
+│   ├── core/
+│   │   ├── result/             # core_result: Result, sealed Failure (pure Dart)
+│   │   └── base/               # core_base: EffectEmitter, EventGuard (pure Dart)
+│   │                           #            + BlocEffectListener (widgets.dart)
+│   └── lints/                  # cine_vault_lints: analyzer plugin (not a workspace member)
 ├── config/                     # Per-flavor build config (*.env git-ignored)
 └── pubspec.yaml                # App deps + `workspace:` list + melos scripts
 ```
@@ -115,9 +116,15 @@ The workspace is driven by [melos](https://melos.invertase.dev) (a dev dependenc
 
 ```bash
 dart run melos run format    # fails if anything is unformatted
-dart run melos run analyze   # flutter analyze --fatal-infos, whole workspace
-dart run melos run test      # every package's tests + the app's tests
+dart run melos run analyze   # dart analyze --fatal-infos, whole workspace (+ feature anatomy rules)
+dart run melos run test      # every package's tests + the app's tests + the lint plugin's tests
 ```
+
+**Feature anatomy rules.** `packages/lints` is an analyzer plugin (enabled under `plugins:` in
+`analysis_options.yaml`) that enforces the file split described in `ARCHITECTURE_NOTES.md` for
+code under `packages/features/`. Its warnings show up in the IDE and in `dart analyze`, **not** in
+`flutter analyze`, and only when analysing from the repo root. Restart the analysis server after
+changing the plugin.
 
 Adding a package: create it under `packages/`, give its pubspec
 `resolution: workspace`, and list it under `workspace:` in the root `pubspec.yaml`.

@@ -29,3 +29,9 @@ linter:
     empty_container_bodies: false
     # pubspec dependencies are grouped by purpose (state, networking, UI...).
     sort_pub_dependencies: false
+
+# Feature anatomy rules (packages/lints). They only check files under
+# packages/features/; see ARCHITECTURE_NOTES.md §1-2.
+plugins:
+  cine_vault_lints:
+    path: packages/lints

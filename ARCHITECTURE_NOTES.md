@@ -202,29 +202,33 @@ linter:
     use_build_context_synchronously: true
 ```
 
-### الطبقة 3 — قواعدنا: analyzer plugin (`cine_vault_lints`)
-الـ Dart الحديث بيدعم analyzer plugins مباشرة (`plugins:` في `analysis_options.yaml`). بنعمل package صغيرة فيها القواعد اللي محدش هيكتبهالنا — **ده اللي بيفرض الـ Feature Anatomy**:
+### الطبقة 3 — قواعدنا: analyzer plugin (`cine_vault_lints`) ✅ (Phase 2)
+analyzer plugin بالـ API الجديد (`analysis_server_plugin`، Dart ≥ 3.10) في `packages/lints`، متفعّل من `plugins:` في الـ root `analysis_options.yaml`. **ده اللي بيفرض الـ Feature Anatomy.**
 
-| القاعدة | بتمنع إيه |
-|---|---|
-| `content_must_be_pure` | `*_content.dart` و`widgets/` يعملوا import لـ `flutter_bloc` أو `*_bloc.dart` |
-| `bloc_must_be_pure_dart` | `*_bloc.dart` و`*_contract.dart` يعملوا import لـ `package:flutter` |
-| `screen_no_di` | `*_screen.dart` يستخدم `getIt` |
-| `provider_only_in_route` | `BlocProvider` / `BlocEffectListener` برّه `*_route.dart` |
-| `no_navigation_in_features` | `context.push` / `Navigator.` جوه أي feature package |
-| `max_file_lines` | ملف > 250 سطر (Content يتقسم لـ `widgets/`) |
-| `no_build_helper_methods` | `Widget _buildX()` — تتحول لـ private widget class (أوضح + rebuilds أقل) |
-| `no_hardcoded_colors` | `Color(0x...)` برّه `core_ui/theme` |
-| `english_comments_only` | تعليقات فيها حروف عربي |
+- **النطاق:** الملفات تحت `packages/features/<name>/lib/` بس. ودور الملف بيتحدد من اسمه (`_route` · `_navigation` · `_screen` · `_content` · `_contract` · `_bloc` · `widgets/`). الكود القديم في `lib/` مش بيتفحص لحد ما يتنقل.
+- **الـ severity:** warning، يعني بتقع في `melos run analyze`، وبتظهر في الـ IDE.
+- **⚠ `dart analyze` مش `flutter analyze`:** على Flutter 3.47، `flutter analyze` **مبيطلّعش** الـ diagnostics بتاعة الـ plugins (اتجرّب). وكمان الـ plugins **بتشتغل بس لما الـ analyze يتعمل من root الـ workspace** (تحليل فولدر فرعي مش بيشغّلها).
+- **الـ package برّه الـ workspace بقصد:** الـ analysis server بيعمل resolution للـ plugin في synthetic package لوحدها، و`analyzer` بيمشي مع إصدار الـ SDK.
+- بعد أي تعديل في الـ plugin أو في `plugins:`، لازم تعمل restart للـ analysis server في الـ IDE.
 
-> لو الـ plugin API طلع لسه مش مستقر وقت التنفيذ، البديل `custom_lint` بنفس القواعد.
+| القاعدة | الحالة | بتمنع إيه |
+|---|---|---|
+| `content_must_be_pure` | ✅ | `_content` و`widgets/` يعملوا import لـ `bloc` / `flutter_bloc` / `provider` / `get_it` / `go_router` / `core_base` أو `*_bloc` / `*_route` / `*_screen` |
+| `bloc_must_be_pure_dart` | ✅ | `_bloc` و`_contract` و`_navigation` يعملوا import لـ `flutter` / `dart:ui` / `flutter_bloc` / `go_router` / `core_base/widgets.dart` |
+| `provider_only_in_route` | ✅ | `BlocProvider` / `MultiBlocProvider` / `RepositoryProvider` / `BlocEffectListener` يتعملوا برّه `_route` (بيتشيّك على الـ library الحقيقية، فأي class بنفس الاسم مش بيتأثر) |
+| `no_navigation_in_features` | ✅ | `go_router` / `auto_route` أو `Navigator` في أي ملف feature، **حتى الـ Route نفسه** (الـ Route بياخد callbacks) |
+| `screen_no_di` | ⏳ | `*_screen.dart` يستخدم `getIt` |
+| `max_file_lines` | ⏳ | ملف أكبر من 250 سطر (الـ Content يتقسم لـ `widgets/`) |
+| `no_build_helper_methods` | ⏳ | `Widget _buildX()`: تتحول لـ private widget class (أوضح + rebuilds أقل) |
+| `no_hardcoded_colors` | ⏳ | `Color(0x...)` برّه `core_ui/theme` |
+| `english_comments_only` | ⏳ | تعليقات فيها حروف عربي |
 
 ### Enforcement
 ```bash
 # melos scripts
 melos run format   # dart format --set-exit-if-changed .
-melos run analyze  # dart analyze --fatal-infos
-melos run test
+melos run analyze  # dart analyze --fatal-infos (+ pub get للـ plugin)
+melos run test     # dart test + flutter test + plugin tests
 ```
 + pre-commit hook (`lefthook`) بيشغّل format + analyze على الملفات المتغيرة بس.
 
@@ -359,7 +363,7 @@ class MovieDetailsRouteData extends GoRouteData {
 | **0-A** | إصلاح الـ test القديم · bugs 1، 2، 5 · flavors (staging/production) + config per flavor | tests خضرا، الـ flavors بتعمل build على Android و iOS |
 | **0-B** | رفع الـ SDK لـ `^3.13` · `very_good_analysis` · `dart format` · `dart fix` + إصلاح الباقي بإيدينا | ✅ `flutter analyze`: No issues |
 | **1** | melos workspace · `core/result` (sealed Failure) · `core/base` (EffectEmitter, EventGuard, BlocEffectListener) + tests | ✅ 18 test في الـ packages · `melos run analyze/test` خضرا |
-| **2** | `lints` package — أول 4 قواعد (content pure · bloc pure · provider only in route · no navigation in features) | القواعد بتفشل على الكود الحالي ✔ |
+| **2** | `lints` package — أول 4 قواعد (content pure · bloc pure · provider only in route · no navigation in features) | ✅ 22 test للـ plugin · الـ 4 قواعد اتجرّبوا end-to-end بـ `dart analyze` على ملف مخالف · الـ workspace نضيف |
 | **3** | `domain` pure Dart · نقل الـ entities · `GetMoviesByCategory` · `GetMovieTrailer` + tests | `domain` من غير `flutter` |
 | **4** | `data` · `guard()` · interceptor بـ `reject` · repo tests | |
 | **5** | **`movie_details`** كنموذج كامل بالـ 6 ملفات + bloc test + golden | ده الـ reference لباقي الـ features |
@@ -379,7 +383,8 @@ class MovieDetailsRouteData extends GoRouteData {
 | `AuthFailure` · `ValidationFailure` | ❌ اتشالوا (مش مستخدمين؛ مع `sealed` كل type زيادة = case إجباري). يرجعوا لما نحتاجهم |
 | رسايل الـ Failure العربي في الكود | ⏳ فاضلة لحد Phase 6: الـ states هتشيل `Failure` والـ UI يترجمها بمفاتيح `failure*` الموجودة في الـ ARB |
 | Flavors: `staging` · `production` | ✅ متعملة في Phase 0 |
-| analyzer plugin ولا `custom_lint` | ⏳ نقرر في Phase 2 بعد ما نجرّب الـ plugin API على Dart 3.13 |
+| analyzer plugin ولا `custom_lint` | ✅ analyzer plugin (Phase 2). شغال مع `dart analyze` والـ IDE، **مش** مع `flutter analyze` |
+| `EventGuard` يفضل ولا يتشال | ✅ يفضل، ويتجرّب فعلياً في `movie_details` (Phase 5) |
 | إعادة تسمية الـ app id (`cine_vault_temp` → ?) | ⏳ مفتوح |
 
 ## 8. Workflow

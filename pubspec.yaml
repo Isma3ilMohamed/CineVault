@@ -90,17 +90,20 @@ melos:
       description: Fail if any Dart file is not formatted.
       run: dart format --set-exit-if-changed .
     analyze:
-      description: Analyze the whole workspace with infos treated as failures.
-      run: flutter analyze --fatal-infos
+      description: >-
+        Analyze the whole workspace with infos treated as failures. Uses
+        `dart analyze` because `flutter analyze` does not report analyzer
+        plugin diagnostics (packages/lints).
+      run: dart pub get --directory packages/lints && dart analyze --fatal-infos
     test:
       description: Run every test in the workspace.
-      run: dart run melos run test:dart && dart run melos run test:flutter
+      run: dart run melos run test:dart && dart run melos run test:flutter && dart run melos run test:lints
     test:dart:
       description: Tests of pure Dart packages.
       exec: dart test
       packageFilters:
         dirExists: test
-        flutter: false
+        noDependsOn: flutter
     test:flutter:
       description: Tests of Flutter packages and the app.
       exec:
@@ -109,4 +112,7 @@ melos:
         concurrency: 1
       packageFilters:
         dirExists: test
-        flutter: true
+        dependsOn: flutter
+    test:lints:
+      description: Tests of the analyzer plugin (packages/lints, outside the workspace).
+      run: cd packages/lints && dart pub get && dart test
