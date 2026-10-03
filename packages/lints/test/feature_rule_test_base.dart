@@ -19,6 +19,7 @@ class BlocProvider<T> { const BlocProvider({Object? create, Object? child}); }
 class MultiBlocProvider { const MultiBlocProvider(); }
 ''');
     newPackage('go_router').addFile('lib/go_router.dart', 'class GoRouter {}');
+    newPackage('get_it').addFile('lib/get_it.dart', 'class GetIt {}');
     newPackage('core_base')
       ..addFile('lib/core_base.dart', 'mixin EffectEmitter {}')
       ..addFile(
