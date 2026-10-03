@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:cine_vault/core/di/injection_container.dart';
 import 'package:cine_vault/core/router/app_router.dart';
-import 'package:cine_vault/core/theme/app_theme.dart';
 import 'package:cine_vault/features/favorites/presentation/cubit/favorite_ids_cubit.dart';
 import 'package:cine_vault/features/movies/presentation/cubit/genres_cubit.dart';
 import 'package:cine_vault/features/settings/presentation/app_settings_flutter.dart';
 import 'package:cine_vault/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:cine_vault/l10n/generated/app_localizations.dart';
+import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,6 +62,7 @@ class _CineVaultAppState extends State<CineVaultApp> {
             supportedLocales: AppLocalizations.supportedLocales,
             localizationsDelegates: const [
               AppLocalizations.delegate,
+              CoreUiLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,

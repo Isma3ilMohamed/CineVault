@@ -1,3 +1,4 @@
+import 'package:core_ui/src/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -22,6 +23,7 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.light,
       scaffoldBackgroundColor: lightBg,
+      extensions: const [AppColors.light],
       colorScheme: const ColorScheme.light(primary: primaryColor, secondary: accentColor),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
@@ -72,6 +74,7 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       scaffoldBackgroundColor: darkBg,
+      extensions: const [AppColors.dark],
       colorScheme: const ColorScheme.dark(
         primary: primaryColor,
         secondary: accentColor,

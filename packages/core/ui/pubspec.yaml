@@ -1,0 +1,27 @@
+name: core_ui
+description: Design system (theme, tokens) and domain-free shared widgets.
+publish_to: none
+version: 0.0.1
+
+environment:
+  sdk: ^3.13.0
+
+resolution: workspace
+
+dependencies:
+  cached_network_image: ^3.4.1
+  core_result:
+    path: ../result
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
+  shimmer: ^3.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  generate: true

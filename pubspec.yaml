@@ -11,6 +11,7 @@ environment:
 workspace:
   - packages/core/base
   - packages/core/result
+  - packages/core/ui
   - packages/data
   - packages/domain
 
@@ -26,6 +27,8 @@ dependencies:
     path: packages/core/base
   core_result:
     path: packages/core/result
+  core_ui:
+    path: packages/core/ui
   data:
     path: packages/data
   domain:

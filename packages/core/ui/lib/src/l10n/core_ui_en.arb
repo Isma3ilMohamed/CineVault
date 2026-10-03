@@ -1,0 +1,9 @@
+{
+  "@@locale": "en",
+  "tryAgain": "Try again",
+  "back": "Back",
+  "failureNetwork": "No internet connection",
+  "failureServer": "Server error",
+  "failureCache": "Storage error",
+  "failureUnknown": "Something went wrong"
+}
