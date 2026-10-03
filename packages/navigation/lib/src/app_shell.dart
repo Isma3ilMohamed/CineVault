@@ -1,8 +1,9 @@
-import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:core_ui/core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:navigation/src/l10n/generated/navigation_localizations.dart';
 
+/// Bottom navigation around the three tab branches.
 class AppShell extends StatelessWidget {
   const AppShell({required this.navigationShell, super.key});
   final StatefulNavigationShell navigationShell;
@@ -13,7 +14,7 @@ class AppShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = NavigationLocalizations.of(context);
     final brand = context.appColors.brand;
 
     return Scaffold(

@@ -43,7 +43,7 @@ class MovieListContent extends StatelessWidget {
         ),
         MovieListLoaded(:final movies, :final isLoadingMore, :final hasReachedMax) => MovieGrid(
           movies: movies,
-          heroTagPrefix: '${category.slug}_list',
+          heroTagPrefix: '${category.name}_list',
           favoriteButton: favoriteButton,
           onMovieTap: onMovieTap,
           isLoadingMore: isLoadingMore,

@@ -7,3 +7,4 @@ export 'src/l10n/generated/settings_localizations.dart';
 export 'src/settings_cubit.dart';
 export 'src/settings_injection.module.dart';
 export 'src/settings_route.dart';
+export 'src/theme_reveal/theme_reveal_boundary.dart';

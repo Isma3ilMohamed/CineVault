@@ -1,6 +1,4 @@
 import 'package:cine_vault/core/di/injection.dart';
-import 'package:cine_vault/core/router/app_router.dart';
-import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 import 'package:favorites/favorites.dart';
@@ -11,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:home/home.dart';
 import 'package:movie_details/movie_details.dart';
 import 'package:movie_ui/movie_ui.dart';
+import 'package:navigation/navigation.dart';
 import 'package:search/search.dart';
 import 'package:settings/settings.dart';
 
@@ -22,17 +21,9 @@ class CineVaultApp extends StatefulWidget {
 }
 
 class _CineVaultAppState extends State<CineVaultApp> {
-  final GlobalKey _themeBoundaryKey = GlobalKey(debugLabel: 'theme_boundary');
-
-  // Created once, never in build(): rebuilding it on theme/locale change re-creates
-  // its static GlobalKeys (duplicate GlobalKey error) and resets navigation to /home.
-  late final GoRouter _router;
-
-  @override
-  void initState() {
-    super.initState();
-    _router = AppRouter.router(_themeBoundaryKey);
-  }
+  // Created once, never in build(): rebuilding it on a theme or locale change
+  // would re-create its global navigator keys and reset navigation to home.
+  final GoRouter _router = createAppRouter();
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +42,11 @@ class _CineVaultAppState extends State<CineVaultApp> {
             darkTheme: AppTheme.darkTheme,
             themeMode: settings.flutterThemeMode,
             locale: settings.locale, // null → follows system
-            supportedLocales: AppLocalizations.supportedLocales,
+            supportedLocales: CoreUiLocalizations.supportedLocales,
             localizationsDelegates: const [
-              AppLocalizations.delegate,
               CoreUiLocalizations.delegate,
               MovieUiLocalizations.delegate,
+              NavigationLocalizations.delegate,
               HomeLocalizations.delegate,
               MovieDetailsLocalizations.delegate,
               SearchLocalizations.delegate,
@@ -66,12 +57,8 @@ class _CineVaultAppState extends State<CineVaultApp> {
               GlobalWidgetsLocalizations.delegate,
             ],
             routerConfig: _router,
-            builder: (context, child) {
-              return RepaintBoundary(
-                key: _themeBoundaryKey,
-                child: child ?? const SizedBox.shrink(),
-              );
-            },
+            builder: (context, child) =>
+                ThemeRevealBoundary(child: child ?? const SizedBox.shrink()),
           );
         },
       ),

@@ -107,7 +107,7 @@ class _LoadedBody extends StatelessWidget {
                 child: MovieSection(
                   title: category.label(context),
                   movies: sections[category] ?? const [],
-                  heroTagPrefix: category.slug,
+                  heroTagPrefix: category.name,
                   favoriteButton: favoriteButton,
                   onMovieTap: onMovieTap,
                   onSeeAll: () => onSeeAll(category),

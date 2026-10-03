@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:settings/src/theme_reveal/theme_reveal_overlay.dart';
 
-/// [boundaryKey] must be on a RepaintBoundary wrapping the MaterialApp so the
-/// current UI can be snapshotted before the theme switches.
+/// [boundaryKey] is the key of the RepaintBoundary wrapping the MaterialApp
+/// (see `ThemeRevealBoundary`), snapshotted before the theme switches. Without
+/// it the theme switches without the animation.
 class ThemeRevealController {
   ThemeRevealController(this.boundaryKey);
-  final GlobalKey boundaryKey;
+  final GlobalKey? boundaryKey;
 
   /// [onThemeSwitch] must switch the theme synchronously.
   Future<void> reveal({
@@ -16,7 +17,7 @@ class ThemeRevealController {
     required Offset tapPosition,
     required VoidCallback onThemeSwitch,
   }) async {
-    final boundary = boundaryKey.currentContext?.findRenderObject();
+    final boundary = boundaryKey?.currentContext?.findRenderObject();
     if (boundary is! RenderRepaintBoundary) {
       onThemeSwitch();
       return;

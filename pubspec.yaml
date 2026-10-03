@@ -14,6 +14,7 @@ workspace:
   - packages/core/ui
   - packages/data
   - packages/domain
+  - packages/navigation
   - packages/features/favorites
   - packages/features/home
   - packages/features/movie_details
@@ -46,6 +47,8 @@ dependencies:
     path: packages/features/movie_list
   movie_ui:
     path: packages/shared/movie_ui
+  navigation:
+    path: packages/navigation
   search:
     path: packages/features/search
   settings:
@@ -63,10 +66,8 @@ dependencies:
   hive_flutter: ^1.1.0
 
   # Navigation
-  go_router: ^14.6.1
+  go_router: ^17.5.0
 
-  # Utils
-  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
@@ -83,7 +84,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  generate: true
   assets:
     - assets/images/
     - assets/icons/

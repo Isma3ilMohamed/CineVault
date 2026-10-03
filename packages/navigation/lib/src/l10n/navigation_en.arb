@@ -1,0 +1,7 @@
+{
+  "@@locale": "en",
+  "tabHome": "Home",
+  "tabFavorites": "Favorites",
+  "tabMore": "More",
+  "routeNotFound": "This page doesn't exist"
+}
