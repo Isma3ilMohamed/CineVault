@@ -17,7 +17,7 @@ enum FeatureFileRole {
   /// `*_contract.dart`: state, events and effects.
   contract,
 
-  /// `*_bloc.dart`: the view model.
+  /// `*_bloc.dart` or `*_cubit.dart`: the view model (or app-wide state).
   bloc,
 
   /// Anything under `widgets/`: building blocks of the content, pure as well.
@@ -53,4 +53,5 @@ const List<(String, FeatureFileRole)> _suffixes = [
   ('_content.dart', FeatureFileRole.content),
   ('_contract.dart', FeatureFileRole.contract),
   ('_bloc.dart', FeatureFileRole.bloc),
+  ('_cubit.dart', FeatureFileRole.bloc),
 ];

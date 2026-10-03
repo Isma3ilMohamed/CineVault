@@ -44,7 +44,12 @@ class ContentMustBePure extends AnalysisRule {
           'package:go_router/',
           'package:core_base/',
         ],
-        bannedSuffixes: const ['_bloc.dart', '_route.dart', '_screen.dart'],
+        bannedSuffixes: const [
+          '_bloc.dart',
+          '_cubit.dart',
+          '_route.dart',
+          '_screen.dart',
+        ],
       ),
     );
   }

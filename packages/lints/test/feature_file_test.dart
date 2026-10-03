@@ -29,6 +29,10 @@ void main() {
       featureFileRole('$root/movie_details_bloc.dart'),
       FeatureFileRole.bloc,
     );
+    expect(
+      featureFileRole('$root/favorite_ids_cubit.dart'),
+      FeatureFileRole.bloc,
+    );
   });
 
   test(

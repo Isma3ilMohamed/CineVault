@@ -24,6 +24,12 @@ class BlocMustBePureDartTest extends FeatureRuleTest {
     ["'package:flutter/widgets.dart'"],
   );
 
+  Future<void> test_cubit_importing_flutter_bloc() => expectLints(
+    'src/favorite_ids_cubit.dart',
+    "import 'package:flutter_bloc/flutter_bloc.dart';",
+    ["'package:flutter_bloc/flutter_bloc.dart'"],
+  );
+
   Future<void> test_contract_importing_flutter_bloc() => expectLints(
     'src/movie_details_contract.dart',
     "import 'package:flutter_bloc/flutter_bloc.dart';",
