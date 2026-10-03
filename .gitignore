@@ -100,8 +100,8 @@ app.*.map.json
 .env
 
 # Per-flavor config (--dart-define-from-file). Only the examples are committed.
-config/*.env
-!config/*.env.example
+app/config/*.env
+!app/config/*.env.example
 
 # Generated code (freezed, go_router_builder, injectable, l10n) is committed
 # on purpose, so a fresh clone builds without running build_runner first.

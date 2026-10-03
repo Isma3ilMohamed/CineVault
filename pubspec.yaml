@@ -1,7 +1,6 @@
-name: cine_vault
-description: "CineVault - A clean architecture Flutter movie app with Bloc."
-publish_to: 'none'
-version: 1.0.0+1
+name: cine_vault_workspace
+description: Workspace root of CineVault. The app is in app/, everything else in packages/.
+publish_to: none
 
 environment:
   sdk: ^3.13.0
@@ -9,6 +8,7 @@ environment:
 # Pub workspace: one resolution for the app and every package below.
 # Add new packages here; melos picks them up automatically.
 workspace:
+  - app
   - packages/core/base
   - packages/core/result
   - packages/core/ui
@@ -23,74 +23,12 @@ workspace:
   - packages/features/settings
   - packages/shared/movie_ui
 
-dependencies:
-  flutter:
-    sdk: flutter
-  flutter_localizations:
-    sdk: flutter
-  cupertino_icons: ^1.0.8
-
-  # Workspace packages
-  core_ui:
-    path: packages/core/ui
-  data:
-    path: packages/data
-  domain:
-    path: packages/domain
-  favorites:
-    path: packages/features/favorites
-  home:
-    path: packages/features/home
-  movie_details:
-    path: packages/features/movie_details
-  movie_list:
-    path: packages/features/movie_list
-  movie_ui:
-    path: packages/shared/movie_ui
-  navigation:
-    path: packages/navigation
-  search:
-    path: packages/features/search
-  settings:
-    path: packages/features/settings
-
-  # State Management
-  flutter_bloc: ^8.1.6
-
-  # Dependency Injection
-  get_it: ^8.0.0
-
-  injectable: ^3.0.0
-
-  # Hive.initFlutter() before DI; packages/data opens the boxes
-  hive_flutter: ^1.1.0
-
-  # Navigation
-  go_router: ^17.5.0
-
-
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  # Shared lint config for every member (analysis_options.yaml includes it).
   very_good_analysis: ^11.0.0
-
-  # Code Generation
-  build_runner: ^2.16.1
-  injectable_generator: ^3.1.3
-  json_serializable: ^6.8.0
-
-  # Workspace tooling
   melos: ^8.6.0
 
-flutter:
-  uses-material-design: true
-  assets:
-    - assets/images/
-    - assets/icons/
-
 melos:
-  # The app lives at the workspace root (moves to app/ later); include it.
-  useRootAsPackage: true
   scripts:
     format:
       description: Fail if any Dart file is not formatted.
@@ -101,6 +39,19 @@ melos:
         `dart analyze` because `flutter analyze` does not report analyzer
         plugin diagnostics (packages/lints).
       run: dart pub get --directory packages/lints && dart analyze --fatal-infos
+    generate:
+      description: >-
+        Regenerate code in every package that uses build_runner (freezed,
+        injectable, go_router_builder), then format it with the workspace's
+        page width.
+      run: dart run melos run generate:build && dart format .
+    generate:build:
+      description: build_runner in each package that depends on it.
+      exec:
+        command: dart run build_runner build
+        concurrency: 1
+      packageFilters:
+        dependsOn: build_runner
     test:
       description: Run every test in the workspace.
       run: dart run melos run test:dart && dart run melos run test:flutter && dart run melos run test:lints
