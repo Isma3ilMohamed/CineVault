@@ -5,7 +5,6 @@
   "@appName": { "description": "App name (brand)" },
 
   "tryAgain": "Try again",
-  "back": "Back",
   "clear": "Clear",
   "seeAll": "See All",
   "errorPrefix": "Error: {message}",
@@ -21,20 +20,7 @@
   "sectionNowPlaying": "Now Playing",
   "sectionUpcoming": "Upcoming",
 
-  "detailsOverview": "Overview",
-  "detailsOverviewNone": "No overview available.",
-  "detailsSimilarMovies": "Similar Movies",
-  "detailsCast": "Cast",
-  "playTrailer": "Play Trailer",
-  "openInYouTube": "Open in YouTube",
-  "trailerEmbedUnavailable": "This trailer can't be played here. Watch it on YouTube instead.",
   "detailsInvalidMovieId": "Invalid movie id",
-  "detailsVotes": "{count, plural, =1{1 vote} other{{count} votes}}",
-  "@detailsVotes": {
-    "placeholders": {
-      "count": { "type": "int" }
-    }
-  },
 
   "searchHint": "Search for a movie...",
   "searchRecent": "Recent searches",
@@ -70,10 +56,6 @@
     "placeholders": {
       "version": { "type": "String" }
     }
-  },
+  }
 
-  "failureNetwork": "No internet connection",
-  "failureServer": "Server error",
-  "failureUnknown": "Something went wrong",
-  "failureCache": "Storage error"
 }

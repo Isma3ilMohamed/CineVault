@@ -2,11 +2,10 @@ import 'package:cine_vault/core/di/injection_container.dart';
 import 'package:cine_vault/core/widgets/app_shell.dart';
 import 'package:cine_vault/features/favorites/presentation/bloc/favorites_bloc.dart';
 import 'package:cine_vault/features/favorites/presentation/pages/favorites_page.dart';
-import 'package:cine_vault/features/movies/presentation/bloc/movie_details_bloc.dart';
+import 'package:cine_vault/features/favorites/presentation/widgets/favorite_heart_button.dart';
 import 'package:cine_vault/features/movies/presentation/bloc/movie_list_bloc.dart';
 import 'package:cine_vault/features/movies/presentation/bloc/movies_bloc.dart';
 import 'package:cine_vault/features/movies/presentation/pages/home_page.dart';
-import 'package:cine_vault/features/movies/presentation/pages/movie_details_page.dart';
 import 'package:cine_vault/features/movies/presentation/pages/movie_list_page.dart';
 import 'package:cine_vault/features/search/presentation/bloc/search_bloc.dart';
 import 'package:cine_vault/features/search/presentation/pages/search_page.dart';
@@ -16,6 +15,7 @@ import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:movie_details/movie_details.dart';
 
 /// `router(themeBoundaryKey)`: the key must sit on the RepaintBoundary wrapping
 /// the app; MorePage passes it to ThemeRevealController for the theme toggle.
@@ -107,9 +107,12 @@ class AppRouter {
             }
             final extra = state.extra;
             final heroTag = (extra is Map<String, Object?>) ? extra['heroTag'] as String? : null;
-            return BlocProvider(
-              create: (_) => sl<MovieDetailsBloc>()..add(LoadMovieDetails(movieId)),
-              child: MovieDetailsPage(movieId: movieId, heroTag: heroTag),
+            return MovieDetailsRoute(
+              movieId: movieId,
+              heroTag: heroTag,
+              onBack: context.pop,
+              onOpenMovie: (id, tag) => context.push('/movie/$id', extra: {'heroTag': tag}),
+              favoriteButton: (_, movie, size) => FavoriteHeartButton(movie: movie, size: size),
             );
           },
         ),

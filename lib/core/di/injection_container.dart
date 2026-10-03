@@ -1,7 +1,6 @@
 import 'package:cine_vault/core/config/app_config.dart';
 import 'package:cine_vault/features/favorites/presentation/bloc/favorites_bloc.dart';
 import 'package:cine_vault/features/favorites/presentation/cubit/favorite_ids_cubit.dart';
-import 'package:cine_vault/features/movies/presentation/bloc/movie_details_bloc.dart';
 import 'package:cine_vault/features/movies/presentation/bloc/movie_list_bloc.dart';
 import 'package:cine_vault/features/movies/presentation/bloc/movies_bloc.dart';
 import 'package:cine_vault/features/movies/presentation/cubit/genres_cubit.dart';
@@ -11,6 +10,7 @@ import 'package:data/data.dart';
 import 'package:domain/domain.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:movie_details/movie_details.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final GetIt sl = GetIt.instance;
@@ -58,14 +58,7 @@ Future<void> initDependencies(AppConfig config) async {
 
   // Blocs are factories so each screen gets a fresh instance
   sl.registerFactory(() => MoviesBloc(getMoviesByCategory: sl()));
-  sl.registerFactory(
-    () => MovieDetailsBloc(
-      getMovieDetails: sl(),
-      getSimilarMovies: sl(),
-      getMovieCredits: sl(),
-      getMovieTrailer: sl(),
-    ),
-  );
+  registerMovieDetailsDependencies(sl);
   sl.registerFactoryParam<MovieListBloc, MovieCategory, void>(
     (category, _) => MovieListBloc(getMoviesByCategory: sl(), category: category),
   );

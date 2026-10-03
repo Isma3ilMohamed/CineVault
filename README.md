@@ -39,10 +39,13 @@ cine_vault/                     # Workspace root, and (for now) the app itself
 ├── packages/
 │   ├── core/
 │   │   ├── result/             # core_result: Result, sealed Failure (pure Dart)
-│   │   └── base/               # core_base: EffectEmitter, EventGuard (pure Dart)
-│   │                           #            + BlocEffectListener (widgets.dart)
+│   │   ├── base/               # core_base: EffectEmitter, EventGuard (pure Dart)
+│   │   │                       #            + BlocEffectListener (widgets.dart)
+│   │   └── ui/                 # core_ui: theme, tokens, PosterCard, RemoteImage... (no domain)
 │   ├── data/                   # data: repositories, data sources, DTOs (processCall / guard)
 │   ├── domain/                 # domain: entities, repository contracts, use cases (pure Dart)
+│   ├── features/
+│   │   └── movie_details/      # first feature package: the reference for the feature anatomy
 │   └── lints/                  # cine_vault_lints: analyzer plugin (not a workspace member)
 ├── config/                     # Per-flavor build config (*.env git-ignored)
 └── pubspec.yaml                # App deps + `workspace:` list + melos scripts
@@ -127,6 +130,15 @@ dart run melos run test      # every package's tests + the app's tests + the lin
 code under `packages/features/`. Its warnings show up in the IDE and in `dart analyze`, **not** in
 `flutter analyze`, and only when analysing from the repo root. Restart the analysis server after
 changing the plugin.
+
+Generated code (freezed contracts, per-package l10n) is committed. After changing a contract or
+an ARB file, regenerate it in that package:
+
+```bash
+dart run build_runner build   # freezed
+flutter gen-l10n              # ARB -> localizations
+flutter test --update-goldens # after an intended UI change
+```
 
 Adding a package: create it under `packages/`, give its pubspec
 `resolution: workspace`, and list it under `workspace:` in the root `pubspec.yaml`.

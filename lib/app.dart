@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:movie_details/movie_details.dart';
 
 class CineVaultApp extends StatefulWidget {
   const CineVaultApp({super.key});
@@ -63,6 +64,7 @@ class _CineVaultAppState extends State<CineVaultApp> {
             localizationsDelegates: const [
               AppLocalizations.delegate,
               CoreUiLocalizations.delegate,
+              MovieDetailsLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,

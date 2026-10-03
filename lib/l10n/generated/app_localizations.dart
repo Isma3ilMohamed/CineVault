@@ -105,12 +105,6 @@ abstract class AppLocalizations {
   /// **'Try again'**
   String get tryAgain;
 
-  /// No description provided for @back.
-  ///
-  /// In en, this message translates to:
-  /// **'Back'**
-  String get back;
-
   /// No description provided for @clear.
   ///
   /// In en, this message translates to:
@@ -159,59 +153,11 @@ abstract class AppLocalizations {
   /// **'Upcoming'**
   String get sectionUpcoming;
 
-  /// No description provided for @detailsOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Overview'**
-  String get detailsOverview;
-
-  /// No description provided for @detailsOverviewNone.
-  ///
-  /// In en, this message translates to:
-  /// **'No overview available.'**
-  String get detailsOverviewNone;
-
-  /// No description provided for @detailsSimilarMovies.
-  ///
-  /// In en, this message translates to:
-  /// **'Similar Movies'**
-  String get detailsSimilarMovies;
-
-  /// No description provided for @detailsCast.
-  ///
-  /// In en, this message translates to:
-  /// **'Cast'**
-  String get detailsCast;
-
-  /// No description provided for @playTrailer.
-  ///
-  /// In en, this message translates to:
-  /// **'Play Trailer'**
-  String get playTrailer;
-
-  /// No description provided for @openInYouTube.
-  ///
-  /// In en, this message translates to:
-  /// **'Open in YouTube'**
-  String get openInYouTube;
-
-  /// No description provided for @trailerEmbedUnavailable.
-  ///
-  /// In en, this message translates to:
-  /// **'This trailer can\'t be played here. Watch it on YouTube instead.'**
-  String get trailerEmbedUnavailable;
-
   /// No description provided for @detailsInvalidMovieId.
   ///
   /// In en, this message translates to:
   /// **'Invalid movie id'**
   String get detailsInvalidMovieId;
-
-  /// No description provided for @detailsVotes.
-  ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =1{1 vote} other{{count} votes}}'**
-  String detailsVotes(int count);
 
   /// No description provided for @searchHint.
   ///
@@ -344,30 +290,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Version {version}'**
   String moreAboutVersion(String version);
-
-  /// No description provided for @failureNetwork.
-  ///
-  /// In en, this message translates to:
-  /// **'No internet connection'**
-  String get failureNetwork;
-
-  /// No description provided for @failureServer.
-  ///
-  /// In en, this message translates to:
-  /// **'Server error'**
-  String get failureServer;
-
-  /// No description provided for @failureUnknown.
-  ///
-  /// In en, this message translates to:
-  /// **'Something went wrong'**
-  String get failureUnknown;
-
-  /// No description provided for @failureCache.
-  ///
-  /// In en, this message translates to:
-  /// **'Storage error'**
-  String get failureCache;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

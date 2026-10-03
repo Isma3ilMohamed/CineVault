@@ -1,0 +1,11 @@
+{
+  "@@locale": "ar",
+  "detailsOverview": "نبذة",
+  "detailsOverviewNone": "مفيش نبذة متاحة.",
+  "detailsSimilarMovies": "أفلام مشابهة",
+  "detailsCast": "طاقم التمثيل",
+  "playTrailer": "تشغيل العرض الدعائي",
+  "openInYouTube": "افتح في YouTube",
+  "trailerEmbedUnavailable": "ما يمكنش تشغيل العرض الدعائي هنا. افتحه في YouTube.",
+  "detailsVotes": "{count, plural, =0{لا يوجد تصويتات} =1{تصويت واحد} =2{تصويتان} few{{count} تصويتات} many{{count} تصويت} other{{count} تصويت}}"
+}

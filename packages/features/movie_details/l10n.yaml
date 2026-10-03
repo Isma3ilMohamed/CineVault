@@ -1,0 +1,6 @@
+arb-dir: lib/src/l10n
+template-arb-file: movie_details_en.arb
+output-localization-file: movie_details_localizations.dart
+output-class: MovieDetailsLocalizations
+nullable-getter: false
+output-dir: lib/src/l10n/generated

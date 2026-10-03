@@ -14,6 +14,7 @@ workspace:
   - packages/core/ui
   - packages/data
   - packages/domain
+  - packages/features/movie_details
 
 dependencies:
   flutter:
@@ -33,6 +34,8 @@ dependencies:
     path: packages/data
   domain:
     path: packages/domain
+  movie_details:
+    path: packages/features/movie_details
 
   # State Management
   flutter_bloc: ^8.1.6

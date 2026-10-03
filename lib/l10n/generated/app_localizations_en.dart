@@ -16,9 +16,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tryAgain => 'Try again';
 
   @override
-  String get back => 'Back';
-
-  @override
   String get clear => 'Clear';
 
   @override
@@ -45,40 +42,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sectionUpcoming => 'Upcoming';
 
   @override
-  String get detailsOverview => 'Overview';
-
-  @override
-  String get detailsOverviewNone => 'No overview available.';
-
-  @override
-  String get detailsSimilarMovies => 'Similar Movies';
-
-  @override
-  String get detailsCast => 'Cast';
-
-  @override
-  String get playTrailer => 'Play Trailer';
-
-  @override
-  String get openInYouTube => 'Open in YouTube';
-
-  @override
-  String get trailerEmbedUnavailable =>
-      'This trailer can\'t be played here. Watch it on YouTube instead.';
-
-  @override
   String get detailsInvalidMovieId => 'Invalid movie id';
-
-  @override
-  String detailsVotes(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count votes',
-      one: '1 vote',
-    );
-    return '$_temp0';
-  }
 
   @override
   String get searchHint => 'Search for a movie...';
@@ -149,16 +113,4 @@ class AppLocalizationsEn extends AppLocalizations {
   String moreAboutVersion(String version) {
     return 'Version $version';
   }
-
-  @override
-  String get failureNetwork => 'No internet connection';
-
-  @override
-  String get failureServer => 'Server error';
-
-  @override
-  String get failureUnknown => 'Something went wrong';
-
-  @override
-  String get failureCache => 'Storage error';
 }

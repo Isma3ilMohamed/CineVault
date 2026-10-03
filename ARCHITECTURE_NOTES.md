@@ -342,6 +342,45 @@ class MovieDetailsRouteData extends GoRouteData {
 - **`injection_container.dart`** في `core` بيعمل import لكل الـ features → `injectable` + module لكل package، والـ composition في `app`.
 - Global cubits متسجلة بطرق مختلفة (`create:` مع lazy singleton، و`.value` مع singleton) → قاعدة واحدة.
 
+### 🎬 أول feature package: `movie_details` (Phase 5) — **المرجع لباقي الـ features**
+```
+packages/features/movie_details/lib/
+├── movie_details.dart              barrel: Route · FavoriteButtonBuilder · registerMovieDetailsDependencies · l10n delegate
+└── src/
+    ├── movie_details_route.dart        BlocProvider + started مرة واحدة + navigation → callbacks
+    ├── movie_details_navigation.dart   NavigateBack · OpenSimilarMovie
+    ├── movie_details_screen.dart       BlocBuilder → Content · trailer dialog
+    ├── movie_details_content.dart      UI بس (Scaffold + كل الـ states)
+    ├── movie_details_contract.dart     freezed: State (initial/loading/loaded/error(Failure)) · Event
+    ├── movie_details_bloc.dart         package:bloc بس + EventGuard
+    ├── movie_details_dependencies.dart الـ DI بتاع الـ feature (registerFactoryParam)
+    ├── widgets/                        details_app_bar · meta_row · genre_chips · cast_card · trailer_player_modal
+    └── l10n/                           ARB خاص بالـ feature (en/ar)
+```
+**القرارات (تتطبق على باقي الـ features):**
+- **feature مبتعتمدش على feature تانية.** الـ favorites دخلت كـ **slot**: `favoriteButton: (context, movie, size) => Widget`، والـ navigation layer هو اللي بيحط فيها `FavoriteHeartButton`.
+- **الـ state بتشيل `Failure`** مش `String`، والـ UI بيترجمها بـ `failure.localizedMessage(context)` من `core_ui`.
+- **الـ strings:** كل package ليها ARB خاص بيها، والمشترك (Try again والـ failures) في `core_ui`. والـ app بيسجّل الـ delegates.
+- **الـ feature بتسجّل الـ DI بتاعها** بـ `registerXDependencies(getIt)`، وده المقابل لـ module في Koin، والـ barrel مبيصدّرش الـ bloc.
+- **`EventGuard`** مستخدم فعلاً: `started` مسموح بس من `initial`، و`retried` مسموح بس من `error`. وعليه tests.
+- **مفيش `EffectEmitter` في details**، لأن الشاشة دي مفيهاش effect حقيقي. اتعمل كده بقصد عشان ماناخترعش effect وهمي. أول feature يبقى فيها effect حقيقي هتستخدمه.
+- **`DialogQueueState` اتأجل:** مفيش شاشة في CineVault بتعرض أكتر من sheet واحدة. هيتعمل لما شاشة تحتاجه.
+- **مفيش `Navigator` في الـ features** (الـ lint بيمنعه). الـ dialogs بتتقفل بـ `close` اللي `showAppDialog` في `core_ui` بيبعتها.
+
+**`packages/core/ui` (`core_ui`)** — من غير dependency على `domain` (الـ core مبيعتمدش على اللي فوقه):
+- `AppTheme` + `AppColors` (`ThemeExtension`: brand · rating · placeholders · scrim) → `context.appColors`.
+- `PosterCard` (بياخد primitives + slot اسمه `leading`)، و`RemoteImage` + `RemoteImageScope` (عشان الـ tests تشتغل من غير شبكة)، و`ErrorView`، و`CircleBackButton`، و`SectionTitle`، و`showAppDialog`، و`TmdbImages` / `MovieFormat`، و`FailureText`.
+
+**Golden tests = الـ preview بتاع CMP:** كل state بالـ en والـ ar (RTL). لعمل regenerate:
+```bash
+cd packages/features/movie_details && flutter test --update-goldens
+```
+الـ font في الـ tests بيرسم boxes بقصد، عشان الصور تبقى ثابتة على أي جهاز. اللي الـ goldens بتحميه هو الـ layout.
+
+**🐛 اتلقطوا:**
+- **الـ genres عمرها ما ظهرت في الـ details:** TMDB بترجّع `genres: [{id, name}]` مش `genre_ids`. `MovieModel` بقى بيقرا الاتنين، وعليه regression test، واتأكدت منه على الـ API الحقيقي وعلى الـ simulator.
+- **الـ golden tests من أول تشغيل لقطت overflow في `MetaRow`** (عدد الـ votes الكبير، أو لما الـ text size يكبر). اتصلح بـ `Flexible` + ellipsis.
+
 ### 🧱 الـ Data layer (Phase 4) — زي `processCall` في Kotlin
 ```
 DataSource  ── processCall(() => dio.get(...), decode: X.fromJson) ──▶ DTO | throws AppException
@@ -382,7 +421,7 @@ Repository  ── guard(() async => (await ds.x()).toEntity())        ──▶
 | **2** | `lints` package — أول 4 قواعد (content pure · bloc pure · provider only in route · no navigation in features) | ✅ 22 test للـ plugin · الـ 4 قواعد اتجرّبوا end-to-end بـ `dart analyze` على ملف مخالف · الـ workspace نضيف |
 | **3** | `domain` pure Dart · نقل الـ entities · `GetMoviesByCategory` · `GetMovieTrailer` + tests | ✅ `packages/domain` (17 test) · import أي package مش متعرّفة كـ dependency = **error** |
 | **4** | `data` · `processCall` / `storageCall` / `guard` · `sealed AppException` · repo tests | ✅ `packages/data` (30 test) · `ErrorInterceptor` و`NetworkInfo` اتشالوا · الـ DTOs و`AppException` داخلية في الـ package |
-| **5** | **`movie_details`** كنموذج كامل بالـ 6 ملفات + bloc test + golden | ده الـ reference لباقي الـ features |
+| **5** | **`movie_details`** كنموذج كامل بالـ 6 ملفات + bloc test + golden | ✅ `packages/features/movie_details` (12 test: bloc + 6 goldens en/ar) · `packages/core/ui` (5 test) · الـ lint plugin شغال على الكود ومفيش ولا warning |
 | **6** | `home` · `movie_list` · `search` · `favorites` · `settings` على نفس النموذج | |
 | **7** | `navigation` typed routes · `injectable` · `app` composition · باقي قواعد الـ lint | `app_router.dart` < 80 سطر |
 

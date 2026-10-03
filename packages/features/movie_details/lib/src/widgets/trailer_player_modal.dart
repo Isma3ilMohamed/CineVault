@@ -1,16 +1,22 @@
 import 'dart:async';
 
-import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_details/src/l10n/generated/movie_details_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 /// Studios often disable embedding and some iframe errors never reach the stream,
 /// so a 6s no-playback timeout also triggers the open-in-YouTube fallback.
 class TrailerPlayerModal extends StatefulWidget {
-  const TrailerPlayerModal({required this.videoKey, required this.title, super.key});
+  const TrailerPlayerModal({
+    required this.videoKey,
+    required this.title,
+    required this.onClose,
+    super.key,
+  });
   final String videoKey;
   final String title;
+  final VoidCallback onClose;
 
   @override
   State<TrailerPlayerModal> createState() => _TrailerPlayerModalState();
@@ -69,7 +75,7 @@ class _TrailerPlayerModalState extends State<TrailerPlayerModal> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = MovieDetailsLocalizations.of(context);
 
     return Dialog.fullscreen(
       backgroundColor: Colors.black,
@@ -80,7 +86,7 @@ class _TrailerPlayerModalState extends State<TrailerPlayerModal> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.close_rounded, color: Colors.white),
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: widget.onClose,
                 ),
                 Expanded(
                   child: Text(
@@ -124,7 +130,7 @@ class _EmbedFailedFallback extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = MovieDetailsLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
