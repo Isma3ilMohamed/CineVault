@@ -15,7 +15,6 @@ workspace:
   - packages/core/ui
   - packages/data
   - packages/domain
-  - packages/navigation
   - packages/features/favorites
   - packages/features/home
   - packages/features/movie_details
@@ -43,8 +42,7 @@ melos:
     generate:
       description: >-
         Regenerate code in every package that uses build_runner (freezed,
-        injectable, go_router_builder), then format it with the workspace's
-        page width.
+        injectable), then format it with the workspace's page width.
       run: dart run melos run generate:build && dart format .
     generate:build:
       description: build_runner in each package that depends on it.

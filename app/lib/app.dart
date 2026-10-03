@@ -1,4 +1,6 @@
 import 'package:cine_vault/core/di/injection.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
+import 'package:cine_vault/routing/app_router.dart';
 import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 import 'package:favorites/favorites.dart';
@@ -9,7 +11,6 @@ import 'package:go_router/go_router.dart';
 import 'package:home/home.dart';
 import 'package:movie_details/movie_details.dart';
 import 'package:movie_ui/movie_ui.dart';
-import 'package:navigation/navigation.dart';
 import 'package:search/search.dart';
 import 'package:settings/settings.dart';
 
@@ -46,7 +47,7 @@ class _CineVaultAppState extends State<CineVaultApp> {
             localizationsDelegates: const [
               CoreUiLocalizations.delegate,
               MovieUiLocalizations.delegate,
-              NavigationLocalizations.delegate,
+              AppLocalizations.delegate,
               HomeLocalizations.delegate,
               MovieDetailsLocalizations.delegate,
               SearchLocalizations.delegate,

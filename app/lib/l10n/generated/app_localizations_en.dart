@@ -1,13 +1,13 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
 
-import 'navigation_localizations.dart';
+import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
 /// The translations for English (`en`).
-class NavigationLocalizationsEn extends NavigationLocalizations {
-  NavigationLocalizationsEn([String locale = 'en']) : super(locale);
+class AppLocalizationsEn extends AppLocalizations {
+  AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
   String get tabHome => 'Home';

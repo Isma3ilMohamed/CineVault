@@ -486,8 +486,39 @@ Repository  ── guard(() async => (await ds.x()).toEntity())        ──▶
 | **6** | `home` · `movie_list` · `search` · `favorites` · `settings` على نفس النموذج | ✅ 6 feature packages + `shared/movie_ui` · `lib/features` اتشال · 164 test (bloc + 32 golden en/ar) · الـ lint plugin شغال على كل الـ features ومفيش ولا warning |
 | **7** | `navigation` typed routes · `injectable` · `app` composition · باقي قواعد الـ lint | ✅ `app_router.dart` 41 سطر · 8 injectable modules · التطبيق في `app/` (iOS و Android بيعملوا build) · 9 قواعد lint (36 test) · الـ generated code بقى committed |
 | **8** | CI · app end-to-end tests · decoding images at display size · design tokens (Panda) | ✅ GitHub Actions (checks + Android/iOS builds) نجحت كـ simulation على copy نضيفة · 191 test · الـ 32 golden زي ما هما |
+| **9** | الرجوع للـ structure الشائع في السوق (5 خطوات، شوف تحت) | ✅ خطوة 1 (routing) · ⏳ 2–5 |
 
 ---
+
+### Phase 9 — الرجوع للـ structure الشائع (2026-10-03)
+**ليه:** بحث (المصادر في الـ PR): الـ layering والـ freezed والـ Result والـ DI وgo_router وBloc كلهم متوافقين مع [دليل Flutter الرسمي](https://docs.flutter.dev/app-architecture/recommendations). بس الـ package لكل شاشة والـ use cases الإجبارية وinjectable وفصل الشاشة لـ 6 ملفات **أتقل من اللي معظم المشاريع بتعمله** لتطبيق 6 شاشات. والـ packages في Dart بتدّي حدود بس، مش سرعة build زي Gradle. **القرار:** نمشي على الشائع (الدليل الرسمي + Bloc/VGV): package واحدة، الـ features فولدرات، من غير use cases.
+
+**الشكل المستهدف:**
+```
+lib/
+├── main.dart
+├── app/            app.dart · di.dart (get_it صريح) · config/
+├── core/           constants/ (endpoints · storage keys · durations) · result/ · network/ · theme/ · widgets/
+├── routing/        app_routes.dart (كل الـ paths والـ params constants) · app_router.dart · app_shell.dart
+├── domain/models/  Movie · CastMember · Genre · Video · AppSettings
+├── data/           services/ · models/ (DTOs) · repositories/ (abstract + impl)
+├── features/<f>/   bloc/ (bloc + event + state، part files، freezed) · view/ (page + view + widgets/)
+└── l10n/           app_en.arb · app_ar.arb
+test/               نفس شكل lib/
+```
+
+**الخطوات (top-down: اللي فوق يتنقل الأول وهو لسه بيستخدم الـ packages اللي تحته). كل خطوة commit (أو كام commit) على `main` مباشرة، والـ CI بيتأكد منها:**
+| PR | Branch | الشغل | النوع |
+|---|---|---|---|
+| 1 | `refactor/routing-in-app` | `packages/navigation` → `app/lib/routing/`. go_router عادي + `AppRoutes` / `RouteParams` بدل go_router_builder | تغيير حقيقي (صغير) |
+| 2 | `refactor/move-features` | الـ 6 features + `shared/movie_ui` → `app/lib/features/` و`core/widgets/` **زي ما هي**: نقل ملفات وimports بس | ميكانيكي بس |
+| 3 | `refactor/feature-anatomy` | كل feature → `bloc/` + `view/` (page + view). `EffectEmitter` → `BlocListener`. `EventGuard` يتشال. injectable يخرج من الـ features | تغيير حقيقي |
+| 4 | `refactor/flatten-layers` | `domain` و`data` و`core/*` → `lib/`. **الـ use cases كلها تتشال**. injectable يتشال خالص → `di.dart`. الـ ARB تتجمع. `core/constants/` | تغيير حقيقي (الأكبر) |
+| 5 | `chore/single-package` | الـ app يرجع للـ root. melos والـ workspace والـ lint plugin و`core_testing` يتشالوا. الـ CI يبقى `flutter analyze` + `flutter test` | ميكانيكي في الأغلب |
+
+**قواعد كل خطوة:** الـ CI أخضر · سلوك الـ app ميتغيرش · **الـ goldens زي ما هي** (أي pixel يتغير يبان) · الـ e2e tests بتعدي · الميكانيكي لوحده عشان مايدفنش الحقيقي.
+
+**قرارات (بتاعتك):** الـ use cases كلها تتشال · `EventGuard` يتشال · مفيش strings مكتوبة بإيد (routes · params · endpoints · keys · durations كلها constants) · الخطة هنا في الـ notes.
 
 ## 7. القرارات
 
