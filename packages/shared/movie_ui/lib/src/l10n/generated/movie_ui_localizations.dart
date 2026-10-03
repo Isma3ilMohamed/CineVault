@@ -5,24 +5,24 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
-import 'core_ui_localizations_ar.dart';
-import 'core_ui_localizations_en.dart';
+import 'movie_ui_localizations_ar.dart';
+import 'movie_ui_localizations_en.dart';
 
 // ignore_for_file: type=lint
 
-/// Callers can lookup localized strings with an instance of CoreUiLocalizations
-/// returned by `CoreUiLocalizations.of(context)`.
+/// Callers can lookup localized strings with an instance of MovieUiLocalizations
+/// returned by `MovieUiLocalizations.of(context)`.
 ///
-/// Applications need to include `CoreUiLocalizations.delegate()` in their app's
+/// Applications need to include `MovieUiLocalizations.delegate()` in their app's
 /// `localizationDelegates` list, and the locales they support in the app's
 /// `supportedLocales` list. For example:
 ///
 /// ```dart
-/// import 'generated/core_ui_localizations.dart';
+/// import 'generated/movie_ui_localizations.dart';
 ///
 /// return MaterialApp(
-///   localizationsDelegates: CoreUiLocalizations.localizationsDelegates,
-///   supportedLocales: CoreUiLocalizations.supportedLocales,
+///   localizationsDelegates: MovieUiLocalizations.localizationsDelegates,
+///   supportedLocales: MovieUiLocalizations.supportedLocales,
 ///   home: MyApplicationHome(),
 /// );
 /// ```
@@ -59,19 +59,20 @@ import 'core_ui_localizations_en.dart';
 /// Select and expand the newly-created Localizations item then, for each
 /// locale your application supports, add a new item and select the locale
 /// you wish to add from the pop-up menu in the Value field. This list should
-/// be consistent with the languages listed in the CoreUiLocalizations.supportedLocales
+/// be consistent with the languages listed in the MovieUiLocalizations.supportedLocales
 /// property.
-abstract class CoreUiLocalizations {
-  CoreUiLocalizations(String locale)
+abstract class MovieUiLocalizations {
+  MovieUiLocalizations(String locale)
     : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
-  static CoreUiLocalizations of(BuildContext context) {
-    return Localizations.of<CoreUiLocalizations>(context, CoreUiLocalizations)!;
+  static MovieUiLocalizations of(BuildContext context) {
+    return Localizations.of<MovieUiLocalizations>(context, MovieUiLocalizations)!;
   }
 
-  static const LocalizationsDelegate<CoreUiLocalizations> delegate = _CoreUiLocalizationsDelegate();
+  static const LocalizationsDelegate<MovieUiLocalizations> delegate =
+      _MovieUiLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -94,75 +95,63 @@ abstract class CoreUiLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[Locale('ar'), Locale('en')];
 
-  /// No description provided for @tryAgain.
+  /// No description provided for @categoryTrending.
   ///
   /// In en, this message translates to:
-  /// **'Try again'**
-  String get tryAgain;
+  /// **'Trending Today'**
+  String get categoryTrending;
 
-  /// No description provided for @back.
+  /// No description provided for @categoryPopular.
   ///
   /// In en, this message translates to:
-  /// **'Back'**
-  String get back;
+  /// **'Popular'**
+  String get categoryPopular;
 
-  /// Shown when a value such as the release year is unknown
+  /// No description provided for @categoryTopRated.
   ///
   /// In en, this message translates to:
-  /// **'N/A'**
-  String get notAvailable;
+  /// **'Top Rated'**
+  String get categoryTopRated;
 
-  /// No description provided for @failureNetwork.
+  /// No description provided for @categoryNowPlaying.
   ///
   /// In en, this message translates to:
-  /// **'No internet connection'**
-  String get failureNetwork;
+  /// **'Now Playing'**
+  String get categoryNowPlaying;
 
-  /// No description provided for @failureServer.
+  /// No description provided for @categoryUpcoming.
   ///
   /// In en, this message translates to:
-  /// **'Server error'**
-  String get failureServer;
-
-  /// No description provided for @failureCache.
-  ///
-  /// In en, this message translates to:
-  /// **'Storage error'**
-  String get failureCache;
-
-  /// No description provided for @failureUnknown.
-  ///
-  /// In en, this message translates to:
-  /// **'Something went wrong'**
-  String get failureUnknown;
+  /// **'Upcoming'**
+  String get categoryUpcoming;
 }
 
-class _CoreUiLocalizationsDelegate extends LocalizationsDelegate<CoreUiLocalizations> {
-  const _CoreUiLocalizationsDelegate();
+class _MovieUiLocalizationsDelegate extends LocalizationsDelegate<MovieUiLocalizations> {
+  const _MovieUiLocalizationsDelegate();
 
   @override
-  Future<CoreUiLocalizations> load(Locale locale) {
-    return SynchronousFuture<CoreUiLocalizations>(lookupCoreUiLocalizations(locale));
+  Future<MovieUiLocalizations> load(Locale locale) {
+    return SynchronousFuture<MovieUiLocalizations>(lookupMovieUiLocalizations(locale));
   }
 
   @override
   bool isSupported(Locale locale) => <String>['ar', 'en'].contains(locale.languageCode);
 
   @override
-  bool shouldReload(_CoreUiLocalizationsDelegate old) => false;
+  bool shouldReload(_MovieUiLocalizationsDelegate old) => false;
 }
 
-CoreUiLocalizations lookupCoreUiLocalizations(Locale locale) {
+MovieUiLocalizations lookupMovieUiLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
     case 'ar':
-      return CoreUiLocalizationsAr();
+      return MovieUiLocalizationsAr();
     case 'en':
-      return CoreUiLocalizationsEn();
+      return MovieUiLocalizationsEn();
   }
 
   throw FlutterError(
-    'CoreUiLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'MovieUiLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
     'that was used.',

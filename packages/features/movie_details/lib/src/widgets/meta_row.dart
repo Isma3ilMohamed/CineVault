@@ -8,7 +8,9 @@ class MetaRow extends StatelessWidget {
 
   final String rating;
   final int voteCount;
-  final String year;
+
+  /// Null shows the localized "not available" text.
+  final String? year;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class MetaRow extends StatelessWidget {
         const SizedBox(width: 16),
         Icon(Icons.calendar_today_rounded, color: onSurface.withValues(alpha: 0.55), size: 16),
         const SizedBox(width: 6),
-        Text(year, style: TextStyle(color: muted)),
+        Text(year ?? CoreUiLocalizations.of(context).notAvailable, style: TextStyle(color: muted)),
       ],
     );
   }

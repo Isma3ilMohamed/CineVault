@@ -16,6 +16,9 @@ class CoreUiLocalizationsEn extends CoreUiLocalizations {
   String get back => 'Back';
 
   @override
+  String get notAvailable => 'N/A';
+
+  @override
   String get failureNetwork => 'No internet connection';
 
   @override

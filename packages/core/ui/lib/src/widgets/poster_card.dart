@@ -1,3 +1,4 @@
+import 'package:core_ui/src/l10n/generated/core_ui_localizations.dart';
 import 'package:core_ui/src/theme/app_colors.dart';
 import 'package:core_ui/src/widgets/remote_image.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,9 @@ class PosterCard extends StatelessWidget {
   final String title;
   final String? posterUrl;
   final String rating;
-  final String year;
+
+  /// Null shows the localized "not available" text.
+  final String? year;
   final VoidCallback? onTap;
 
   /// Must be unique on the screen when the same movie can appear more than once;
@@ -73,7 +76,10 @@ class PosterCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 2),
-            Text(year, style: TextStyle(fontSize: 12, color: onSurface.withValues(alpha: 0.6))),
+            Text(
+              year ?? CoreUiLocalizations.of(context).notAvailable,
+              style: TextStyle(fontSize: 12, color: onSurface.withValues(alpha: 0.6)),
+            ),
           ],
         ),
       ),

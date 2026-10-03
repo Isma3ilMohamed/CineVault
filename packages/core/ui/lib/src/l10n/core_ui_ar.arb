@@ -2,6 +2,7 @@
   "@@locale": "ar",
   "tryAgain": "حاول تاني",
   "back": "رجوع",
+  "notAvailable": "غير معروف",
   "failureNetwork": "مفيش اتصال بالإنترنت",
   "failureServer": "خطأ في الخادم",
   "failureCache": "خطأ في التخزين",

@@ -8,10 +8,7 @@ import 'package:movie_details/src/widgets/cast_card.dart';
 import 'package:movie_details/src/widgets/details_app_bar.dart';
 import 'package:movie_details/src/widgets/genre_chips.dart';
 import 'package:movie_details/src/widgets/meta_row.dart';
-
-/// Builds the favorite toggle for a movie at the given icon size. Supplied by
-/// the app, so this feature does not depend on the favorites feature.
-typedef FavoriteButtonBuilder = Widget Function(BuildContext context, Movie movie, double size);
+import 'package:movie_ui/movie_ui.dart';
 
 /// Pure UI for every [MovieDetailsState]. No bloc, no navigation: state and
 /// callbacks in.
@@ -235,13 +232,10 @@ class _SimilarMoviesRow extends StatelessWidget {
           final movie = movies[i];
           // Distinct prefix so tags do not collide with Hero tags on the pushed route.
           final tag = 'similar_${movie.id}';
-          return PosterCard(
-            title: movie.title,
-            posterUrl: TmdbImages.poster(movie.posterPath),
-            rating: MovieFormat.rating(movie.voteAverage),
-            year: MovieFormat.year(movie.releaseDate),
+          return MovieCard(
+            movie: movie,
+            favoriteButton: favoriteButton,
             heroTag: tag,
-            leading: favoriteButton(context, movie, 18),
             onTap: () => onMovieTap(movie, tag),
           );
         },

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:movie_details/src/movie_details_bloc.dart';
-import 'package:movie_details/src/movie_details_content.dart';
 import 'package:movie_details/src/movie_details_contract.dart';
 import 'package:movie_details/src/movie_details_navigation.dart';
 import 'package:movie_details/src/movie_details_screen.dart';
+import 'package:movie_ui/movie_ui.dart';
 
 /// Entry and exit point of the feature.
 ///

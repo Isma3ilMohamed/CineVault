@@ -33,7 +33,7 @@ void main() {
     test('formats ratings and years', () {
       expect(MovieFormat.rating(7.25), '7.3');
       expect(MovieFormat.year(DateTime(2010)), '2010');
-      expect(MovieFormat.year(null), 'N/A');
+      expect(MovieFormat.year(null), isNull);
     });
   });
 
@@ -72,6 +72,16 @@ void main() {
     expect(find.text('8.4'), findsOneWidget);
     expect(find.text('2010'), findsOneWidget);
     expect(find.byKey(const Key('slot')), findsOneWidget);
+  });
+
+  testWidgets('PosterCard shows the localized fallback for an unknown year', (tester) async {
+    await tester.pumpWidget(
+      _app(
+        const PosterCard(title: 'Untitled', posterUrl: null, rating: '0.0', year: null),
+        locale: const Locale('ar'),
+      ),
+    );
+    expect(find.text('غير معروف'), findsOneWidget);
   });
 
   testWidgets('showAppDialog hands the content a working close callback', (tester) async {

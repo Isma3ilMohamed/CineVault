@@ -6,6 +6,7 @@ import 'package:movie_details/src/movie_details_content.dart';
 import 'package:movie_details/src/movie_details_contract.dart';
 import 'package:movie_details/src/movie_details_navigation.dart';
 import 'package:movie_details/src/widgets/trailer_player_modal.dart';
+import 'package:movie_ui/movie_ui.dart';
 
 /// Binds the bloc to [MovieDetailsContent]: state down, taps up as either bloc
 /// events or [MovieDetailsNavigation]. Owns UI-only overlays (the trailer).

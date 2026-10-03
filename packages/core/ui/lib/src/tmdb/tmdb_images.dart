@@ -14,6 +14,6 @@ abstract final class MovieFormat {
   /// One decimal place (TMDB rates out of 10).
   static String rating(double voteAverage) => voteAverage.toStringAsFixed(1);
 
-  // TODO(phase-6): localize the 'N/A' fallback.
-  static String year(DateTime? date) => date?.year.toString() ?? 'N/A';
+  /// Null when the date is unknown; widgets show the localized fallback.
+  static String? year(DateTime? date) => date?.year.toString();
 }

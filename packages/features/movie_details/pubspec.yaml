@@ -26,6 +26,8 @@ dependencies:
   freezed_annotation: ^3.1.0
   get_it: ^8.0.0
   intl: ^0.20.2
+  movie_ui:
+    path: ../../shared/movie_ui
   url_launcher: ^6.3.1
   youtube_player_iframe: ^5.2.0
 

@@ -16,6 +16,9 @@ class CoreUiLocalizationsAr extends CoreUiLocalizations {
   String get back => 'رجوع';
 
   @override
+  String get notAvailable => 'غير معروف';
+
+  @override
   String get failureNetwork => 'مفيش اتصال بالإنترنت';
 
   @override
