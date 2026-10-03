@@ -42,10 +42,20 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
 
   /// Current value first, then a fresh read after every change. Read failures
   /// surface as stream errors (`CacheException`).
-  Stream<T> _watch<T>(Future<T> Function() read) async* {
-    yield await read();
-    await for (final _ in localDataSource.watch()) {
-      yield await read();
-    }
+  ///
+  /// Not an `async*` generator on purpose: cancelling one while it waits in
+  /// `await for` only completes after the next change, which would hang
+  /// `close()` in the blocs that listen to this.
+  Stream<T> _watch<T>(Future<T> Function() read) {
+    final ticks = Stream<void>.multi((controller) {
+      controller.add(null);
+      final changes = localDataSource.watch().listen(
+        controller.add,
+        onError: controller.addError,
+        onDone: controller.close,
+      );
+      controller.onCancel = changes.cancel;
+    });
+    return ticks.asyncMap((_) => read());
   }
 }

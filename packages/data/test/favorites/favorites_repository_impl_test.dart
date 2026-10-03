@@ -64,4 +64,30 @@ void main() {
     expect((await repository.toggleFavorite(_movie)).valueOrNull, isFalse);
     expect((await repository.isFavorite(1)).valueOrNull, isFalse);
   });
+
+  test('watchFavoriteIds emits the current ids, then after every change', () async {
+    final emitted = <Set<int>>[];
+    final sub = repository.watchFavoriteIds().listen(emitted.add);
+    await pumpEventQueue();
+
+    await repository.addFavorite(_movie);
+    await pumpEventQueue();
+    await repository.removeFavorite(1);
+    await pumpEventQueue();
+
+    expect(emitted, [
+      <int>{},
+      {1},
+      <int>{},
+    ]);
+    await sub.cancel();
+  });
+
+  // Regression: an async* implementation hung here until the next box change.
+  test('cancelling a watch completes without waiting for another change', () async {
+    final sub = repository.watchFavorites().listen((_) {});
+    await pumpEventQueue();
+
+    await expectLater(sub.cancel(), completes);
+  });
 }

@@ -354,6 +354,7 @@ Repository  ── guard(() async => (await ds.x()).toEntity())        ──▶
   - بيمسك الـ `TypeError` حوالين خطوة الـ `decode` بس (لما الـ JSON ييجي بشكل غير المتوقع)، عشان مايخبيش bugs تانية.
   - بيحتفظ بالـ stack trace الأصلي بـ `Error.throwWithStackTrace`. ده المقابل لـ `inline` في Kotlin.
 - **`guard`:** أي حاجة مش `AppException` بتتعتبر bug، فبيعمل لها log وبيرجّع `UnknownFailure`، عشان item واحد بايظ مايوقعش الشاشة.
+- **🐛 bug اتصلح:** `watchFavorites` و`watchFavoriteIds` كانوا مكتوبين `async*`. لو عملت cancel لـ stream زي ده وهو مستني جوه `await for`، الـ `cancel()` مبيخلصش غير لما يحصل تغيير جديد في الـ box، وده كان هيعلّق `close()` في الـ blocs. اتعادوا بـ `Stream.multi`، وعليهم regression test.
 
 ### ⚠️ Errors
 - `Failure` معمولة `abstract` → **`sealed`** عشان الـ `switch` exhaustive.
