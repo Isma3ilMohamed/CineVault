@@ -205,7 +205,7 @@ linter:
 ### الطبقة 3 — قواعدنا: analyzer plugin (`cine_vault_lints`) ✅ (Phase 2)
 analyzer plugin بالـ API الجديد (`analysis_server_plugin`، Dart ≥ 3.10) في `packages/lints`، متفعّل من `plugins:` في الـ root `analysis_options.yaml`. **ده اللي بيفرض الـ Feature Anatomy.**
 
-- **النطاق:** الملفات تحت `packages/features/<name>/lib/` بس. ودور الملف بيتحدد من اسمه (`_route` · `_navigation` · `_screen` · `_content` · `_contract` · `_bloc` / `_cubit` · `widgets/`). الكود القديم في `lib/` مش بيتفحص لحد ما يتنقل.
+- **النطاق:** قواعد الـ anatomy على `packages/features/<name>/lib/` بس، ودور الملف بيتحدد من اسمه (`_route` · `_navigation` · `_screen` · `_content` · `_contract` · `_bloc` / `_cubit` · `widgets/`). القواعد العامة (طول الملف · `_buildX` · الألوان · التعليقات) على كل الكود اللي مكتوب بإيد في `packages/*/lib` و`app/lib`، من غير الـ generated (`isHandWrittenSource`).
 - **الـ severity:** warning، يعني بتقع في `melos run analyze`، وبتظهر في الـ IDE.
 - **⚠ `dart analyze` مش `flutter analyze`:** على Flutter 3.47، `flutter analyze` **مبيطلّعش** الـ diagnostics بتاعة الـ plugins (اتجرّب). وكمان الـ plugins **بتشتغل بس لما الـ analyze يتعمل من root الـ workspace** (تحليل فولدر فرعي مش بيشغّلها).
 - **الـ package برّه الـ workspace بقصد:** الـ analysis server بيعمل resolution للـ plugin في synthetic package لوحدها، و`analyzer` بيمشي مع إصدار الـ SDK.
@@ -217,11 +217,11 @@ analyzer plugin بالـ API الجديد (`analysis_server_plugin`، Dart ≥ 3
 | `bloc_must_be_pure_dart` | ✅ | `_bloc` و`_contract` و`_navigation` يعملوا import لـ `flutter` / `dart:ui` / `flutter_bloc` / `go_router` / `core_base/widgets.dart` |
 | `provider_only_in_route` | ✅ | `BlocProvider` / `MultiBlocProvider` / `RepositoryProvider` / `BlocEffectListener` يتعملوا برّه `_route` (بيتشيّك على الـ library الحقيقية، فأي class بنفس الاسم مش بيتأثر) |
 | `no_navigation_in_features` | ✅ | `go_router` / `auto_route` أو `Navigator` في أي ملف feature، **حتى الـ Route نفسه** (الـ Route بياخد callbacks) |
-| `screen_no_di` | ⏳ | `*_screen.dart` يستخدم `getIt` |
-| `max_file_lines` | ⏳ | ملف أكبر من 250 سطر (الـ Content يتقسم لـ `widgets/`) |
-| `no_build_helper_methods` | ⏳ | `Widget _buildX()`: تتحول لـ private widget class (أوضح + rebuilds أقل) |
-| `no_hardcoded_colors` | ⏳ | `Color(0x...)` برّه `core_ui/theme` |
-| `english_comments_only` | ⏳ | تعليقات فيها حروف عربي |
+| `screen_no_di` | ✅ Phase 7 | `*_screen.dart` يعمل import لـ `get_it` أو `injectable` (الـ Screen بيقرا الـ bloc بـ `context.read`) |
+| `max_file_lines` | ✅ Phase 7 | ملف أكبر من 250 سطر (الـ Content يتقسم لـ `widgets/`) |
+| `no_build_helper_methods` | ✅ Phase 7 | method أو function خاصة (`_x`) بترجّع `Widget`: تتحول لـ private widget class. الـ local functions جوه `build` مسموحة |
+| `no_hardcoded_colors` | ✅ Phase 7 | `Color(...)` برّه `packages/core/ui/lib/src/theme/` |
+| `english_comments_only` | ✅ Phase 7 | تعليق فيه حروف عربي (الـ strings مش تعليقات، والنصوص مكانها الـ ARB) |
 
 ### Enforcement
 ```bash
@@ -245,23 +245,23 @@ melos run test     # dart test + flutter test + plugin tests
 ## 3. الـ Modules (melos)
 
 ```
-cine_vault/
-├── app/                    main · DI composition · theme wiring · MaterialApp
+cine_vault/                 pubspec.yaml: workspace list + melos scripts
+├── app/                    main · DI order (composition root) · MaterialApp · android/ ios/ config/
 ├── packages/
 │   ├── core/
 │   │   ├── base/           EffectEmitter · EventGuard · BlocEffectListener
 │   │   ├── result/         Result · sealed Failure
-│   │   ├── network/        Dio client · interceptors
-│   │   ├── storage/        Hive · SharedPreferences wrappers
-│   │   └── ui/             theme tokens · MovieCard · shimmer · error view
+│   │   └── ui/             theme tokens · PosterCard · RemoteImage · ErrorView   (no domain)
 │   ├── domain/             entities · repository interfaces · use cases   (pure Dart)
-│   ├── data/               repo impls · DTOs · data sources · mappers
+│   ├── data/               repo impls · DTOs · data sources · Dio · storage
+│   ├── shared/
+│   │   └── movie_ui/       MovieCard · MovieGrid · category labels   (domain + core_ui)
 │   ├── features/
 │   │   ├── home/  movie_details/  movie_list/  search/  favorites/  settings/
-│   ├── navigation/         typed routes · shell · wiring callbacks
+│   ├── navigation/         typed routes · shell · the favorite-button slot
 │   └── lints/              cine_vault_lints (analyzer plugin)
-└── melos.yaml
 ```
+> الخطة الأولى كان فيها `core/network` و`core/storage`. ماتعملوش بقصد: الـ Dio والـ storage مستخدمين في `data` بس، وفصلهم كان هيعمل packages من غير حد تاني يستخدمها.
 
 > ⚠ **الـ pub workspace مش بيفرض الحدود لوحده:** الـ resolution مشتركة، فأي import لـ package مش موجودة في الـ pubspec بيشتغل عادي. الحماية جاية من `depend_on_referenced_packages: error` في الـ root `analysis_options.yaml` (Phase 3)، وده اتجرّب: import لـ `flutter` من `domain` بقى error.
 
@@ -269,25 +269,29 @@ cine_vault/
 |---|---|---|
 | `domain` | — | أي حاجة (ولا `flutter`) |
 | `data` | `domain` · `core/*` | `features` |
-| `features/*` | `domain` · `core/*` | `data` · `go_router` · features تانية |
-| `navigation` | `features/*` · `domain` | `data` |
+| `shared/*` | `domain` · `core/*` | `data` · `features` |
+| `features/*` | `domain` · `core/*` · `shared/*` | `data` · `go_router` · features تانية |
+| `navigation` | `features/*` · `shared/*` · `domain` | `data` |
 | `app` | الكل | — |
 
 **الـ Feature = شاشة**، مش "movies". `movies` الحالية بتتقسم لـ `home` · `movie_details` · `movie_list`.
 
 ---
 
-## 4. Navigation — علاج صداع `app_router.dart`
+## 4. Navigation — علاج صداع `app_router.dart` ✅ (Phase 7)
 
-**الحالي:** ملف واحد بيعمل 6 حاجات (routing · DI · BlocProvider · dispatch · parsing · error UI).
+**كان:** ملف واحد بيعمل 6 حاجات (routing · DI · BlocProvider · dispatch · parsing · error UI)، 134 سطر.
 
-**الجديد:** كل route في ملف، والـ builder سطر واحد:
+**بقى:** `packages/navigation`. الـ `app_router.dart` بقى 41 سطر، وكل route في ملف لوحده:
 
 ```
 packages/navigation/lib/src/
-├── app_router.dart              ← الـ tree بس (shell + list of routes)
+├── app_router.dart              ← library: الـ parts + `createAppRouter()` بس
 ├── app_shell.dart
-└── routes/
+├── favorite_button_slot.dart    ← المكان الوحيد اللي feature بتقابل فيه feature
+├── route_error_screen.dart
+└── routes/                      ← `part of` (الـ mixin اللي بيتولد private للـ library)
+    ├── shell_route_data.dart    ← @TypedStatefulShellRoute + الـ 3 branches
     ├── home_route_data.dart
     ├── movie_details_route_data.dart
     ├── movie_list_route_data.dart
@@ -297,26 +301,33 @@ packages/navigation/lib/src/
 ```
 
 ```dart
-// movie_details_route_data.dart
-@TypedGoRoute<MovieDetailsRouteData>(path: '/movie/:movieId')
-class MovieDetailsRouteData extends GoRouteData {
-  const MovieDetailsRouteData({required this.movieId});
-  final int movieId; // parsed & validated by the generator
+// routes/movie_details_route_data.dart
+@TypedGoRoute<MovieDetailsRouteData>(path: '/movie/:id')
+class MovieDetailsRouteData extends GoRouteData with $MovieDetailsRouteData {
+  const MovieDetailsRouteData({required this.id, this.heroTag});
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavigatorKey;
+  final int id;          // parsed by the generator
+  final String? heroTag; // ?hero-tag= query parameter
 
   @override
   Widget build(BuildContext context, GoRouterState state) => MovieDetailsRoute(
-        movieId: movieId,
-        onBack: context.pop,
-        onOpenMovie: (id) => MovieDetailsRouteData(movieId: id).push(context),
-      );
+    movieId: id,
+    heroTag: heroTag,
+    favoriteButton: favoriteButtonSlot,
+    onBack: context.pop,
+    onOpenMovie: (id, heroTag) =>
+        unawaited(MovieDetailsRouteData(id: id, heroTag: heroTag).push<void>(context)),
+  );
 }
 ```
 
-- مفيش strings — الـ paths والـ params typed.
-- مفيش `state.extra` → الـ heroTag يتشال أو يتحسب من الـ `movieId` (`'poster-$id'`) فيشتغل مع deep links.
-- مفيش DI ولا `BlocProvider` في الـ navigation — ده شغل الـ Route.
-- `themeBoundaryKey` يطلع من الراوتر → `InheritedWidget` في `app` يقراه `ThemeRevealController`.
-- نحافظ على: `StatefulShellRoute.indexedStack` · `parentNavigatorKey` للشاشات فوق الـ shell.
+- **مفيش strings:** الـ paths والـ params typed (`int` · `MovieCategory`). `MovieCategory.slug` و`fromSlug` اتشالوا من الـ domain، والـ URL بقى `/list/top-rated` من الـ generator.
+- **مفيش `state.extra`:** الـ heroTag بقى query parameter اختياري، فالـ location بقى URL عادي ويشتغل كـ deep link (من غير tag = من غير Hero).
+- **الـ links الغلط** (`/movie/abc` · `/list/unknown` · path مش موجود) بتروح لـ `RouteErrorScreen`. go_router بيمسك الـ parse error لوحده، وعليه tests.
+- **مفيش DI ولا `BlocProvider` في الـ navigation:** ده شغل الـ Route بتاع الـ feature.
+- **`themeBoundaryKey` طلع من الراوتر:** `ThemeRevealBoundary` في `settings` (InheritedWidget + RepaintBoundary)، والـ app بيحطه في `MaterialApp.builder`. وعليه test بيثبت إن الـ animation بتعدي من خلاله.
+- **حافظنا على:** `StatefulShellRoute.indexedStack` (كل tab ليه stack) · `parentNavigatorKey` للشاشات فوق الـ shell.
+- **`go_router` اترفع من 14 لـ 17** عشان `go_router_builder` 4.5.
 
 ---
 
@@ -339,7 +350,7 @@ class MovieDetailsRouteData extends GoRouteData {
 - ✅ ~~**`Movie.fullPosterUrl`**~~ (Phase 3 → 6): بقت `TmdbImages` / `MovieFormat` في `core_ui`. `MovieFormat.year` بيرجّع `null` والـ widget بيعرض `notAvailable` المترجمة.
 - ✅ ~~**UseCases بتتخطّى**~~ (Phase 3): `GetMoviesByCategory` حل محل `GetPopularMovies` والـ `switch` اللي كان في `MovieListBloc`. ومفيش bloc بقى بيلمس الـ repository.
 - ✅ ~~**منطق اختيار الـ trailer**~~ (Phase 3): `GetMovieTrailer` حل محل `GetMovieVideos` + الـ `firstWhere` المتداخلة. وبقى بيتجاهل كمان الـ videos اللي من غير key.
-- **`injection_container.dart`** في `core` بيعمل import لكل الـ features → `injectable` + module لكل package، والـ composition في `app`.
+- ✅ ~~**`injection_container.dart`** بيعمل import لكل الـ features~~ (Phase 7): `injectable` بـ `@InjectableInit.microPackage()` في كل package، والـ app بيحدد الترتيب بس (`app/lib/core/di/injection.dart`، 53 سطر). الـ data barrel بقى بيصدّر الـ module و`NetworkConfig` بس.
 - ✅ ~~Global cubits متسجلة بطرق مختلفة~~ (Phase 6): الاتنين singletons في GetIt، والـ app بيعملهم provide بـ `.value` (الـ provider مايقفلهمش). و`GenresCubit` طلع ميت (بيتحمّل ومحدش بيقراه)، فاتشال.
 
 ### 🎬 أول feature package: `movie_details` (Phase 5) — **المرجع لباقي الـ features**
@@ -403,6 +414,20 @@ packages/
 
 **🐛 اتلقطوا واتصلحوا:** "See All" كانت hardcoded إنجليزي · الـ carousel وعنوان الـ recent searches كانوا ثابتين على الشمال في RTL · bugs 3 و4 و6 فوق · `GenresCubit` و`LoadMorePopularMovies` كود ميت.
 
+### 💉 الـ DI بـ injectable (Phase 7)
+```
+app/lib/core/di/injection.dart         @InjectableInit: الترتيب بس
+  before: DataPackageModule  ← بيفتح SharedPreferences والـ Hive box (@preResolve)
+          DomainPackageModule ← الـ use cases (@lazySingleton)
+  app:    AppModule           ← AppConfig (eager، فالـ flavor الغلط بيقع على طول) · NetworkConfig
+  after:  Home · MovieList · MovieDetails · Search · Favorites · Settings
+          (Settings بيعمل preResolve للـ cubit، فلازم ييجي بعد الـ storage)
+```
+- **كل package بتعرّف الـ module بتاعها:** `<pkg>_injection.dart` فيه `@InjectableInit.microPackage()`، والـ generator بيطلّع `<Pkg>PackageModule`. ده المقابل لـ Koin `module { }` لكل Gradle module.
+- **الـ blocs:** `@injectable` (factory)، و`@factoryParam` للـ `movieId` والـ `category`. الـ Route لسه بيقول `GetIt.instance<MovieDetailsBloc>(param1: movieId)`.
+- **الـ data بقت مقفولة:** الـ app مبقاش يعرف ولا impl. بيسجّل `NetworkConfig` بس، والـ data هي اللي بتعمل الـ Dio وبتفتح الـ storage.
+- **`Hive.initFlutter()`** في `main` قبل `configureDependencies()`، لأنه Flutter-only والـ data package مش بتعتمد على `hive_flutter`.
+
 ### 🧱 الـ Data layer (Phase 4) — زي `processCall` في Kotlin
 ```
 DataSource  ── processCall(() => dio.get(...), decode: X.fromJson) ──▶ DTO | throws AppException
@@ -445,7 +470,7 @@ Repository  ── guard(() async => (await ds.x()).toEntity())        ──▶
 | **4** | `data` · `processCall` / `storageCall` / `guard` · `sealed AppException` · repo tests | ✅ `packages/data` (30 test) · `ErrorInterceptor` و`NetworkInfo` اتشالوا · الـ DTOs و`AppException` داخلية في الـ package |
 | **5** | **`movie_details`** كنموذج كامل بالـ 6 ملفات + bloc test + golden | ✅ `packages/features/movie_details` (12 test: bloc + 6 goldens en/ar) · `packages/core/ui` (5 test) · الـ lint plugin شغال على الكود ومفيش ولا warning |
 | **6** | `home` · `movie_list` · `search` · `favorites` · `settings` على نفس النموذج | ✅ 6 feature packages + `shared/movie_ui` · `lib/features` اتشال · 164 test (bloc + 32 golden en/ar) · الـ lint plugin شغال على كل الـ features ومفيش ولا warning |
-| **7** | `navigation` typed routes · `injectable` · `app` composition · باقي قواعد الـ lint | `app_router.dart` < 80 سطر |
+| **7** | `navigation` typed routes · `injectable` · `app` composition · باقي قواعد الـ lint | ✅ `app_router.dart` 41 سطر · 8 injectable modules · التطبيق في `app/` (iOS و Android بيعملوا build) · 9 قواعد lint (36 test) · الـ generated code بقى committed |
 
 ---
 
@@ -456,7 +481,9 @@ Repository  ── guard(() async => (await ds.x()).toEntity())        ──▶
 | `freezed` للـ states والـ contracts | ✅ متفق (2026-10-02) |
 | `go_router_builder` للـ typed routes | ✅ متفق |
 | melos من Phase 1 | ✅ melos 8 فوق Dart pub workspaces (Phase 1) |
-| التطبيق في root الـ workspace مؤقتاً | ✅ Phase 1 — النقل لـ `app/` في Phase 7 (معاه `android/` و `ios/`) |
+| التطبيق في root الـ workspace مؤقتاً | ✅ اتنقل لـ `app/` في Phase 7 (معاه `android/` و`ios/` و`config/`). الـ root بقى workspace + melos بس |
+| DI: `injectable` ولا `registerXDependencies` اليدوي | ✅ `injectable` (قرارك، Phase 7): micro package لكل package، والترتيب في الـ app. الـ `domain` بقى بيعتمد على `injectable` (annotations بس، pure Dart) |
+| الـ generated code يتعمل له commit | ✅ (قرارك، Phase 7): freezed · injectable · go_router_builder · l10n. الـ clone بيعمل build على طول، و`melos run generate` بيعيد توليده |
 | `AuthFailure` · `ValidationFailure` | ❌ اتشالوا (مش مستخدمين؛ مع `sealed` كل type زيادة = case إجباري). يرجعوا لما نحتاجهم |
 | رسايل الـ Failure العربي في الكود | ✅ Phase 6: الـ states بتشيل `Failure` والـ UI بيترجمها من `core_ui` |
 | Flavors: `staging` · `production` | ✅ متعملة في Phase 0 |

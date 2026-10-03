@@ -29,19 +29,22 @@
 
 ## 📁 Folder Structure
 
-The project is mid-migration to a melos workspace (target layout and plan:
+A melos / pub workspace (layout, rules and decisions:
 [ARCHITECTURE_NOTES.md](ARCHITECTURE_NOTES.md)).
 
 ```
-cine_vault/                     # Workspace root, and (for now) the app itself
-├── lib/                        # App: main, DI composition, router, shell, MaterialApp
+cine_vault/                     # Workspace root: `workspace:` list + melos scripts only
+├── app/                        # The Flutter app: main, DI order, MaterialApp
+│   ├── lib/core/di/            #   composition root (injectable, one module per package)
+│   ├── config/                 #   per-flavor build config (*.env git-ignored)
+│   ├── android/  ios/          #   platform projects (flavors live here)
 ├── packages/
 │   ├── core/
 │   │   ├── result/             # core_result: Result, sealed Failure (pure Dart)
 │   │   ├── base/               # core_base: EffectEmitter, EventGuard (pure Dart)
 │   │   │                       #            + BlocEffectListener (widgets.dart)
 │   │   └── ui/                 # core_ui: theme, tokens, PosterCard, RemoteImage... (no domain)
-│   ├── data/                   # data: repositories, data sources, DTOs (processCall / guard)
+│   ├── data/                   # data: repositories, data sources, DTOs (processCall / guard); opens storage
 │   ├── domain/                 # domain: entities, repository contracts, use cases (pure Dart)
 │   ├── shared/
 │   │   └── movie_ui/           # movie_ui: MovieCard, MovieGrid, category labels, FavoriteButtonBuilder
@@ -52,9 +55,9 @@ cine_vault/                     # Workspace root, and (for now) the app itself
 │   │   ├── search/             #   debounced search + recent searches
 │   │   ├── favorites/          #   favorites screen + app-wide FavoriteIdsCubit / FavoriteButton
 │   │   └── settings/           #   "More" screen + app-wide SettingsCubit (theme, language)
+│   ├── navigation/             # typed routes (go_router_builder), shell, feature-to-feature slots
 │   └── lints/                  # cine_vault_lints: analyzer plugin (not a workspace member)
-├── config/                     # Per-flavor build config (*.env git-ignored)
-└── pubspec.yaml                # App deps + `workspace:` list + melos scripts
+└── pubspec.yaml                # `workspace:` list + melos scripts
 ```
 
 ## 🚀 Getting Started
@@ -69,7 +72,7 @@ cine_vault/                     # Workspace root, and (for now) the app itself
 ### 2. Clone & Setup
 
 ```bash
-# بعد ما تاخد المشروع
+# بعد ما تاخد المشروع (من الـ root: بيعمل resolve للـ workspace كله)
 flutter pub get
 ```
 
@@ -85,11 +88,11 @@ flutter pub get
 Two flavors: **staging** and **production**. Both hit TMDB; staging installs side by side
 (`.staging` app id suffix, "CineVault Stg" name) and has network logging on.
 
-Each flavor reads its config from `config/<flavor>.env` (git-ignored) at build time:
+Each flavor reads its config from `app/config/<flavor>.env` (git-ignored) at build time:
 
 ```bash
-cp config/staging.env.example config/staging.env
-cp config/production.env.example config/production.env
+cp app/config/staging.env.example app/config/staging.env
+cp app/config/production.env.example app/config/production.env
 # then put your TMDB v4 read access token in both files
 ```
 
@@ -101,14 +104,15 @@ The app refuses to start if `--flavor` and the config file don't match.
 | iOS bundle id | `com.ismail.cineVaultTemp.staging` | `com.ismail.cineVaultTemp` |
 | Network logs | ✅ | ❌ |
 
-Flavor wiring lives in `android/app/build.gradle.kts`, `ios/Flutter/Flavors/` and
-`lib/core/config/app_config.dart` — keep them in sync.
+Flavor wiring lives in `app/android/app/build.gradle.kts`, `app/ios/Flutter/Flavors/` and
+`app/lib/core/config/app_config.dart` — keep them in sync.
 
 ### 5. Run
 
-A flavor is required (there is no default build any more).
+A flavor is required (there is no default build any more). Run from `app/`:
 
 ```bash
+cd app
 flutter run --flavor staging --dart-define-from-file=config/staging.env
 flutter run --flavor production --dart-define-from-file=config/production.env
 ```
@@ -129,26 +133,29 @@ The workspace is driven by [melos](https://melos.invertase.dev) (a dev dependenc
 dart run melos run format    # fails if anything is unformatted
 dart run melos run analyze   # dart analyze --fatal-infos, whole workspace (+ feature anatomy rules)
 dart run melos run test      # every package's tests (bloc + golden) + the lint plugin's tests
+dart run melos run generate  # build_runner in every package that uses it, then dart format
 ```
 
-**Feature anatomy rules.** `packages/lints` is an analyzer plugin (enabled under `plugins:` in
-`analysis_options.yaml`) that enforces the file split described in `ARCHITECTURE_NOTES.md` for
-code under `packages/features/`. Its warnings show up in the IDE and in `dart analyze`, **not** in
-`flutter analyze`, and only when analysing from the repo root. Restart the analysis server after
-changing the plugin.
+**Lint rules.** `packages/lints` is an analyzer plugin (enabled under `plugins:` in
+`analysis_options.yaml`). It enforces the feature anatomy under `packages/features/`, plus general
+readability rules (file length, no `_buildX()` helpers, no `Color` literals outside the theme,
+English comments) on all hand-written code in `packages/` and `app/`. Its warnings show up in the
+IDE and in `dart analyze`, **not** in `flutter analyze`, and only when analysing from the repo
+root. Restart the analysis server after changing the plugin.
 
-Per-package l10n output is committed; freezed output (`*.freezed.dart`) is git-ignored, so run
-`build_runner` in each package that has a `*_contract.dart` after cloning. After changing a
-contract or an ARB file, regenerate it in that package:
+All generated code (freezed, injectable, go_router_builder, l10n) is committed, so a fresh clone
+builds right away. After changing an annotated class, a contract, a route or an ARB file:
 
 ```bash
-dart run build_runner build   # freezed
-flutter gen-l10n              # ARB -> localizations
-flutter test --update-goldens # after an intended UI change
+dart run melos run generate   # freezed, injectable, go_router_builder (+ format)
+flutter gen-l10n              # in the package whose ARB changed
+flutter test --update-goldens # in the package, after an intended UI change
 ```
 
 Adding a package: create it under `packages/`, give its pubspec
-`resolution: workspace`, and list it under `workspace:` in the root `pubspec.yaml`.
+`resolution: workspace`, and list it under `workspace:` in the root `pubspec.yaml`. If it
+registers anything in DI, give it an `@InjectableInit.microPackage()` entry and add its module to
+`app/lib/core/di/injection.dart`.
 
 ## 🧩 الـ Stack
 
