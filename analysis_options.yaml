@@ -11,6 +11,12 @@ analyzer:
     - lib/l10n/generated/**
     - "**/*.g.dart"
     - "**/*.freezed.dart"
+  errors:
+    # Pub workspaces share one resolution, so importing a package that isn't in
+    # the importing package's pubspec still resolves. This turns that into an
+    # error: it is what keeps the module boundaries (e.g. domain -> no Flutter)
+    # enforced.
+    depend_on_referenced_packages: error
   language:
     strict-casts: true
     strict-inference: true
