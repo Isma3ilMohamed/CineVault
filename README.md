@@ -1,246 +1,171 @@
-# 🎬 CineVault
+# CineVault
 
-تطبيق أفلام مبني بـ **Flutter + Clean Architecture + Bloc** — مشروع تعليمي احترافي.
+[![CI](https://github.com/Isma3ilMohamed/CineVault/actions/workflows/ci.yml/badge.svg)](https://github.com/Isma3ilMohamed/CineVault/actions/workflows/ci.yml)
+![Flutter](https://img.shields.io/badge/Flutter-3.47-02569B?logo=flutter)
+![Dart](https://img.shields.io/badge/Dart-3.13-0175C2?logo=dart)
 
-## 🏗️ Architecture
+A movie app for Android and iOS built on [TMDB](https://www.themoviedb.org/), in English and
+Arabic (RTL), light and dark.
+
+The app is small on purpose; the point is the structure around it: a modular Flutter workspace
+where package boundaries are enforced by the compiler, every screen follows the same file
+anatomy (enforced by a custom lint plugin), and the whole thing is covered by unit, golden and
+end-to-end tests that run on every push.
+
+<p align="center">
+  <img src="docs/screenshots/home.png" width="16%" alt="Home" />
+  <img src="docs/screenshots/details.png" width="16%" alt="Movie details" />
+  <img src="docs/screenshots/search.png" width="16%" alt="Search" />
+  <img src="docs/screenshots/favorites.png" width="16%" alt="Favorites" />
+  <img src="docs/screenshots/settings.png" width="16%" alt="Settings" />
+  <img src="docs/screenshots/home_ar_light.png" width="16%" alt="Home in Arabic, light theme" />
+</p>
+
+## Features
+
+- **Home**: featured carousel and five categories (trending, popular, top rated, now playing,
+  upcoming), pull to refresh.
+- **See all**: the full list of a category with infinite scroll.
+- **Details**: backdrop, rating, genres, cast, similar movies, and the trailer in-app.
+- **Search**: debounced, cancels stale requests, remembers recent searches.
+- **Favorites**: stored on the device; the heart stays in sync on every screen.
+- **Settings**: light/dark theme with a circular reveal animation, English/Arabic.
+
+## Architecture
 
 ```
-┌─────────────────────────────────────────┐
-│          Presentation Layer             │
-│  (Pages, Widgets, Bloc/Cubit, States)   │
-└───────────────┬─────────────────────────┘
-                │ depends on
-                ▼
-┌─────────────────────────────────────────┐
-│            Domain Layer                 │
-│    (Entities, UseCases, Repositories)   │
-│         ← Pure Dart, no Flutter →       │
-└───────────────▲─────────────────────────┘
-                │ implements
-                │
-┌───────────────┴─────────────────────────┐
-│             Data Layer                  │
-│  (Models, DataSources, Repository Impl) │
-└─────────────────────────────────────────┘
+cine_vault/
+├── app/                    main, DI order (composition root), MaterialApp, android/, ios/
+└── packages/
+    ├── core/
+    │   ├── result/         Result, sealed Failure                    (pure Dart)
+    │   ├── base/           EffectEmitter, EventGuard, BlocEffectListener
+    │   └── ui/             design tokens, theme, shared widgets      (no domain types)
+    ├── domain/             entities, repository interfaces, use cases (pure Dart)
+    ├── data/               repository implementations, DTOs, Dio, local storage
+    ├── shared/movie_ui/    movie card, paginated grid, category labels
+    ├── features/           home, movie_list, movie_details, search, favorites, settings
+    ├── navigation/         typed routes and the bottom-navigation shell
+    └── lints/              cine_vault_lints, a custom analyzer plugin
 ```
 
-### الفكرة الأساسية
-**Dependencies point inward.** الـ Domain في النص، ما يعرفش حاجة عن Flutter أو Dio أو Firebase. الـ Data بتقدمله implementations. الـ Presentation بتستخدمه.
+**Dependencies point inward.** `domain` knows nothing about Flutter or the network. Features
+depend on `domain` and `core`, never on `data` and never on each other; the `navigation` package
+is the only place where features meet, through callbacks. These rules are not conventions: each
+layer is a package, and importing something a package does not declare is an analyzer error.
 
-## 📁 Folder Structure
+**Every screen has the same files**, so you know what a file does from its name:
 
-A melos / pub workspace (layout, rules and decisions:
-[ARCHITECTURE_NOTES.md](ARCHITECTURE_NOTES.md)).
+| File | Responsibility |
+|---|---|
+| `*_route.dart` | Entry and exit: gets the bloc from DI, starts it once, maps navigation to callbacks |
+| `*_navigation.dart` | The screen's exits (sealed) |
+| `*_screen.dart` | Binds bloc state to the content |
+| `*_content.dart` | Pure UI, golden-tested |
+| `*_contract.dart` | State, Event and Effect (freezed, sealed) |
+| `*_bloc.dart` | The logic, in pure Dart |
 
-```
-cine_vault/                     # Workspace root: `workspace:` list + melos scripts only
-├── app/                        # The Flutter app: main, DI order, MaterialApp
-│   ├── lib/core/di/            #   composition root (injectable, one module per package)
-│   ├── config/                 #   per-flavor build config (*.env git-ignored)
-│   ├── android/  ios/          #   platform projects (flavors live here)
-├── packages/
-│   ├── core/
-│   │   ├── result/             # core_result: Result, sealed Failure (pure Dart)
-│   │   ├── base/               # core_base: EffectEmitter, EventGuard (pure Dart)
-│   │   │                       #            + BlocEffectListener (widgets.dart)
-│   │   └── ui/                 # core_ui: theme, tokens, PosterCard, RemoteImage... (no domain)
-│   ├── data/                   # data: repositories, data sources, DTOs (processCall / guard); opens storage
-│   ├── domain/                 # domain: entities, repository contracts, use cases (pure Dart)
-│   ├── shared/
-│   │   └── movie_ui/           # movie_ui: MovieCard, MovieGrid, category labels, FavoriteButtonBuilder
-│   ├── features/               # one package per screen, each with the feature anatomy
-│   │   ├── home/               #   carousel + category rows, pull-to-refresh
-│   │   ├── movie_list/         #   "see all" grid of one category
-│   │   ├── movie_details/      #   the reference feature package
-│   │   ├── search/             #   debounced search + recent searches
-│   │   ├── favorites/          #   favorites screen + app-wide FavoriteIdsCubit / FavoriteButton
-│   │   └── settings/           #   "More" screen + app-wide SettingsCubit (theme, language)
-│   ├── navigation/             # typed routes (go_router_builder), shell, feature-to-feature slots
-│   └── lints/                  # cine_vault_lints: analyzer plugin (not a workspace member)
-└── pubspec.yaml                # `workspace:` list + melos scripts
-```
+### Highlights
 
-## 🚀 Getting Started
+- **Errors as values.** Repositories return a sealed `Result`; the UI shows a localized message
+  per `Failure` type. Network and storage calls go through one wrapper each (`processCall`,
+  `storageCall`), so there is no `try/catch` in the repositories.
+- **Typed navigation.** Routes are generated by `go_router_builder`; invalid deep links land on an
+  error screen. Hero tags travel as query parameters, so every location is a plain URL.
+- **DI per package.** Each package registers its own classes as an `injectable` micro package;
+  the app only decides the order.
+- **Images decoded at display size** (`memCacheWidth` from the layout and device pixel ratio),
+  aware of the source aspect ratio so cover-fit images never upscale.
+- **Lint rules for the architecture** (`packages/lints`): content and widgets stay pure, blocs
+  stay Flutter-free, providers only in routes, no navigation inside features, no hardcoded
+  colors, no build-helper methods, files under 250 lines, English comments.
 
-### 1. Prerequisites
+The full rationale, decisions and trade-offs are in
+[ARCHITECTURE_NOTES.md](ARCHITECTURE_NOTES.md) (written in Arabic).
 
-- Flutter SDK ≥ 3.5.0
-- Dart ≥ 3.5.0
-- Android Studio / VS Code with Flutter plugin
-- iOS: Xcode 15+ (للـ iOS build)
+## Tech stack
 
-### 2. Clone & Setup
+| | |
+|---|---|
+| State | `flutter_bloc`, `freezed` |
+| Navigation | `go_router`, `go_router_builder` |
+| DI | `get_it`, `injectable` |
+| Networking | `dio` |
+| Storage | `hive`, `shared_preferences` |
+| Images | `cached_network_image` |
+| Workspace | Dart pub workspaces, `melos` |
+| Lint | `very_good_analysis`, custom analyzer plugin |
+| Tests | `flutter_test`, `bloc_test`, `mocktail`, golden files |
 
-```bash
-# بعد ما تاخد المشروع (من الـ root: بيعمل resolve للـ workspace كله)
-flutter pub get
-```
+## Getting started
 
-### 3. TMDB API Key
+**Requirements:** Flutter 3.47 (Dart 3.13), Xcode for iOS, JDK 17 for Android.
 
-1. روح لـ https://www.themoviedb.org/signup
-2. بعد ما تعمل حساب: **Settings → API → Create**
-3. اختار **Developer** → املى الفورم
-4. هتاخد **API Key (v3)** و **API Read Access Token (v4)**
+1. **Resolve the workspace** (from the repository root):
+   ```bash
+   flutter pub get
+   ```
+2. **Add your TMDB token.** Create an account on [TMDB](https://www.themoviedb.org/signup), then
+   copy the *API Read Access Token* from Settings → API. Put it in both config files:
+   ```bash
+   cp app/config/staging.env.example app/config/staging.env
+   cp app/config/production.env.example app/config/production.env
+   ```
+   These files are git-ignored. The app refuses to start if the flavor and the config don't match.
+3. **Run** (from `app/`, a flavor is required):
+   ```bash
+   cd app
+   flutter run --flavor staging --dart-define-from-file=config/staging.env
+   ```
 
-### 4. Flavors & Config
+| Flavor | Android app id | iOS bundle id | Network logs |
+|---|---|---|---|
+| staging | `com.ismail.cine_vault_temp.staging` | `com.ismail.cineVaultTemp.staging` | ✅ |
+| production | `com.ismail.cine_vault_temp` | `com.ismail.cineVaultTemp` | ❌ |
 
-Two flavors: **staging** and **production**. Both hit TMDB; staging installs side by side
-(`.staging` app id suffix, "CineVault Stg" name) and has network logging on.
+Android Studio users can pick the **staging** / **production** run configurations in `.run/`.
 
-Each flavor reads its config from `app/config/<flavor>.env` (git-ignored) at build time:
+## Development
 
-```bash
-cp app/config/staging.env.example app/config/staging.env
-cp app/config/production.env.example app/config/production.env
-# then put your TMDB v4 read access token in both files
-```
-
-The app refuses to start if `--flavor` and the config file don't match.
-
-| | staging | production |
-|---|---|---|
-| Android app id | `com.ismail.cine_vault_temp.staging` | `com.ismail.cine_vault_temp` |
-| iOS bundle id | `com.ismail.cineVaultTemp.staging` | `com.ismail.cineVaultTemp` |
-| Network logs | ✅ | ❌ |
-
-Flavor wiring lives in `app/android/app/build.gradle.kts`, `app/ios/Flutter/Flavors/` and
-`app/lib/core/config/app_config.dart` — keep them in sync.
-
-### 5. Run
-
-A flavor is required (there is no default build any more). Run from `app/`:
-
-```bash
-cd app
-flutter run --flavor staging --dart-define-from-file=config/staging.env
-flutter run --flavor production --dart-define-from-file=config/production.env
-```
-
-Android Studio: pick the **staging** / **production** run configuration (from `.run/`).
-
-```bash
-# Release builds
-flutter build apk --flavor production --dart-define-from-file=config/production.env
-flutter build ipa --flavor production --dart-define-from-file=config/production.env
-```
-
-## 🛠️ Development
-
-The workspace is driven by [melos](https://melos.invertase.dev) (a dev dependency):
+The workspace is driven by [melos](https://melos.invertase.dev):
 
 ```bash
 dart run melos run format    # fails if anything is unformatted
-dart run melos run analyze   # dart analyze --fatal-infos, whole workspace (+ feature anatomy rules)
-dart run melos run test      # every package's tests (bloc + golden) + the lint plugin's tests
-dart run melos run generate  # build_runner in every package that uses it, then dart format
+dart run melos run analyze   # dart analyze --fatal-infos, with the custom lint rules
+dart run melos run test      # every test in the workspace
+dart run melos run generate  # freezed, injectable, go_router_builder (+ format)
 ```
 
-**CI** (`.github/workflows/ci.yml`) runs the same format / analyze / test, checks that generated
-code is up to date, and builds the staging flavor for Android and iOS on every push to `main` and
-every pull request.
+- The lint rules show up in the IDE and in `dart analyze`, **not** in `flutter analyze`, and only
+  when analyzing from the repository root.
+- Generated code is committed, so a fresh clone builds without running `build_runner`. After
+  changing a contract, an annotated class or a route, run `generate`; after changing an `.arb`
+  file, run `flutter gen-l10n` in that package.
+- New package: create it under `packages/` with `resolution: workspace`, list it under
+  `workspace:` in the root `pubspec.yaml`, and if it registers anything in DI, add its module to
+  `app/lib/core/di/injection.dart`.
 
-**App tests** (`app/test/`) run the real app (real DI, routes, blocs, repositories, storage)
-against a fake TMDB adapter, so the main flows are covered without a device or network.
+## Testing
 
-**Lint rules.** `packages/lints` is an analyzer plugin (enabled under `plugins:` in
-`analysis_options.yaml`). It enforces the feature anatomy under `packages/features/`, plus general
-readability rules (file length, no `_buildX()` helpers, no `Color` literals outside the theme,
-English comments) on all hand-written code in `packages/` and `app/`. Its warnings show up in the
-IDE and in `dart analyze`, **not** in `flutter analyze`, and only when analysing from the repo
-root. Restart the analysis server after changing the plugin.
+- **Bloc tests** for every bloc, including the race conditions (a slow old search never
+  overwrites newer results) and the event guards.
+- **Golden tests** for every screen state, in English and Arabic. Regenerate after an intended UI
+  change with `flutter test --update-goldens` in the package.
+- **End-to-end tests** in `app/test/`: the real app with the real DI graph, routes and storage,
+  against a fake TMDB HTTP adapter, so the main flows run without a device or network.
+- **Lint plugin tests** in `packages/lints`.
 
-All generated code (freezed, injectable, go_router_builder, l10n) is committed, so a fresh clone
-builds right away. After changing an annotated class, a contract, a route or an ARB file:
+## CI/CD
 
-```bash
-dart run melos run generate   # freezed, injectable, go_router_builder (+ format)
-flutter gen-l10n              # in the package whose ARB changed
-flutter test --update-goldens # in the package, after an intended UI change
-```
+| Workflow | When | What |
+|---|---|---|
+| [CI](.github/workflows/ci.yml) | every push to `main` and every pull request | format, analyze, all tests, generated code up to date; builds the staging flavor for Android and iOS |
+| [Release](.github/workflows/release.yml) | a pushed `v*` tag | builds the production APK and publishes it as a GitHub Release |
 
-Adding a package: create it under `packages/`, give its pubspec
-`resolution: workspace`, and list it under `workspace:` in the root `pubspec.yaml`. If it
-registers anything in DI, give it an `@InjectableInit.microPackage()` entry and add its module to
-`app/lib/core/di/injection.dart`.
+The release workflow needs the `TMDB_ACCESS_TOKEN` repository secret. Builds are signed with the
+debug key until a release keystore is configured.
 
-## 🧩 الـ Stack
+## Credits
 
-| الجانب | الـ Tool | ليه |
-|--------|---------|-----|
-| State Management | `flutter_bloc` | الأشهر، testable، MVI-friendly |
-| Networking | `dio` + interceptors | أقوى HTTP client |
-| DI | `get_it` | simple service locator |
-| Functional | `dartz` (Either) | error handling بطريقة Kotlin-esque |
-| Navigation | `go_router` | declarative + deep linking |
-| Local DB | `isar` | أسرع NoSQL DB لـ Flutter |
-| Images | `cached_network_image` | caching جاهز |
-| Equatable | `equatable` | easy value equality |
-
-## 🎯 Clean Architecture Rules
-
-1. **Domain ماتعرفش عن Data أو Presentation**
-   - لو حاجة في Domain بتستخدم `package:flutter` → غلط
-   - لو Entity بتستخدم `fromJson` → غلط (ده DTO)
-
-2. **Data Layer يـ implements Domain contracts**
-   - `MovieRepositoryImpl implements MovieRepository`
-   - بيترجم Exceptions لـ Failures
-
-3. **Presentation ياخد من Domain بس**
-   - Bloc بيستخدم UseCases
-   - UseCases بترجع `Either<Failure, T>`
-   - Bloc بيترجمها لـ State
-
-4. **Single Responsibility**
-   - كل UseCase = action واحد
-   - `GetPopularMovies`, مش `MoviesManager`
-
-## 🧪 Testing Strategy
-
-```
-test/
-├── features/
-│   └── movies/
-│       ├── data/
-│       │   ├── repositories/   # Mock data sources
-│       │   └── datasources/    # Mock Dio responses
-│       ├── domain/
-│       │   └── usecases/       # Mock repository
-│       └── presentation/
-│           └── bloc/           # bloc_test package
-```
-
-مثال:
-```dart
-blocTest<MoviesBloc, MoviesState>(
-  'emits [Loading, Loaded] when LoadHomeMovies succeeds',
-  build: () => MoviesBloc(getPopularMovies: mockUseCase, ...),
-  act: (bloc) => bloc.add(const LoadHomeMovies()),
-  expect: () => [
-    const MoviesLoading(),
-    isA<MoviesLoaded>(),
-  ],
-);
-```
-
-## 📈 Roadmap
-
-- [x] Phase 1: Project setup + Clean Architecture scaffold
-- [x] Phase 2: Movies feature (data + domain + presentation)
-- [ ] Phase 3: Movie Details screen + Hero animation
-- [ ] Phase 4: Search feature (with debouncing)
-- [ ] Phase 5: Favorites (local DB with Isar)
-- [ ] Phase 6: Firebase Auth + Firestore sync
-- [ ] Phase 7: Unit + Widget + Bloc tests
-- [ ] Phase 8: CI/CD with GitHub Actions
-
-## 📚 Learning Resources
-
-- [Bloc Library Docs](https://bloclibrary.dev/)
-- [Clean Architecture by Uncle Bob](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
-- [Flutter Clean Architecture Examples](https://resocoder.com/flutter-clean-architecture-tdd/)
-
-## 🛠️ Author
-
-**Ismail** — Senior Android Engineer learning Flutter the right way 🚀
+Movie data and images from [TMDB](https://www.themoviedb.org/). This product uses the TMDB API
+but is not endorsed or certified by TMDB.
