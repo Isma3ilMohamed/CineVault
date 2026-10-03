@@ -1,6 +1,8 @@
+import 'package:core_ui/src/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
-/// Brand and semantic colors that Material's ColorScheme has no slot for.
+/// Semantic color tokens: roles that Material's ColorScheme has no slot for,
+/// mapped to [AppPalette] primitives per theme.
 ///
 /// Read with `context.appColors`. Registered on both themes in `AppTheme`.
 @immutable
@@ -30,21 +32,21 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color scrim;
 
   static const dark = AppColors(
-    brand: Color(0xFFE50914),
-    rating: Color(0xFFFFB800),
-    imagePlaceholder: Color(0xFF212121),
-    shimmerBase: Color(0xFF424242),
-    shimmerHighlight: Color(0xFF616161),
-    scrim: Color(0x80000000),
+    brand: AppPalette.red500,
+    rating: AppPalette.gold500,
+    imagePlaceholder: AppPalette.grey900,
+    shimmerBase: AppPalette.grey800,
+    shimmerHighlight: AppPalette.grey700,
+    scrim: AppPalette.black50,
   );
 
   static const light = AppColors(
-    brand: Color(0xFFE50914),
-    rating: Color(0xFFFFB800),
-    imagePlaceholder: Color(0xFFE0E0E0),
-    shimmerBase: Color(0xFFE0E0E0),
-    shimmerHighlight: Color(0xFFF5F5F5),
-    scrim: Color(0x80000000),
+    brand: AppPalette.red500,
+    rating: AppPalette.gold500,
+    imagePlaceholder: AppPalette.grey300,
+    shimmerBase: AppPalette.grey300,
+    shimmerHighlight: AppPalette.grey100,
+    scrim: AppPalette.black50,
   );
 
   @override

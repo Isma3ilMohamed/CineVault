@@ -136,6 +136,13 @@ dart run melos run test      # every package's tests (bloc + golden) + the lint 
 dart run melos run generate  # build_runner in every package that uses it, then dart format
 ```
 
+**CI** (`.github/workflows/ci.yml`) runs the same format / analyze / test, checks that generated
+code is up to date, and builds the staging flavor for Android and iOS on every push to `main` and
+every pull request.
+
+**App tests** (`app/test/`) run the real app (real DI, routes, blocs, repositories, storage)
+against a fake TMDB adapter, so the main flows are covered without a device or network.
+
 **Lint rules.** `packages/lints` is an analyzer plugin (enabled under `plugins:` in
 `analysis_options.yaml`). It enforces the feature anatomy under `packages/features/`, plus general
 readability rules (file length, no `_buildX()` helpers, no `Color` literals outside the theme,

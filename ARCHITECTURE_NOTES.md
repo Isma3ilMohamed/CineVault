@@ -428,6 +428,20 @@ app/lib/core/di/injection.dart         @InjectableInit: الترتيب بس
 - **الـ data بقت مقفولة:** الـ app مبقاش يعرف ولا impl. بيسجّل `NetworkConfig` بس، والـ data هي اللي بتعمل الـ Dio وبتفتح الـ storage.
 - **`Hive.initFlutter()`** في `main` قبل `configureDependencies()`، لأنه Flutter-only والـ data package مش بتعتمد على `hive_flutter`.
 
+### 🚦 Phase 8 — CI · app tests · الصور · tokens
+- **CI (`.github/workflows/ci.yml`):** 3 jobs على كل push لـ `main` وكل PR:
+  - `checks` (macOS، لأن الـ goldens اتعملت على macOS): format · analyze (`dart analyze` عشان الـ 9 قواعد) · كل الـ tests · **الـ generated code لازم يكون محدّث** (`melos run generate` + `git diff --exit-code`).
+  - `build-android` (Ubuntu + JDK 17) و`build-ios` (macOS، simulator من غير signing): الـ staging flavor بيعمل build. الـ config جاي من الـ `.env.example` (الـ build مش محتاج token حقيقي).
+  - ⚠ دقايق macOS بتتحسب ×10 على الـ private repos.
+- **app tests (`app/test/app_test.dart`):** end-to-end على مستوى الـ widget: الـ app الحقيقي بالـ DI الحقيقي والـ routes والـ blocs والـ repositories والـ storage. اللي بيتبدل: TMDB (fake `HttpClientAdapter` جوه الـ Dio الحقيقي، فالـ interceptors و`processCall` والـ DTOs بيشتغلوا)، ومكان الـ storage (temp dir)، والصور. 5 flows: الـ token · home → details → favorite → tab المفضلة · see all · search بعد الـ debounce · التحويل للعربي.
+  - عشان يبقى testable: `configureDependencies(AppConfig)`، والـ `main` هو اللي بيعمل `AppConfig.fromEnvironment()` (وبيقع على طول لو الـ flavor غلط).
+  - **gotcha:** Hive بيعمل real IO، والـ fake time بتاع `testWidgets` مبيكملوش. فالـ app بيتقفل جوه الـ test نفسه (`driveStorage`: real time + pump بالتبادل)، وإلا الـ `Hive.close()` بيعلق في الـ tearDown.
+- **الصور:** `RemoteImage` بقى بيعمل decode بالحجم اللي بيتعرض بيه (`memCacheWidth` من `LayoutBuilder` × الـ DPR)، ومع `sourceAspectRatio` عشان الـ cover مايعملش upscale (backdrop 16:9 في box عرضه أكبر من طوله محتاج عرض = الطول × 16/9). الـ poster على 3x بقى 420px بدل 500 (~30% ذاكرة أقل)، وعلى 2x بقى 280px (~70%). TMDB أصلاً بتبعت أحجام محدودة (w500/w1280)، فالمكسب حقيقي بس مش ×100 زي الصور الـ original.
+- **Design tokens بطبقتين (من Panda):** `AppPalette` (الألوان الخام، بأسماء زي `red500` و`ink950`) ← `AppColors` و`AppTheme` (الأدوار). الـ widgets بتقرا الأدوار بس. الـ goldens متغيرتش، يعني نفس الألوان بالظبط.
+- **اللي ماتنقلش من Panda، وليه:**
+  - **الـ Snackbar controller:** Panda عملت `object SnackBarHost` + channel عشان Compose مفيهوش واحد مركزي (وبيضيّع رسايل لو مفيش collector). في Flutter، الـ `ScaffoldMessenger` بتاع `MaterialApp` هو أصلاً controller واحد فوق الـ Navigator وبيعمل queue للرسايل، وده اللي الـ home بيستخدمه. مفيش حاجة تتنقل.
+  - **`DialogQueueState`:** لسه مفيش شاشة بتعرض أكتر من sheet، فبناؤه دلوقتي = كود من غير ما حد يستخدمه (نفس قاعدة "مفيش effect وهمي"). أول شاشة تحتاجه هتجيبه.
+
 ### 🧱 الـ Data layer (Phase 4) — زي `processCall` في Kotlin
 ```
 DataSource  ── processCall(() => dio.get(...), decode: X.fromJson) ──▶ DTO | throws AppException
@@ -471,6 +485,7 @@ Repository  ── guard(() async => (await ds.x()).toEntity())        ──▶
 | **5** | **`movie_details`** كنموذج كامل بالـ 6 ملفات + bloc test + golden | ✅ `packages/features/movie_details` (12 test: bloc + 6 goldens en/ar) · `packages/core/ui` (5 test) · الـ lint plugin شغال على الكود ومفيش ولا warning |
 | **6** | `home` · `movie_list` · `search` · `favorites` · `settings` على نفس النموذج | ✅ 6 feature packages + `shared/movie_ui` · `lib/features` اتشال · 164 test (bloc + 32 golden en/ar) · الـ lint plugin شغال على كل الـ features ومفيش ولا warning |
 | **7** | `navigation` typed routes · `injectable` · `app` composition · باقي قواعد الـ lint | ✅ `app_router.dart` 41 سطر · 8 injectable modules · التطبيق في `app/` (iOS و Android بيعملوا build) · 9 قواعد lint (36 test) · الـ generated code بقى committed |
+| **8** | CI · app end-to-end tests · decoding images at display size · design tokens (Panda) | ✅ GitHub Actions (checks + Android/iOS builds) نجحت كـ simulation على copy نضيفة · 191 test · الـ 32 golden زي ما هما |
 
 ---
 

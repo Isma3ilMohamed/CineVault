@@ -1,30 +1,21 @@
 import 'package:core_ui/src/theme/app_colors.dart';
+import 'package:core_ui/src/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
+/// Light and dark Material themes, built from the [AppPalette] primitives.
 class AppTheme {
   AppTheme._();
 
-  // Brand colors
-  static const Color primaryColor = Color(0xFFE50914); // Netflix red
-  static const Color accentColor = Color(0xFFFFB800); // Gold for ratings
-
-  // Dark theme backgrounds
-  static const Color darkBg = Color(0xFF0F0F14);
-  static const Color darkSurface = Color(0xFF1A1A23);
-  static const Color darkCard = Color(0xFF252530);
-
-  // Light theme
-  static const Color lightBg = Color(0xFFF8F8F8);
-  static const Color lightSurface = Color(0xFFFFFFFF);
-  static const Color lightCard = Color(0xFFF0F0F3);
+  static const Color _primary = AppPalette.red500;
+  static const Color _secondary = AppPalette.gold500;
 
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      scaffoldBackgroundColor: lightBg,
+      scaffoldBackgroundColor: AppPalette.mist50,
       extensions: const [AppColors.light],
-      colorScheme: const ColorScheme.light(primary: primaryColor, secondary: accentColor),
+      colorScheme: const ColorScheme.light(primary: _primary, secondary: _secondary),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -32,19 +23,19 @@ class AppTheme {
         titleTextStyle: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w600),
       ),
       cardTheme: CardThemeData(
-        color: lightCard,
+        color: AppPalette.mist100,
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: lightSurface,
-        selectedItemColor: primaryColor,
+        backgroundColor: AppPalette.white,
+        selectedItemColor: _primary,
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primaryColor,
+          backgroundColor: _primary,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -52,7 +43,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: lightCard,
+        fillColor: AppPalette.mist100,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -73,12 +64,12 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: darkBg,
+      scaffoldBackgroundColor: AppPalette.ink950,
       extensions: const [AppColors.dark],
       colorScheme: const ColorScheme.dark(
-        primary: primaryColor,
-        secondary: accentColor,
-        surface: darkSurface,
+        primary: _primary,
+        secondary: _secondary,
+        surface: AppPalette.ink900,
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
@@ -87,19 +78,19 @@ class AppTheme {
         titleTextStyle: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600),
       ),
       cardTheme: CardThemeData(
-        color: darkCard,
+        color: AppPalette.ink800,
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: darkSurface,
-        selectedItemColor: primaryColor,
+        backgroundColor: AppPalette.ink900,
+        selectedItemColor: _primary,
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primaryColor,
+          backgroundColor: _primary,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -107,7 +98,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: darkCard,
+        fillColor: AppPalette.ink800,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
