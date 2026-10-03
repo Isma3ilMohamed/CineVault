@@ -11,7 +11,7 @@ class MovieDetailsBloc extends Bloc<MovieDetailsEvent, MovieDetailsState> {
     required this.getMovieDetails,
     required this.getSimilarMovies,
     required this.getMovieCredits,
-    required this.getMovieVideos,
+    required this.getMovieTrailer,
   }) : super(const MovieDetailsInitial()) {
     on<LoadMovieDetails>(_onLoad);
     on<RetryMovieDetails>((event, emit) => _load(event.movieId, emit));
@@ -19,25 +19,25 @@ class MovieDetailsBloc extends Bloc<MovieDetailsEvent, MovieDetailsState> {
   final GetMovieDetails getMovieDetails;
   final GetSimilarMovies getSimilarMovies;
   final GetMovieCredits getMovieCredits;
-  final GetMovieVideos getMovieVideos;
+  final GetMovieTrailer getMovieTrailer;
 
   Future<void> _onLoad(LoadMovieDetails event, Emitter<MovieDetailsState> emit) =>
       _load(event.movieId, emit);
 
-  /// Only the details request is critical; similar, cast and videos fall back
-  /// to empty lists on failure.
+  /// Only the details request is critical; similar, cast and the trailer fall
+  /// back to empty/null on failure.
   Future<void> _load(int movieId, Emitter<MovieDetailsState> emit) async {
     emit(const MovieDetailsLoading());
 
     final detailsFuture = getMovieDetails(MovieIdParams(movieId: movieId));
     final similarFuture = getSimilarMovies(SimilarMoviesParams(movieId: movieId));
     final creditsFuture = getMovieCredits(MovieIdParams(movieId: movieId));
-    final videosFuture = getMovieVideos(MovieIdParams(movieId: movieId));
+    final trailerFuture = getMovieTrailer(MovieIdParams(movieId: movieId));
 
     final detailsResult = await detailsFuture;
     final similarResult = await similarFuture;
     final creditsResult = await creditsFuture;
-    final videosResult = await videosFuture;
+    final trailerResult = await trailerFuture;
 
     switch (detailsResult) {
       case Err(:final failure):
@@ -45,25 +45,12 @@ class MovieDetailsBloc extends Bloc<MovieDetailsEvent, MovieDetailsState> {
       case Ok(:final value):
         final similar = similarResult.getOrElse(() => const <Movie>[]);
         final cast = creditsResult.getOrElse(() => const <CastMember>[]);
-        final videos = videosResult.getOrElse(() => const <Video>[]);
-        // Prefer an official YouTube trailer, then any YouTube trailer, then any YouTube video.
-        final trailer = videos.firstWhere(
-          (v) => v.isYouTube && v.isTrailer && v.official,
-          orElse: () => videos.firstWhere(
-            (v) => v.isYouTube && v.isTrailer,
-            orElse: () => videos.firstWhere(
-              (v) => v.isYouTube,
-              orElse: () =>
-                  const Video(id: '', key: '', site: '', name: '', type: '', official: false),
-            ),
-          ),
-        );
         emit(
           MovieDetailsLoaded(
             movie: value,
             similarMovies: similar,
             cast: cast,
-            trailer: trailer.key.isEmpty ? null : trailer,
+            trailer: trailerResult.valueOrNull,
           ),
         );
     }

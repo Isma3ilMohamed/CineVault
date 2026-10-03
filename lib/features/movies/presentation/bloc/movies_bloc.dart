@@ -7,14 +7,12 @@ part 'movies_event.dart';
 part 'movies_state.dart';
 
 class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
-  MoviesBloc({required this.getPopularMovies, required this.movieRepository})
-    : super(const MoviesInitial()) {
+  MoviesBloc({required this.getMoviesByCategory}) : super(const MoviesInitial()) {
     on<LoadHomeMovies>(_onLoadHomeMovies);
     on<RefreshHomeMovies>(_onRefreshHomeMovies);
     on<LoadMorePopularMovies>(_onLoadMorePopular);
   }
-  final GetPopularMovies getPopularMovies;
-  final MovieRepository movieRepository;
+  final GetMoviesByCategory getMoviesByCategory;
 
   Future<void> _onLoadHomeMovies(LoadHomeMovies event, Emitter<MoviesState> emit) async {
     emit(const MoviesLoading());
@@ -28,11 +26,11 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
 
   Future<void> _fetchAllCategories(Emitter<MoviesState> emit) async {
     final results = await Future.wait([
-      getPopularMovies(const PageParams(page: 1)),
-      movieRepository.getTopRatedMovies(page: 1),
-      movieRepository.getUpcomingMovies(page: 1),
-      movieRepository.getNowPlayingMovies(page: 1),
-      movieRepository.getTrendingDayMovies(page: 1),
+      getMoviesByCategory(const MoviesByCategoryParams(category: MovieCategory.popular)),
+      getMoviesByCategory(const MoviesByCategoryParams(category: MovieCategory.topRated)),
+      getMoviesByCategory(const MoviesByCategoryParams(category: MovieCategory.upcoming)),
+      getMoviesByCategory(const MoviesByCategoryParams(category: MovieCategory.nowPlaying)),
+      getMoviesByCategory(const MoviesByCategoryParams(category: MovieCategory.trending)),
     ]);
 
     for (final result in results) {
@@ -62,7 +60,9 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
     emit(currentState.copyWith(isLoadingMore: true));
 
     final nextPage = currentState.popularPage + 1;
-    final result = await getPopularMovies(PageParams(page: nextPage));
+    final result = await getMoviesByCategory(
+      MoviesByCategoryParams(category: MovieCategory.popular, page: nextPage),
+    );
 
     switch (result) {
       case Err():

@@ -5,28 +5,19 @@ import 'package:domain/domain.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockGetPopularMovies extends Mock implements GetPopularMovies {}
-
-class MockMovieRepository extends Mock implements MovieRepository {}
-
-class FakePageParams extends Fake implements PageParams {}
+class MockGetMoviesByCategory extends Mock implements GetMoviesByCategory {}
 
 void main() {
-  late MockGetPopularMovies mockGetPopularMovies;
-  late MockMovieRepository mockMovieRepository;
+  late MockGetMoviesByCategory mockGetMoviesByCategory;
   late MoviesBloc moviesBloc;
 
   setUpAll(() {
-    registerFallbackValue(FakePageParams());
+    registerFallbackValue(const MoviesByCategoryParams(category: MovieCategory.popular));
   });
 
   setUp(() {
-    mockGetPopularMovies = MockGetPopularMovies();
-    mockMovieRepository = MockMovieRepository();
-    moviesBloc = MoviesBloc(
-      getPopularMovies: mockGetPopularMovies,
-      movieRepository: mockMovieRepository,
-    );
+    mockGetMoviesByCategory = MockGetMoviesByCategory();
+    moviesBloc = MoviesBloc(getMoviesByCategory: mockGetMoviesByCategory);
   });
 
   tearDown(() async {
@@ -57,36 +48,30 @@ void main() {
 
     group('LoadHomeMovies', () {
       blocTest<MoviesBloc, MoviesState>(
-        'emits [Loading, Loaded] when all categories succeed',
+        'emits [Loading, Loaded] with every category when all succeed',
         setUp: () {
-          when(() => mockGetPopularMovies(any())).thenAnswer((_) async => Ok(testMovies));
-          when(() => mockMovieRepository.getTopRatedMovies(page: 1))
-              .thenAnswer((_) async => Ok(testMovies));
-          when(() => mockMovieRepository.getUpcomingMovies(page: 1))
-              .thenAnswer((_) async => Ok(testMovies));
-          when(() => mockMovieRepository.getNowPlayingMovies(page: 1))
-              .thenAnswer((_) async => Ok(testMovies));
-          when(() => mockMovieRepository.getTrendingDayMovies(page: 1))
-              .thenAnswer((_) async => Ok(testMovies));
+          when(() => mockGetMoviesByCategory(any())).thenAnswer((_) async => Ok(testMovies));
         },
         build: () => moviesBloc,
         act: (bloc) => bloc.add(const LoadHomeMovies()),
         expect: () => [const MoviesLoading(), isA<MoviesLoaded>()],
+        verify: (_) {
+          for (final category in MovieCategory.values) {
+            verify(() => mockGetMoviesByCategory(MoviesByCategoryParams(category: category)))
+                .called(1);
+          }
+        },
       );
 
       blocTest<MoviesBloc, MoviesState>(
-        'emits [Loading, Error] when getPopularMovies fails',
+        'emits [Loading, Error] when one category fails',
         setUp: () {
-          when(() => mockGetPopularMovies(any()))
-              .thenAnswer((_) async => const Err(ServerFailure(message: 'Server error')));
-          when(() => mockMovieRepository.getTopRatedMovies(page: 1))
-              .thenAnswer((_) async => Ok(testMovies));
-          when(() => mockMovieRepository.getUpcomingMovies(page: 1))
-              .thenAnswer((_) async => Ok(testMovies));
-          when(() => mockMovieRepository.getNowPlayingMovies(page: 1))
-              .thenAnswer((_) async => Ok(testMovies));
-          when(() => mockMovieRepository.getTrendingDayMovies(page: 1))
-              .thenAnswer((_) async => Ok(testMovies));
+          when(() => mockGetMoviesByCategory(any())).thenAnswer((_) async => Ok(testMovies));
+          when(
+            () => mockGetMoviesByCategory(
+              const MoviesByCategoryParams(category: MovieCategory.popular),
+            ),
+          ).thenAnswer((_) async => const Err(ServerFailure(message: 'Server error')));
         },
         build: () => moviesBloc,
         act: (bloc) => bloc.add(const LoadHomeMovies()),

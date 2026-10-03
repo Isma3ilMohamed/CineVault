@@ -263,6 +263,8 @@ cine_vault/
 └── melos.yaml
 ```
 
+> ⚠ **الـ pub workspace مش بيفرض الحدود لوحده:** الـ resolution مشتركة، فأي import لـ package مش موجودة في الـ pubspec بيشتغل عادي. الحماية جاية من `depend_on_referenced_packages: error` في الـ root `analysis_options.yaml` (Phase 3)، وده اتجرّب: import لـ `flutter` من `domain` بقى error.
+
 | Package | بيعتمد على | ممنوع |
 |---|---|---|
 | `domain` | — | أي حاجة (ولا `flutter`) |
@@ -333,10 +335,10 @@ class MovieDetailsRouteData extends GoRouteData {
 ### 🏗️ Architecture
 - **Circular dependency** `movies` ⇄ `favorites`: `MovieCard` → `FavoriteHeartButton` → … ← `favorites_page` → `MovieCard`. الحل: `MovieCard` في `core/ui` بـ `trailing: Widget?`.
 - **`Movie` entity** مستخدمة في 4 features → مكانها `domain`.
-- **Domain فيها Flutter**: `settings/domain` بتعمل import لـ `material.dart` (`ThemeMode`, `Locale`) في 4 ملفات → `AppThemeMode` enum + `String? languageCode`.
-- **`Movie.fullPosterUrl`** فيها TMDB URLs → mapper في `data` أو helper في `core/ui`.
-- **UseCases بتتخطّى**: `MoviesBloc` و`MovieListBloc` بيكلموا `MovieRepository` مباشرة → use case واحد `GetMoviesByCategory`.
-- **منطق اختيار الـ trailer** في `MovieDetailsBloc` → use case `GetMovieTrailer` أو method على `List<Video>` في الـ domain.
+- ✅ ~~**Domain فيها Flutter**~~ (Phase 3): `AppThemeMode` + `languageCode`، والتحويل لـ Flutter في `app_settings_flutter.dart`. الـ strings المحفوظة متغيرتش، فمش محتاجين migration (وفيه test بيثبت ده).
+- ✅ ~~**`Movie.fullPosterUrl`**~~ (Phase 3): الـ URLs و`formattedRating` و`releaseYear` اتنقلوا لـ extension في `lib/core/extensions/tmdb_display.dart`، وهتتنقل لـ `core_ui` في Phase 5. الـ `'N/A'` لسه مش مترجمة (Phase 6).
+- ✅ ~~**UseCases بتتخطّى**~~ (Phase 3): `GetMoviesByCategory` حل محل `GetPopularMovies` والـ `switch` اللي كان في `MovieListBloc`. ومفيش bloc بقى بيلمس الـ repository.
+- ✅ ~~**منطق اختيار الـ trailer**~~ (Phase 3): `GetMovieTrailer` حل محل `GetMovieVideos` + الـ `firstWhere` المتداخلة. وبقى بيتجاهل كمان الـ videos اللي من غير key.
 - **`injection_container.dart`** في `core` بيعمل import لكل الـ features → `injectable` + module لكل package، والـ composition في `app`.
 - Global cubits متسجلة بطرق مختلفة (`create:` مع lazy singleton، و`.value` مع singleton) → قاعدة واحدة.
 
@@ -364,7 +366,7 @@ class MovieDetailsRouteData extends GoRouteData {
 | **0-B** | رفع الـ SDK لـ `^3.13` · `very_good_analysis` · `dart format` · `dart fix` + إصلاح الباقي بإيدينا | ✅ `flutter analyze`: No issues |
 | **1** | melos workspace · `core/result` (sealed Failure) · `core/base` (EffectEmitter, EventGuard, BlocEffectListener) + tests | ✅ 18 test في الـ packages · `melos run analyze/test` خضرا |
 | **2** | `lints` package — أول 4 قواعد (content pure · bloc pure · provider only in route · no navigation in features) | ✅ 22 test للـ plugin · الـ 4 قواعد اتجرّبوا end-to-end بـ `dart analyze` على ملف مخالف · الـ workspace نضيف |
-| **3** | `domain` pure Dart · نقل الـ entities · `GetMoviesByCategory` · `GetMovieTrailer` + tests | `domain` من غير `flutter` |
+| **3** | `domain` pure Dart · نقل الـ entities · `GetMoviesByCategory` · `GetMovieTrailer` + tests | ✅ `packages/domain` (17 test) · import أي package مش متعرّفة كـ dependency = **error** |
 | **4** | `data` · `guard()` · interceptor بـ `reject` · repo tests | |
 | **5** | **`movie_details`** كنموذج كامل بالـ 6 ملفات + bloc test + golden | ده الـ reference لباقي الـ features |
 | **6** | `home` · `movie_list` · `search` · `favorites` · `settings` على نفس النموذج | |

@@ -7,23 +7,17 @@ part 'movie_list_event.dart';
 part 'movie_list_state.dart';
 
 class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
-  MovieListBloc({required this.repository, required this.category})
+  MovieListBloc({required this.getMoviesByCategory, required this.category})
     : super(const MovieListInitial()) {
     on<MovieListStarted>(_onStarted);
     on<MovieListLoadMore>(_onLoadMore);
     on<MovieListRetried>((_, emit) => _onStarted(const MovieListStarted(), emit));
   }
-  final MovieRepository repository;
+  final GetMoviesByCategory getMoviesByCategory;
   final MovieCategory category;
 
   Future<Result<List<Movie>>> _fetch(int page) {
-    return switch (category) {
-      MovieCategory.trending => repository.getTrendingDayMovies(page: page),
-      MovieCategory.popular => repository.getPopularMovies(page: page),
-      MovieCategory.topRated => repository.getTopRatedMovies(page: page),
-      MovieCategory.nowPlaying => repository.getNowPlayingMovies(page: page),
-      MovieCategory.upcoming => repository.getUpcomingMovies(page: page),
-    };
+    return getMoviesByCategory(MoviesByCategoryParams(category: category, page: page));
   }
 
   Future<void> _onStarted(MovieListStarted event, Emitter<MovieListState> emit) async {

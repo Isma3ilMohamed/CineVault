@@ -55,28 +55,28 @@ Future<void> initDependencies(AppConfig config) async {
   );
 
   // Use cases
-  sl.registerLazySingleton(() => GetPopularMovies(sl()));
+  sl.registerLazySingleton(() => GetMoviesByCategory(sl()));
   sl.registerLazySingleton(() => GetMovieDetails(sl()));
   sl.registerLazySingleton(() => GetSimilarMovies(sl()));
   sl.registerLazySingleton(() => GetGenres(sl()));
   sl.registerLazySingleton(() => GetMovieCredits(sl()));
-  sl.registerLazySingleton(() => GetMovieVideos(sl()));
+  sl.registerLazySingleton(() => GetMovieTrailer(sl()));
 
   // GenresCubit — global cache, lazy singleton (one instance for the app)
   sl.registerLazySingleton(() => GenresCubit(getGenres: sl()));
 
   // Blocs are factories so each screen gets a fresh instance
-  sl.registerFactory(() => MoviesBloc(getPopularMovies: sl(), movieRepository: sl()));
+  sl.registerFactory(() => MoviesBloc(getMoviesByCategory: sl()));
   sl.registerFactory(
     () => MovieDetailsBloc(
       getMovieDetails: sl(),
       getSimilarMovies: sl(),
       getMovieCredits: sl(),
-      getMovieVideos: sl(),
+      getMovieTrailer: sl(),
     ),
   );
   sl.registerFactoryParam<MovieListBloc, MovieCategory, void>(
-    (category, _) => MovieListBloc(repository: sl(), category: category),
+    (category, _) => MovieListBloc(getMoviesByCategory: sl(), category: category),
   );
 
   //! Features - Search
