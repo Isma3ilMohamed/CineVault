@@ -1,5 +1,6 @@
 import 'package:core_ui/src/l10n/generated/core_ui_localizations.dart';
 import 'package:core_ui/src/theme/app_colors.dart';
+import 'package:core_ui/src/tmdb/tmdb_images.dart';
 import 'package:core_ui/src/widgets/remote_image.dart';
 import 'package:flutter/material.dart';
 
@@ -48,7 +49,7 @@ class PosterCard extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            RemoteImage(url: posterUrl),
+            RemoteImage(url: posterUrl, sourceAspectRatio: TmdbImages.posterAspectRatio),
             if (leading case final leading?)
               PositionedDirectional(top: 6, start: 6, child: leading),
             PositionedDirectional(top: 8, end: 8, child: _RatingBadge(rating: rating)),

@@ -2,6 +2,11 @@
 abstract final class TmdbImages {
   static const _base = 'https://image.tmdb.org/t/p';
 
+  /// Width / height of each image kind, for `RemoteImage.sourceAspectRatio`.
+  static const double posterAspectRatio = 2 / 3;
+  static const double backdropAspectRatio = 16 / 9;
+  static const double profileAspectRatio = 2 / 3;
+
   static String? poster(String? path) => _url('w500', path);
   static String? backdrop(String? path) => _url('w1280', path);
   static String? profile(String? path) => _url('w185', path);

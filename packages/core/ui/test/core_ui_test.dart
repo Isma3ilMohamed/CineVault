@@ -37,6 +37,48 @@ void main() {
     });
   });
 
+  group('RemoteImage.decodeWidth', () {
+    test('a poster card on a 3x screen decodes at 420px, not at its full 500px+', () {
+      expect(
+        RemoteImage.decodeWidth(
+          constraints: BoxConstraints.tight(const Size(140, 210)),
+          devicePixelRatio: 3,
+          sourceAspectRatio: TmdbImages.posterAspectRatio,
+        ),
+        420,
+      );
+    });
+
+    test('a cover backdrop in a wide box is decoded wide enough not to upscale', () {
+      // 402x280 box, 16:9 image: cover scales by height -> 280 * 16/9 = 498 pt.
+      expect(
+        RemoteImage.decodeWidth(
+          constraints: BoxConstraints.tight(const Size(402, 280)),
+          devicePixelRatio: 3,
+          sourceAspectRatio: TmdbImages.backdropAspectRatio,
+        ),
+        1494,
+      );
+    });
+
+    test('unknown aspect ratio uses the box width; unbounded width decodes at full size', () {
+      expect(
+        RemoteImage.decodeWidth(
+          constraints: BoxConstraints.tight(const Size(100, 100)),
+          devicePixelRatio: 2,
+        ),
+        200,
+      );
+      expect(
+        RemoteImage.decodeWidth(
+          constraints: const BoxConstraints(maxHeight: 100),
+          devicePixelRatio: 2,
+        ),
+        isNull,
+      );
+    });
+  });
+
   testWidgets('FailureText picks the localized message by failure type', (tester) async {
     late String network;
     late String server;

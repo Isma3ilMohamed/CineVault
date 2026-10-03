@@ -25,7 +25,11 @@ class CastCard extends StatelessWidget {
           ClipOval(
             child: SizedBox.square(
               dimension: width,
-              child: RemoteImage(url: profileUrl, fallbackIcon: Icons.person_rounded),
+              child: RemoteImage(
+                url: profileUrl,
+                fallbackIcon: Icons.person_rounded,
+                sourceAspectRatio: TmdbImages.profileAspectRatio,
+              ),
             ),
           ),
           const SizedBox(height: 8),

@@ -57,7 +57,10 @@ class _CarouselItem extends StatelessWidget {
         children: [
           Hero(
             tag: heroTag,
-            child: RemoteImage(url: TmdbImages.backdrop(movie.backdropPath)),
+            child: RemoteImage(
+              url: TmdbImages.backdrop(movie.backdropPath),
+              sourceAspectRatio: TmdbImages.backdropAspectRatio,
+            ),
           ),
           DecoratedBox(
             decoration: BoxDecoration(

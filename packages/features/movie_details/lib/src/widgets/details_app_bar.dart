@@ -23,7 +23,7 @@ class DetailsAppBar extends StatelessWidget {
     final Widget background = Stack(
       fit: StackFit.expand,
       children: [
-        RemoteImage(url: backdropUrl),
+        RemoteImage(url: backdropUrl, sourceAspectRatio: TmdbImages.backdropAspectRatio),
         DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
