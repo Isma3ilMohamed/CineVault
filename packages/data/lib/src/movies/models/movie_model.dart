@@ -26,7 +26,7 @@ class MovieModel {
       voteAverage: (json['vote_average'] as num?)?.toDouble() ?? 0.0,
       voteCount: json['vote_count'] as int? ?? 0,
       releaseDate: json['release_date'] as String?,
-      genreIds: (json['genre_ids'] as List<dynamic>?)?.map((e) => e as int).toList() ?? [],
+      genreIds: _genreIds(json),
       originalLanguage: json['original_language'] as String? ?? 'en',
       popularity: (json['popularity'] as num?)?.toDouble() ?? 0.0,
       adult: json['adult'] as bool? ?? false,
@@ -49,6 +49,16 @@ class MovieModel {
       adult: movie.adult,
     );
   }
+
+  /// List endpoints send `genre_ids: [28]`; the details endpoint sends
+  /// `genres: [{"id": 28, "name": "Action"}]` instead.
+  static List<int> _genreIds(Map<String, dynamic> json) {
+    final ids = json['genre_ids'] as List<dynamic>?;
+    if (ids != null) return ids.map((e) => e as int).toList();
+    final genres = json['genres'] as List<dynamic>?;
+    return genres?.map((g) => (g as Map<String, dynamic>)['id'] as int).toList() ?? [];
+  }
+
   final int id;
   final String title;
   final String overview;
