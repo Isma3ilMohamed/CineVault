@@ -1,5 +1,5 @@
+import 'package:cine_vault/features/favorites/favorites.dart';
 import 'package:domain/domain.dart';
-import 'package:favorites/favorites.dart';
 import 'package:flutter/widgets.dart';
 
 /// Fills every feature's `FavoriteButtonBuilder` slot with the favorites

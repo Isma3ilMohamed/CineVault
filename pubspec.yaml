@@ -15,13 +15,6 @@ workspace:
   - packages/core/ui
   - packages/data
   - packages/domain
-  - packages/features/favorites
-  - packages/features/home
-  - packages/features/movie_details
-  - packages/features/movie_list
-  - packages/features/search
-  - packages/features/settings
-  - packages/shared/movie_ui
 
 dev_dependencies:
   # Shared lint config for every member (analysis_options.yaml includes it).

@@ -1,6 +1,0 @@
-arb-dir: lib/src/l10n
-template-arb-file: movie_ui_en.arb
-output-localization-file: movie_ui_localizations.dart
-output-class: MovieUiLocalizations
-nullable-getter: false
-output-dir: lib/src/l10n/generated

@@ -1,18 +1,18 @@
 import 'dart:async';
 
+import 'package:cine_vault/features/favorites/favorites.dart';
+import 'package:cine_vault/features/home/home.dart';
+import 'package:cine_vault/features/movie_details/movie_details.dart';
+import 'package:cine_vault/features/movie_list/movie_list.dart';
+import 'package:cine_vault/features/search/search.dart';
+import 'package:cine_vault/features/settings/settings.dart';
 import 'package:cine_vault/routing/app_routes.dart';
 import 'package:cine_vault/routing/app_shell.dart';
 import 'package:cine_vault/routing/favorite_button_slot.dart';
 import 'package:cine_vault/routing/route_error_screen.dart';
 import 'package:domain/domain.dart';
-import 'package:favorites/favorites.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:home/home.dart';
-import 'package:movie_details/movie_details.dart';
-import 'package:movie_list/movie_list.dart';
-import 'package:search/search.dart';
-import 'package:settings/settings.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 final _homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');

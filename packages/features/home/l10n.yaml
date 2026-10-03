@@ -1,6 +1,0 @@
-arb-dir: lib/src/l10n
-template-arb-file: home_en.arb
-output-localization-file: home_localizations.dart
-output-class: HomeLocalizations
-nullable-getter: false
-output-dir: lib/src/l10n/generated

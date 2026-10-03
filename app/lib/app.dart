@@ -1,18 +1,18 @@
 import 'package:cine_vault/core/di/injection.dart';
+import 'package:cine_vault/core/widgets/movie_ui/movie_ui.dart';
+import 'package:cine_vault/features/favorites/favorites.dart';
+import 'package:cine_vault/features/home/home.dart';
+import 'package:cine_vault/features/movie_details/movie_details.dart';
+import 'package:cine_vault/features/search/search.dart';
+import 'package:cine_vault/features/settings/settings.dart';
 import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:cine_vault/routing/app_router.dart';
 import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
-import 'package:favorites/favorites.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:home/home.dart';
-import 'package:movie_details/movie_details.dart';
-import 'package:movie_ui/movie_ui.dart';
-import 'package:search/search.dart';
-import 'package:settings/settings.dart';
 
 class CineVaultApp extends StatefulWidget {
   const CineVaultApp({super.key});
