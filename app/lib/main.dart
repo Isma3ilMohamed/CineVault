@@ -1,4 +1,5 @@
 import 'package:cine_vault/app.dart';
+import 'package:cine_vault/core/config/app_config.dart';
 import 'package:cine_vault/core/di/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,9 +8,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Fails fast if --flavor and the config file don't match.
+  final config = AppConfig.fromEnvironment();
+
   await Hive.initFlutter();
-  // Also fails fast if --flavor and the config file don't match.
-  await configureDependencies();
+  await configureDependencies(config);
 
   Bloc.observer = AppBlocObserver();
 

@@ -33,7 +33,6 @@ extension GetItInjectableX on _i174.GetIt {
     await _i437.DataPackageModule().init(gh);
     await _i494.DomainPackageModule().init(gh);
     final appModule = _$AppModule();
-    gh.singleton<_i704.AppConfig>(() => appModule.config);
     gh.singleton<_i437.NetworkConfig>(
       () => appModule.networkConfig(gh<_i704.AppConfig>()),
     );

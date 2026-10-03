@@ -16,12 +16,15 @@ final GetIt getIt = GetIt.instance;
 /// The composition root: every package registers its own classes in its
 /// injectable module; this only decides the order.
 ///
-/// data and domain register first (data also opens storage), then the app's
-/// own [AppModule], then the features. Settings resolves its cubit at startup,
-/// so it must come after the storage it reads from.
+/// [config] is registered first; data and domain come next (data also opens
+/// storage), then the app's own [AppModule], then the features. Settings
+/// resolves its cubit at startup, so it must come after the storage it reads
+/// from.
 ///
-/// Call `Hive.initFlutter()` before this.
+/// Call `Hive.initFlutter()` (or `Hive.init` in tests) before this. Tests pass
+/// their own [config] and can replace registrations afterwards.
 @InjectableInit(
+  ignoreUnregisteredTypes: [AppConfig],
   externalPackageModulesBefore: [
     ExternalModule(DataPackageModule),
     ExternalModule(DomainPackageModule),
@@ -35,15 +38,15 @@ final GetIt getIt = GetIt.instance;
     ExternalModule(SettingsPackageModule),
   ],
 )
-Future<void> configureDependencies() => getIt.init();
+Future<void> configureDependencies(AppConfig config) async {
+  getIt.registerSingleton(config);
+  await getIt.init();
+}
 
-/// What only the app knows: the flavor's build config.
+/// What only the app knows: turns the flavor's build config into what the
+/// packages need.
 @module
 abstract class AppModule {
-  /// Eager, so a flavor/config mismatch fails at startup.
-  @singleton
-  AppConfig get config => AppConfig.fromEnvironment();
-
   @singleton
   NetworkConfig networkConfig(AppConfig config) => NetworkConfig(
     baseUrl: config.tmdbBaseUrl,
