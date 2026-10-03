@@ -9,7 +9,6 @@ environment:
 # Add new packages here; melos picks them up automatically.
 workspace:
   - app
-  - packages/core/base
   - packages/core/result
   - packages/core/testing
   - packages/core/ui

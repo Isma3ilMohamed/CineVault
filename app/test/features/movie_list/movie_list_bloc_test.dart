@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
-import 'package:cine_vault/features/movie_list/movie_list_bloc.dart';
-import 'package:cine_vault/features/movie_list/movie_list_contract.dart';
+import 'package:cine_vault/features/movie_list/bloc/movie_list_bloc.dart';
 import 'package:core_result/core_result.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -102,8 +101,4 @@ void main() {
       MovieListState.loaded(movies: [movie(1)], page: 1, hasReachedMax: false),
     ],
   );
-
-  test('EventGuard rejects retry unless the list failed', () {
-    expect(() => build().add(const MovieListEvent.retried()), throwsA(isA<AssertionError>()));
-  });
 }

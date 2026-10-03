@@ -3,7 +3,7 @@
 library;
 
 export 'app_settings_flutter.dart';
+export 'cubit/settings_cubit.dart';
 export 'l10n/generated/settings_localizations.dart';
-export 'settings_cubit.dart';
-export 'settings_route.dart';
-export 'theme_reveal/theme_reveal_boundary.dart';
+export 'view/settings_page.dart';
+export 'view/theme_reveal/theme_reveal_boundary.dart';

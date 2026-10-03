@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
-import 'package:cine_vault/features/favorites/favorites_bloc.dart';
-import 'package:cine_vault/features/favorites/favorites_contract.dart';
+import 'package:cine_vault/features/favorites/bloc/favorites_bloc.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -46,15 +45,5 @@ void main() {
 
     await bloc.close();
     expect(storage.hasListener, isFalse);
-  });
-
-  test('EventGuard rejects a second started', () async {
-    final bloc = FavoritesBloc(watchFavorites: watchFavorites)..add(const FavoritesEvent.started());
-    await Future<void>.delayed(Duration.zero);
-    storage.add(const []);
-    await Future<void>.delayed(Duration.zero);
-
-    expect(() => bloc.add(const FavoritesEvent.started()), throwsA(isA<AssertionError>()));
-    await bloc.close();
   });
 }

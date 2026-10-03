@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:cine_vault/features/search/search_bloc.dart';
-import 'package:cine_vault/features/search/search_contract.dart';
+import 'package:cine_vault/features/search/bloc/search_bloc.dart';
 import 'package:core_result/core_result.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -134,15 +133,9 @@ void main() {
     expect(bloc.state, isA<SearchLoaded>());
   });
 
-  test('EventGuard: retry only after a failure, recents only while idle', () async {
-    expect(() => bloc.add(const SearchEvent.retried()), throwsA(isA<AssertionError>()));
-
-    when(() => searchMovies(any())).thenAnswer((_) async => Ok([movie(1)]));
-    bloc.add(const SearchEvent.queryChanged('batman'));
+  test('retry outside the error state does nothing', () async {
+    bloc.add(const SearchEvent.retried());
     await pump();
-    expect(
-      () => bloc.add(const SearchEvent.recentSearchTapped('x')),
-      throwsA(isA<AssertionError>()),
-    );
+    verifyNever(() => searchMovies(any()));
   });
 }

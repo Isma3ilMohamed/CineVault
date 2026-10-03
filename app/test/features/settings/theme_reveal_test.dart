@@ -1,5 +1,5 @@
 import 'package:cine_vault/features/settings/settings.dart';
-import 'package:cine_vault/features/settings/theme_reveal/theme_reveal_overlay.dart';
+import 'package:cine_vault/features/settings/view/theme_reveal/theme_reveal_overlay.dart';
 import 'package:core_result/core_result.dart';
 import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
@@ -37,7 +37,7 @@ void main() {
             GlobalCupertinoLocalizations.delegate,
           ],
           builder: withBoundary ? (_, child) => ThemeRevealBoundary(child: child!) : null,
-          home: const SettingsRoute(),
+          home: const SettingsPage(),
         ),
       ),
     );

@@ -1,6 +1,6 @@
-/// Home screen. Exposes the Route and the localizations
-/// delegate.
+/// Home screen. The router places `HomePage`; the localizations delegate is
+/// registered by the app.
 library;
 
-export 'home_route.dart';
 export 'l10n/generated/home_localizations.dart';
+export 'view/home_page.dart';

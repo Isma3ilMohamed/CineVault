@@ -1,6 +1,6 @@
-/// Movie details feature. Exposes only what the app needs to place it:
-/// the Route and the localizations delegate.
+/// Movie details screen. The router places `MovieDetailsPage`; the
+/// localizations delegate is registered by the app.
 library;
 
 export 'l10n/generated/movie_details_localizations.dart';
-export 'movie_details_route.dart';
+export 'view/movie_details_page.dart';

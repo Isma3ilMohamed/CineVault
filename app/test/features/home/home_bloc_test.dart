@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
-import 'package:cine_vault/features/home/home_bloc.dart';
-import 'package:cine_vault/features/home/home_contract.dart';
+import 'package:cine_vault/features/home/bloc/home_bloc.dart';
 import 'package:core_result/core_result.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -71,23 +70,19 @@ void main() {
     ],
   );
 
-  test('a failed refresh keeps the old sections and emits refreshFailed', () async {
-    stubAll(const Err(NetworkFailure()));
-    final bloc = build()..emit(HomeState.loaded(sections: sections));
-    final effects = <HomeEffect>[];
-    final sub = bloc.effects.listen(effects.add);
+  blocTest<HomeBloc, HomeState>(
+    'a failed refresh keeps the old sections and records the failure',
+    setUp: () => stubAll(const Err(NetworkFailure())),
+    build: build,
+    seed: () => HomeState.loaded(sections: sections),
+    act: (bloc) => bloc.add(const HomeEvent.refreshed()),
+    expect: () => [
+      HomeState.loaded(sections: sections, isRefreshing: true),
+      HomeState.loaded(sections: sections, refreshFailure: const NetworkFailure()),
+    ],
+  );
 
-    bloc.add(const HomeEvent.refreshed());
-    await bloc.stream.firstWhere((s) => s is HomeLoaded && !s.isRefreshing);
-    await Future<void>.delayed(Duration.zero);
-
-    expect(bloc.state, HomeState.loaded(sections: sections));
-    expect(effects, [const HomeEffect.refreshFailed(NetworkFailure())]);
-    await sub.cancel();
-    await bloc.close();
-  });
-
-  test('EventGuard rejects a second refresh while one is running', () async {
+  test('a second refresh while one is running is ignored', () async {
     final pending = Completer<Result<List<Movie>>>();
     when(() => getMovies(any())).thenAnswer((_) => pending.future);
     final bloc = build()
@@ -95,7 +90,11 @@ void main() {
       ..add(const HomeEvent.refreshed());
     await Future<void>.delayed(Duration.zero);
 
-    expect(() => bloc.add(const HomeEvent.refreshed()), throwsA(isA<AssertionError>()));
+    bloc.add(const HomeEvent.refreshed());
+    await Future<void>.delayed(Duration.zero);
+
+    // One refresh = one request per category.
+    verify(() => getMovies(any())).called(MovieCategory.values.length);
     pending.complete(Ok([movie(1)]));
     await bloc.close();
   });

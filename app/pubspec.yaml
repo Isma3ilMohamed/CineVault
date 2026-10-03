@@ -18,8 +18,6 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   # Workspace packages
-  core_base:
-    path: ../packages/core/base
   core_result:
     path: ../packages/core/result
   core_ui:

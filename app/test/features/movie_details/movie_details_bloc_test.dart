@@ -1,6 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:cine_vault/features/movie_details/movie_details_bloc.dart';
-import 'package:cine_vault/features/movie_details/movie_details_contract.dart';
+import 'package:cine_vault/features/movie_details/bloc/movie_details_bloc.dart';
 import 'package:core_result/core_result.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -112,21 +111,4 @@ void main() {
     act: (bloc) => bloc.add(const MovieDetailsEvent.retried()),
     expect: () => [const MovieDetailsState.loading(), isA<MovieDetailsLoaded>()],
   );
-
-  group('EventGuard', () {
-    test('rejects retried while loading (e.g. a double tap on Retry)', () async {
-      final bloc = build()..emit(const MovieDetailsState.loading());
-      expect(() => bloc.add(const MovieDetailsEvent.retried()), throwsA(isA<AssertionError>()));
-      await bloc.close();
-    });
-
-    test('rejects a second started', () async {
-      final bloc = build()..add(const MovieDetailsEvent.started());
-      await pumpEventQueue();
-
-      expect(() => bloc.add(const MovieDetailsEvent.started()), throwsA(isA<AssertionError>()));
-      verify(() => getMovieDetails(any())).called(1);
-      await bloc.close();
-    });
-  });
 }
