@@ -49,9 +49,28 @@ jobs:
             echo "TMDB_ACCESS_TOKEN=$TMDB_ACCESS_TOKEN"
           } > config/production.env
 
-      # Signed with the debug key until a release keystore is added as secrets
-      # (android/app/build.gradle.kts), so builds from different runners
-      # cannot be installed over each other.
+      # The upload keystore is stored base64-encoded in a secret and written,
+      # with its key.properties, only on the runner (android/app/build.gradle.kts).
+      - name: Signing key from secrets
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          for name in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Add the $name repository secret first (see the README)."
+              exit 1
+            fi
+          done
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/upload-keystore.jks
+          {
+            echo "storeFile=upload-keystore.jks"
+            echo "storePassword=$ANDROID_KEYSTORE_PASSWORD"
+            echo "keyAlias=$ANDROID_KEY_ALIAS"
+            echo "keyPassword=$ANDROID_KEYSTORE_PASSWORD"
+          } > android/key.properties
+
       - name: Build
         run: flutter build apk --release --flavor production --dart-define-from-file=config/production.env
 

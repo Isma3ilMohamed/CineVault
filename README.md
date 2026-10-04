@@ -153,8 +153,31 @@ Generated code (freezed, localizations) is committed, so a fresh clone builds wi
 | [CI](.github/workflows/ci.yml) | every push to `main` and every pull request | format, analyze, all tests, generated code up to date; builds the staging flavor for Android and iOS |
 | [Release](.github/workflows/release.yml) | a pushed `v*` tag | builds the production APK and publishes it as a GitHub Release |
 
-The release workflow needs the `TMDB_ACCESS_TOKEN` repository secret. Builds are signed with the
-debug key until a release keystore is configured.
+The release workflow needs the `TMDB_ACCESS_TOKEN` repository secret and the signing secrets below.
+
+### Release signing
+
+Release builds are signed with the upload key from `android/key.properties` (git-ignored). Without
+that file they fall back to the debug key, so `flutter run --release` works on any machine.
+
+1. **Create the upload keystore** once, outside the repository. `keytool` asks for a password;
+   keep the keystore and the password somewhere safe, since a lost key cannot be replaced:
+   ```bash
+   keytool -genkeypair -v -keystore ~/upload-keystore.jks -storetype PKCS12 -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+   ```
+2. **Sign local builds** with an `android/key.properties` file (PKCS12 uses one password for both):
+   ```properties
+   storeFile=/Users/<you>/upload-keystore.jks
+   storePassword=<password>
+   keyAlias=upload
+   keyPassword=<password>
+   ```
+3. **Sign CI releases** with three repository secrets (the password one prompts for its value):
+   ```bash
+   base64 -i ~/upload-keystore.jks | gh secret set ANDROID_KEYSTORE_BASE64
+   gh secret set ANDROID_KEYSTORE_PASSWORD
+   gh secret set ANDROID_KEY_ALIAS --body upload
+   ```
 
 ## Credits
 
