@@ -47,17 +47,16 @@ jobs:
             echo "APP_FLAVOR=production"
             echo "TMDB_BASE_URL=https://api.themoviedb.org/3"
             echo "TMDB_ACCESS_TOKEN=$TMDB_ACCESS_TOKEN"
-          } > app/config/production.env
+          } > config/production.env
 
       # Signed with the debug key until a release keystore is added as secrets
-      # (app/android/app/build.gradle.kts), so builds from different runners
+      # (android/app/build.gradle.kts), so builds from different runners
       # cannot be installed over each other.
       - name: Build
-        working-directory: app
         run: flutter build apk --release --flavor production --dart-define-from-file=config/production.env
 
       - name: Rename
-        run: mv app/build/app/outputs/flutter-apk/app-production-release.apk "CineVault-${GITHUB_REF_NAME}.apk"
+        run: mv build/app/outputs/flutter-apk/app-production-release.apk "CineVault-${GITHUB_REF_NAME}.apk"
 
       - name: Publish the release
         uses: softprops/action-gh-release@v2

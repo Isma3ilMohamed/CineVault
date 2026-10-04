@@ -1,62 +1,51 @@
-name: cine_vault_workspace
-description: Workspace root of CineVault. The app is in app/, everything else in packages/.
-publish_to: none
+name: cine_vault
+description: "CineVault - A clean architecture Flutter movie app with Bloc."
+publish_to: 'none'
+version: 1.0.0+1
 
 environment:
   sdk: ^3.13.0
 
-# Pub workspace: one resolution for the app and every package below.
-# Add new packages here; melos picks them up automatically.
-workspace:
-  - app
-  - packages/core/testing
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  bloc: ^8.1.4
+  bloc_concurrency: ^0.2.5
+  cached_network_image: ^3.4.1
+  carousel_slider: ^5.0.0
+  dio: ^5.7.0
+  equatable: ^2.0.5
+  flutter_bloc: ^8.1.6
+  freezed_annotation: ^3.1.0
+  get_it: ^8.0.0
+  go_router: ^17.5.0
+  hive: ^2.2.3
+  # Hive.initFlutter() before DI; lib/app/di.dart opens the boxes.
+  hive_flutter: ^1.1.0
+  intl: ^0.20.2
+  meta: ^1.19.0
+  pretty_dio_logger: ^1.4.0
+  shared_preferences: ^2.3.2
+  shimmer: ^3.0.0
+  url_launcher: ^6.3.1
+  youtube_player_iframe: ^5.2.0
 
 dev_dependencies:
-  # Shared lint config for every member (analysis_options.yaml includes it).
+  bloc_test: ^9.1.7
+  build_runner: ^2.16.1
+  flutter_test:
+    sdk: flutter
+  freezed: ^4.0.1
+  mocktail: ^1.0.4
   very_good_analysis: ^11.0.0
-  melos: ^8.6.0
 
-melos:
-  scripts:
-    format:
-      description: Fail if any Dart file is not formatted.
-      run: dart format --set-exit-if-changed .
-    analyze:
-      description: >-
-        Analyze the whole workspace with infos treated as failures. Uses
-        `dart analyze` because `flutter analyze` does not report analyzer
-        plugin diagnostics (packages/lints).
-      run: dart pub get --directory packages/lints && dart analyze --fatal-infos
-    generate:
-      description: >-
-        Regenerate code in every package that uses build_runner (freezed),
-        then format it with the workspace's page width.
-      run: dart run melos run generate:build && dart format .
-    generate:build:
-      description: build_runner in each package that depends on it.
-      exec:
-        command: dart run build_runner build
-        concurrency: 1
-      packageFilters:
-        dependsOn: build_runner
-    test:
-      description: Run every test in the workspace.
-      run: dart run melos run test:dart && dart run melos run test:flutter && dart run melos run test:lints
-    test:dart:
-      description: Tests of pure Dart packages.
-      exec: dart test
-      packageFilters:
-        dirExists: test
-        noDependsOn: flutter
-    test:flutter:
-      description: Tests of Flutter packages and the app.
-      exec:
-        command: flutter test
-        # flutter holds a global startup lock; parallel runs just wait on it.
-        concurrency: 1
-      packageFilters:
-        dirExists: test
-        dependsOn: flutter
-    test:lints:
-      description: Tests of the analyzer plugin (packages/lints, outside the workspace).
-      run: cd packages/lints && dart pub get && dart test
+flutter:
+  uses-material-design: true
+  generate: true
+  assets:
+    - assets/images/
+    - assets/icons/

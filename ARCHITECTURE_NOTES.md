@@ -3,6 +3,8 @@
 > Refactor plan for moving CineVault onto the agreed **Target Architecture** (Obsidian: `Projects/Target Architecture.md`).
 > Written from a full read of `lib/` (~6.8k lines, excluding generated l10n). Date: 2026-10-02.
 
+> **الحالة الحالية (Phase 9، 2026-10-04):** CineVault بقى package واحدة على الـ structure الشائع (دليل Flutter الرسمي + Bloc/VGV): `lib/{app, core, data, domain, features, routing, l10n}`، وكل feature فيها `bloc/` + `view/` (page + view)، والـ DI صريح في `lib/app/di.dart`. الشكل الحالي موصوف في الـ README وفي قسم **Phase 9** تحت. الأقسام من 1 لـ 4 (الـ 6 ملفات، الـ lint plugin، الـ packages، go_router_builder) **تاريخ** للمراحل اللي قبلها، اتسابت عشان القرارات و"ليه".
+
 **الهدف الأساسي:** كود **بيتقري** — أي حد يفتح feature يعرف كل ملف بيعمل إيه من اسمه، ومفيش ملف شايل مسؤوليات مش بتاعته (زي `app_router.dart` النهارده).
 
 ---
@@ -486,7 +488,7 @@ Repository  ── guard(() async => (await ds.x()).toEntity())        ──▶
 | **6** | `home` · `movie_list` · `search` · `favorites` · `settings` على نفس النموذج | ✅ 6 feature packages + `shared/movie_ui` · `lib/features` اتشال · 164 test (bloc + 32 golden en/ar) · الـ lint plugin شغال على كل الـ features ومفيش ولا warning |
 | **7** | `navigation` typed routes · `injectable` · `app` composition · باقي قواعد الـ lint | ✅ `app_router.dart` 41 سطر · 8 injectable modules · التطبيق في `app/` (iOS و Android بيعملوا build) · 9 قواعد lint (36 test) · الـ generated code بقى committed |
 | **8** | CI · app end-to-end tests · decoding images at display size · design tokens (Panda) | ✅ GitHub Actions (checks + Android/iOS builds) نجحت كـ simulation على copy نضيفة · 191 test · الـ 32 golden زي ما هما |
-| **9** | الرجوع للـ structure الشائع في السوق (5 خطوات، شوف تحت) | ✅ خطوات 1–4 · ⏳ 5 |
+| **9** | الرجوع للـ structure الشائع في السوق (5 خطوات، شوف تحت) | ✅ الـ 5 خطوات · package واحدة في الـ root · 140 test · الـ 32 golden زي ما هما من أول خطوة لآخرها |
 
 ---
 
@@ -514,7 +516,7 @@ test/               نفس شكل lib/
 | 2 | `refactor/move-features` | الـ 6 features + `shared/movie_ui` → `app/lib/features/` و`core/widgets/movie_ui/` **زي ما هي**: نقل ملفات وimports بس. استثناءين اتفرضوا: الـ DI micro packages بتاعة الـ features اتشالت (في package واحدة الـ root config بيلاقي الـ classes لوحده)، و`flutter_test_config.dart` واحد. الـ ARB بتاعة كل feature لسه في مكانها لحد خطوة 4 (الـ generated بتاعها committed، فمش محتاجة regenerate) | ميكانيكي بس |
 | 3 | `refactor/feature-anatomy` | كل feature → `bloc/` (bloc + event + state كـ part files) + `view/` (page: provider + أول event + navigation بـ `AppRoutes` · view: `BlocBuilder` + الـ UI). `EffectEmitter` → field في الـ state + `BlocListener`. `EventGuard` اتشال (اللي كان بيحمي حاجة حقيقية بقى check في الـ handler). `core_base` اتشال. الـ router بقى بيحط pages بس (73 سطر). الـ goldens بقت بتعمل pump للـ View بـ `MockBloc` وطلعت **نفس الـ pixels**. الـ `@injectable` annotations لسه موجودة لحد خطوة 4 | تغيير حقيقي |
 | 4 | `refactor/flatten-layers` | 4 commits: (a) `domain` و`data` و`core/*` → `lib/` (نقل بس) · (b) **الـ use cases كلها اتشالت** والمنطق الحقيقي (اختيار الـ trailer والـ category) اتنقل للـ repository بالـ tests بتاعته · (c) injectable اتشال → `lib/app/di.dart` صريح (108 سطر) · (d) الـ 9 ARB بقوا ملف واحد لكل لغة (46 مفتاح) + `core/constants/` (endpoints · storage keys · durations · app info). انحرافين عن الشجرة: `network/` و`processCall` في `data/` مش `core/` (بيرموا `AppException` بتاعة data)، والـ data sources في `data/sources/` | تغيير حقيقي (الأكبر) |
-| 5 | `chore/single-package` | الـ app يرجع للـ root. melos والـ workspace والـ lint plugin و`core_testing` يتشالوا. الـ CI يبقى `flutter analyze` + `flutter test` | ميكانيكي في الأغلب |
+| 5 | `chore/single-package` | الـ app رجع للـ root (`git mv`). melos والـ workspace والـ lint plugin اتشالوا، و`core_testing` بقى `test/helpers/tolerant_goldens.dart`. الـ CI بقى `dart format` + `flutter analyze` + `flutter test` + check إن الـ generated code محدّث. iOS وAndroid بيعملوا build من الـ root، والـ app اشتغل على الـ simulator | ميكانيكي في الأغلب |
 
 **قواعد كل خطوة:** الـ CI أخضر · سلوك الـ app ميتغيرش · **الـ goldens زي ما هي** (أي pixel يتغير يبان) · الـ e2e tests بتعدي · الميكانيكي لوحده عشان مايدفنش الحقيقي.
 

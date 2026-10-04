@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:core_testing/core_testing.dart';
+import 'helpers/tolerant_goldens.dart';
 
 /// Golden tests tolerate anti-aliasing noise between machines (see
 /// [defaultGoldenTolerance]).

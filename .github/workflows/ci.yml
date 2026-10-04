@@ -29,23 +29,24 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Resolve the workspace
+      - name: Get dependencies
         run: flutter pub get
 
       - name: Format
-        run: dart run melos run format
+        run: dart format --set-exit-if-changed .
 
-      # dart analyze (not flutter analyze) so the cine_vault_lints rules run.
       - name: Analyze
-        run: dart run melos run analyze
+        run: flutter analyze --fatal-infos
 
-      - name: Test (bloc, golden, lint plugin)
-        run: dart run melos run test
+      - name: Test (unit, bloc, golden, end-to-end)
+        run: flutter test
 
       - name: Generated code is up to date
         run: |
-          dart run melos run generate
-          git diff --exit-code || (echo "::error::Generated code is stale. Run 'dart run melos run generate' and commit." && exit 1)
+          dart run build_runner build --delete-conflicting-outputs
+          flutter gen-l10n
+          dart format .
+          git diff --exit-code || (echo "::error::Generated code is stale. Run build_runner and flutter gen-l10n, then commit." && exit 1)
 
   build-android:
     name: Build Android (staging)
@@ -68,10 +69,9 @@ jobs:
       # The build only needs the defines to exist; the placeholder token is
       # never used because the app is not run.
       - name: Config from the example
-        run: cp app/config/staging.env.example app/config/staging.env
+        run: cp config/staging.env.example config/staging.env
 
       - name: Build
-        working-directory: app
         run: flutter build apk --debug --flavor staging --dart-define-from-file=config/staging.env
 
   build-ios:
@@ -88,8 +88,7 @@ jobs:
           cache: true
 
       - name: Config from the example
-        run: cp app/config/staging.env.example app/config/staging.env
+        run: cp config/staging.env.example config/staging.env
 
       - name: Build
-        working-directory: app
         run: flutter build ios --simulator --debug --flavor staging --dart-define-from-file=config/staging.env

@@ -12,10 +12,7 @@ analyzer:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
   errors:
-    # Pub workspaces share one resolution, so importing a package that isn't in
-    # the importing package's pubspec still resolves. This turns that into an
-    # error: it is what keeps the module boundaries (e.g. domain -> no Flutter)
-    # enforced.
+    # Importing a package that pubspec.yaml does not declare is an error.
     depend_on_referenced_packages: error
   language:
     strict-casts: true
@@ -35,9 +32,3 @@ linter:
     empty_container_bodies: false
     # pubspec dependencies are grouped by purpose (state, networking, UI...).
     sort_pub_dependencies: false
-
-# Feature anatomy rules (packages/lints). They only check files under
-# packages/features/; see ARCHITECTURE_NOTES.md §1-2.
-plugins:
-  cine_vault_lints:
-    path: packages/lints
