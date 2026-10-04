@@ -1,5 +1,5 @@
 import 'package:cine_vault/core/ui.dart';
-import 'package:cine_vault/features/search/l10n/generated/search_localizations.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 /// Recent queries with a "clear all" action, or a prompt when there are none.
@@ -19,7 +19,7 @@ class RecentSearchesList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (searches.isEmpty) return const _SearchPrompt();
 
-    final l10n = SearchLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
     final onSurface = Theme.of(context).colorScheme.onSurface;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,7 +85,7 @@ class _SearchPrompt extends StatelessWidget {
             Icon(Icons.movie_filter_outlined, size: 72, color: onSurface.withValues(alpha: 0.2)),
             const SizedBox(height: 16),
             Text(
-              SearchLocalizations.of(context).searchEmptyPrompt,
+              AppLocalizations.of(context).searchEmptyPrompt,
               style: TextStyle(color: onSurface.withValues(alpha: 0.55), fontSize: 16),
             ),
           ],

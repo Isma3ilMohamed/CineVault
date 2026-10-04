@@ -4,6 +4,7 @@ import 'package:cine_vault/data/repositories/settings_repository.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/settings/settings.dart';
 import 'package:cine_vault/features/settings/view/theme_reveal/theme_reveal_overlay.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -28,8 +29,7 @@ void main() {
         child: MaterialApp(
           theme: AppTheme.darkTheme,
           localizationsDelegates: const [
-            SettingsLocalizations.delegate,
-            CoreUiLocalizations.delegate,
+            AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,

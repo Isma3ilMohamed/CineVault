@@ -1,7 +1,7 @@
-import 'package:cine_vault/core/l10n/generated/core_ui_localizations.dart';
 import 'package:cine_vault/core/theme/app_colors.dart';
 import 'package:cine_vault/core/tmdb/tmdb_images.dart';
 import 'package:cine_vault/core/widgets/remote_image.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 /// Poster with a rating badge, title and year: the card used by every movie list.
@@ -78,7 +78,7 @@ class PosterCard extends StatelessWidget {
             ),
             const SizedBox(height: 2),
             Text(
-              year ?? CoreUiLocalizations.of(context).notAvailable,
+              year ?? AppLocalizations.of(context).notAvailable,
               style: TextStyle(fontSize: 12, color: onSurface.withValues(alpha: 0.6)),
             ),
           ],

@@ -22,7 +22,6 @@ abstract class FavoritesLocalDataSource {
 
 class FavoritesLocalDataSourceImpl implements FavoritesLocalDataSource {
   FavoritesLocalDataSourceImpl(this.box);
-  static const String boxName = 'favorites';
 
   final Box<dynamic> box;
 

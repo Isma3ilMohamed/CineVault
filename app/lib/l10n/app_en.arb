@@ -3,5 +3,78 @@
   "tabHome": "Home",
   "tabFavorites": "Favorites",
   "tabMore": "More",
-  "routeNotFound": "This page doesn't exist"
+  "routeNotFound": "This page doesn't exist",
+  "tryAgain": "Try again",
+  "back": "Back",
+  "notAvailable": "N/A",
+  "@notAvailable": {
+    "description": "Shown when a value such as the release year is unknown"
+  },
+  "failureNetwork": "No internet connection",
+  "failureServer": "Server error",
+  "failureCache": "Storage error",
+  "failureUnknown": "Something went wrong",
+  "categoryTrending": "Trending Today",
+  "categoryPopular": "Popular",
+  "categoryTopRated": "Top Rated",
+  "categoryNowPlaying": "Now Playing",
+  "categoryUpcoming": "Upcoming",
+  "homeSeeAll": "See All",
+  "homeSearch": "Search",
+  "homeRefreshFailed": "Couldn't refresh: {reason}",
+  "@homeRefreshFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "detailsOverview": "Overview",
+  "detailsOverviewNone": "No overview available.",
+  "detailsSimilarMovies": "Similar Movies",
+  "detailsCast": "Cast",
+  "playTrailer": "Play Trailer",
+  "openInYouTube": "Open in YouTube",
+  "trailerEmbedUnavailable": "This trailer can't be played here. Watch it on YouTube instead.",
+  "detailsVotes": "{count, plural, =1{1 vote} other{{count} votes}}",
+  "@detailsVotes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchHint": "Search for a movie...",
+  "searchRecent": "Recent searches",
+  "searchClearRecent": "Clear",
+  "searchNothingFound": "No results for \"{query}\"",
+  "@searchNothingFound": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "searchEmptyPrompt": "Find any movie",
+  "favoritesTitle": "Favorites",
+  "favoritesEmptyTitle": "No favorites yet",
+  "favoritesEmptyCta": "Search for a movie",
+  "moreTitle": "More",
+  "moreAppearance": "Appearance",
+  "moreTheme": "Theme",
+  "moreThemeLight": "Light",
+  "moreThemeDark": "Dark",
+  "moreLanguage": "Language",
+  "moreLanguageEnglish": "English",
+  "moreLanguageArabic": "Arabic",
+  "moreAbout": "About",
+  "moreAboutTmdb": "Movie data from TMDB",
+  "moreAboutVersion": "Version {version}",
+  "@moreAboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  }
 }

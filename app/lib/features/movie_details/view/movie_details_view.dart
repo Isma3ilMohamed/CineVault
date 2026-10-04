@@ -3,13 +3,13 @@ import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/core/widgets/movie_ui/movie_ui.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/movie_details/bloc/movie_details_bloc.dart';
-import 'package:cine_vault/features/movie_details/l10n/generated/movie_details_localizations.dart';
 import 'package:cine_vault/features/movie_details/view/widgets/cast_row.dart';
 import 'package:cine_vault/features/movie_details/view/widgets/details_app_bar.dart';
 import 'package:cine_vault/features/movie_details/view/widgets/genre_chips.dart';
 import 'package:cine_vault/features/movie_details/view/widgets/meta_row.dart';
 import 'package:cine_vault/features/movie_details/view/widgets/similar_movies_row.dart';
 import 'package:cine_vault/features/movie_details/view/widgets/trailer_player_modal.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -109,7 +109,7 @@ class _ErrorBody extends StatelessWidget {
         children: [
           ErrorView(
             message: failure.localizedMessage(context),
-            retryLabel: CoreUiLocalizations.of(context).tryAgain,
+            retryLabel: AppLocalizations.of(context).tryAgain,
             onRetry: onRetry,
           ),
           PositionedDirectional(top: 8, start: 8, child: CircleBackButton(onPressed: onBack)),
@@ -138,7 +138,7 @@ class _LoadedBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = MovieDetailsLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
     final onSurface = Theme.of(context).colorScheme.onSurface;
     final movie = state.movie;
     final trailer = state.trailer;

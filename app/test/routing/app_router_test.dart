@@ -1,4 +1,3 @@
-import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:cine_vault/routing/app_router.dart';
@@ -13,7 +12,6 @@ Widget _app(String location) => MaterialApp.router(
   supportedLocales: AppLocalizations.supportedLocales,
   localizationsDelegates: const [
     AppLocalizations.delegate,
-    CoreUiLocalizations.delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalWidgetsLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,

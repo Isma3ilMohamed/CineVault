@@ -1,3 +1,4 @@
+import 'package:cine_vault/core/constants/app_durations.dart';
 import 'package:cine_vault/core/ui.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,7 @@ class FavoriteHeart extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(6),
           child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 180),
+            duration: AppDurations.favoriteToggle,
             transitionBuilder: (child, animation) =>
                 ScaleTransition(scale: animation, child: child),
             child: Icon(

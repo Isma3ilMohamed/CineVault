@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:cine_vault/features/movie_details/l10n/generated/movie_details_localizations.dart';
+import 'package:cine_vault/core/constants/app_durations.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
@@ -40,7 +41,7 @@ class _TrailerPlayerModalState extends State<TrailerPlayerModal> {
 
     _sub = _controller.stream.listen(_onPlayerState);
 
-    _startTimeout = Timer(const Duration(seconds: 6), () {
+    _startTimeout = Timer(AppDurations.trailerLoadTimeout, () {
       if (!_hasStartedPlaying) _setEmbedFailed();
     });
   }
@@ -75,7 +76,7 @@ class _TrailerPlayerModalState extends State<TrailerPlayerModal> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = MovieDetailsLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Dialog.fullscreen(
       backgroundColor: Colors.black,
@@ -130,7 +131,7 @@ class _EmbedFailedFallback extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = MovieDetailsLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(

@@ -1,9 +1,9 @@
+import 'package:cine_vault/core/constants/api_endpoints.dart';
 import 'package:cine_vault/data/models/cast_member_model.dart';
 import 'package:cine_vault/data/models/genre_model.dart';
 import 'package:cine_vault/data/models/movie_model.dart';
 import 'package:cine_vault/data/models/video_model.dart';
 import 'package:cine_vault/data/network/process_call.dart';
-import 'package:cine_vault/data/network/tmdb_endpoints.dart';
 import 'package:dio/dio.dart';
 
 /// TMDB movie endpoints. Every method throws an `AppException` on failure.
@@ -26,49 +26,47 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
 
   @override
   Future<MoviesPageResponse> getPopularMovies({required int page}) =>
-      _moviesPage(TmdbEndpoints.popularMovies, page);
+      _moviesPage(ApiEndpoints.popularMovies, page);
 
   @override
   Future<MoviesPageResponse> getTopRatedMovies({required int page}) =>
-      _moviesPage(TmdbEndpoints.topRatedMovies, page);
+      _moviesPage(ApiEndpoints.topRatedMovies, page);
 
   @override
   Future<MoviesPageResponse> getUpcomingMovies({required int page}) =>
-      _moviesPage(TmdbEndpoints.upcomingMovies, page);
+      _moviesPage(ApiEndpoints.upcomingMovies, page);
 
   @override
   Future<MoviesPageResponse> getNowPlayingMovies({required int page}) =>
-      _moviesPage(TmdbEndpoints.nowPlayingMovies, page);
+      _moviesPage(ApiEndpoints.nowPlayingMovies, page);
 
   @override
   Future<MoviesPageResponse> getTrendingDayMovies({required int page}) =>
-      _moviesPage(TmdbEndpoints.trendingDay, page);
+      _moviesPage(ApiEndpoints.trendingDay, page);
 
   @override
-  Future<MovieModel> getMovieDetails({required int movieId}) => processCall(
-    () => dio.get<dynamic>(TmdbEndpoints.movie(movieId)),
-    decode: MovieModel.fromJson,
-  );
+  Future<MovieModel> getMovieDetails({required int movieId}) =>
+      processCall(() => dio.get<dynamic>(ApiEndpoints.movie(movieId)), decode: MovieModel.fromJson);
 
   @override
   Future<MoviesPageResponse> getSimilarMovies({required int movieId, required int page}) =>
-      _moviesPage(TmdbEndpoints.similar(movieId), page);
+      _moviesPage(ApiEndpoints.similar(movieId), page);
 
   @override
   Future<GenresResponse> getGenres() => processCall(
-    () => dio.get<dynamic>(TmdbEndpoints.genres, queryParameters: {'language': 'en-US'}),
+    () => dio.get<dynamic>(ApiEndpoints.genres, queryParameters: {'language': 'en-US'}),
     decode: GenresResponse.fromJson,
   );
 
   @override
   Future<CreditsResponse> getMovieCredits({required int movieId}) => processCall(
-    () => dio.get<dynamic>(TmdbEndpoints.credits(movieId)),
+    () => dio.get<dynamic>(ApiEndpoints.credits(movieId)),
     decode: CreditsResponse.fromJson,
   );
 
   @override
   Future<VideosResponse> getMovieVideos({required int movieId}) => processCall(
-    () => dio.get<dynamic>(TmdbEndpoints.videos(movieId)),
+    () => dio.get<dynamic>(ApiEndpoints.videos(movieId)),
     decode: VideosResponse.fromJson,
   );
 

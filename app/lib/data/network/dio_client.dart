@@ -1,3 +1,4 @@
+import 'package:cine_vault/core/constants/app_durations.dart';
 import 'package:cine_vault/data/network/auth_interceptor.dart';
 import 'package:cine_vault/data/network/network_config.dart';
 import 'package:dio/dio.dart';
@@ -11,8 +12,8 @@ class DioClient {
     : dio = Dio(
         BaseOptions(
           baseUrl: config.baseUrl,
-          connectTimeout: const Duration(seconds: 30),
-          receiveTimeout: const Duration(seconds: 30),
+          connectTimeout: AppDurations.networkTimeout,
+          receiveTimeout: AppDurations.networkTimeout,
           headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
         ),
       ) {

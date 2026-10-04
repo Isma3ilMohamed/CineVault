@@ -1,3 +1,4 @@
+import 'package:cine_vault/core/constants/storage_keys.dart';
 import 'package:cine_vault/data/models/movie_model.dart';
 import 'package:cine_vault/domain/domain.dart';
 
@@ -8,7 +9,7 @@ class FavoriteMovieModel {
   /// Hive returns `Map<dynamic, dynamic>`; copy to a typed map before parsing.
   factory FavoriteMovieModel.fromStorage(Map<dynamic, dynamic> raw) {
     final normalized = Map<String, dynamic>.from(raw);
-    final added = normalized.remove(addedAtKey) as String?;
+    final added = normalized.remove(StorageKeys.favoriteAddedAt) as String?;
     return FavoriteMovieModel(
       movie: MovieModel.fromJson(normalized),
       addedAt: added != null
@@ -23,14 +24,13 @@ class FavoriteMovieModel {
       addedAt: addedAt ?? DateTime.now(),
     );
   }
-  static const String addedAtKey = '_added_at';
 
   final MovieModel movie;
   final DateTime addedAt;
 
   /// The movie JSON with `_added_at` merged into the same map.
   Map<String, dynamic> toStorage() {
-    return {...movie.toJson(), addedAtKey: addedAt.toIso8601String()};
+    return {...movie.toJson(), StorageKeys.favoriteAddedAt: addedAt.toIso8601String()};
   }
 
   Movie toEntity() => movie.toEntity();

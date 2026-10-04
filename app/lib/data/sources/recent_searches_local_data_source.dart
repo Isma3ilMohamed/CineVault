@@ -1,3 +1,4 @@
+import 'package:cine_vault/core/constants/storage_keys.dart';
 import 'package:cine_vault/data/storage/storage_call.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,14 +14,15 @@ abstract class RecentSearchesLocalDataSource {
 
 class RecentSearchesLocalDataSourceImpl implements RecentSearchesLocalDataSource {
   RecentSearchesLocalDataSourceImpl(this.prefs);
-  static const String _key = 'recent_searches';
   static const int _maxItems = 10;
 
   final SharedPreferences prefs;
 
   @override
-  Future<List<String>> getRecentSearches() =>
-      storageCall('read recent searches', () => prefs.getStringList(_key) ?? const <String>[]);
+  Future<List<String>> getRecentSearches() => storageCall(
+    'read recent searches',
+    () => prefs.getStringList(StorageKeys.recentSearches) ?? const <String>[],
+  );
 
   @override
   Future<List<String>> saveRecentSearch(String query) {
@@ -28,18 +30,18 @@ class RecentSearchesLocalDataSourceImpl implements RecentSearchesLocalDataSource
     if (normalized.isEmpty) return getRecentSearches();
 
     return storageCall('save recent search', () async {
-      final current = prefs.getStringList(_key) ?? const <String>[];
+      final current = prefs.getStringList(StorageKeys.recentSearches) ?? const <String>[];
       // Drop any case-insensitive duplicate so a repeated query moves to the top.
       final updated = [
         normalized,
         ...current.where((q) => q.toLowerCase() != normalized.toLowerCase()),
       ].take(_maxItems).toList();
-      await prefs.setStringList(_key, updated);
+      await prefs.setStringList(StorageKeys.recentSearches, updated);
       return updated;
     });
   }
 
   @override
   Future<void> clearRecentSearches() =>
-      storageCall('clear recent searches', () => prefs.remove(_key));
+      storageCall('clear recent searches', () => prefs.remove(StorageKeys.recentSearches));
 }

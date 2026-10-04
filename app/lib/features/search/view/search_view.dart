@@ -2,9 +2,9 @@ import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/core/widgets/movie_ui/movie_ui.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/search/bloc/search_bloc.dart';
-import 'package:cine_vault/features/search/l10n/generated/search_localizations.dart';
 import 'package:cine_vault/features/search/view/widgets/recent_searches_list.dart';
 import 'package:cine_vault/features/search/view/widgets/search_field.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -131,7 +131,7 @@ class _SearchBodyState extends State<_SearchBody> {
         SearchEmpty(:final query) => _NothingFound(query: query),
         SearchError(:final failure) => ErrorView(
           message: failure.localizedMessage(context),
-          retryLabel: CoreUiLocalizations.of(context).tryAgain,
+          retryLabel: AppLocalizations.of(context).tryAgain,
           onRetry: widget.onRetry,
         ),
       },
@@ -156,7 +156,7 @@ class _NothingFound extends StatelessWidget {
             Icon(Icons.search_off_rounded, size: 72, color: onSurface.withValues(alpha: 0.2)),
             const SizedBox(height: 16),
             Text(
-              SearchLocalizations.of(context).searchNothingFound(query),
+              AppLocalizations.of(context).searchNothingFound(query),
               textAlign: TextAlign.center,
               style: TextStyle(color: onSurface.withValues(alpha: 0.55), fontSize: 16),
             ),

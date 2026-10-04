@@ -1,5 +1,8 @@
-/// TMDB v3 endpoints, relative to the configured base URL.
-abstract final class TmdbEndpoints {
+/// TMDB v3 endpoints. Paths are relative to [baseUrl] (the default; each
+/// flavor's config can override it).
+abstract final class ApiEndpoints {
+  static const String baseUrl = 'https://api.themoviedb.org/3';
+
   static const String popularMovies = '/movie/popular';
   static const String topRatedMovies = '/movie/top_rated';
   static const String upcomingMovies = '/movie/upcoming';

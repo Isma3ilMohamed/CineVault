@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:cine_vault/core/constants/app_durations.dart';
 import 'package:flutter/material.dart';
 
 /// Covers the app with a snapshot of the old theme and cuts a growing circle
@@ -10,7 +11,7 @@ class ThemeRevealOverlay extends StatefulWidget {
     required this.center,
     required this.onCompleted,
     super.key,
-    this.duration = const Duration(milliseconds: 650),
+    this.duration = AppDurations.themeReveal,
   });
   final ui.Image oldThemeImage;
   final Offset center;

@@ -2,6 +2,7 @@ import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/core/widgets/movie_ui/movie_ui.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/movie_list/bloc/movie_list_bloc.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -71,7 +72,7 @@ class _MovieListBody extends StatelessWidget {
         ),
         MovieListError(:final failure) => ErrorView(
           message: failure.localizedMessage(context),
-          retryLabel: CoreUiLocalizations.of(context).tryAgain,
+          retryLabel: AppLocalizations.of(context).tryAgain,
           onRetry: onRetry,
         ),
         MovieListLoaded(:final movies, :final isLoadingMore, :final hasReachedMax) => MovieGrid(

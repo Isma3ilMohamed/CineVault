@@ -1,5 +1,5 @@
 import 'package:cine_vault/core/ui.dart';
-import 'package:cine_vault/features/movie_details/l10n/generated/movie_details_localizations.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 /// Rating, vote count and release year.
@@ -14,7 +14,7 @@ class MetaRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = MovieDetailsLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
     final onSurface = Theme.of(context).colorScheme.onSurface;
     final muted = onSurface.withValues(alpha: 0.7);
     return Row(
@@ -33,7 +33,7 @@ class MetaRow extends StatelessWidget {
         const SizedBox(width: 16),
         Icon(Icons.calendar_today_rounded, color: onSurface.withValues(alpha: 0.55), size: 16),
         const SizedBox(width: 6),
-        Text(year ?? CoreUiLocalizations.of(context).notAvailable, style: TextStyle(color: muted)),
+        Text(year ?? AppLocalizations.of(context).notAvailable, style: TextStyle(color: muted)),
       ],
     );
   }

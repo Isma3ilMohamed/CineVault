@@ -1,7 +1,6 @@
 /// CineVault design system: theme, tokens and domain-free shared widgets.
 library;
 
-export 'l10n/generated/core_ui_localizations.dart';
 export 'theme/app_colors.dart';
 export 'theme/app_theme.dart';
 export 'tmdb/tmdb_images.dart';

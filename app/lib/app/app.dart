@@ -1,11 +1,8 @@
 import 'package:cine_vault/app/di.dart';
+import 'package:cine_vault/core/constants/app_info.dart';
 import 'package:cine_vault/core/ui.dart';
-import 'package:cine_vault/core/widgets/movie_ui/movie_ui.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/favorites/favorites.dart';
-import 'package:cine_vault/features/home/home.dart';
-import 'package:cine_vault/features/movie_details/movie_details.dart';
-import 'package:cine_vault/features/search/search.dart';
 import 'package:cine_vault/features/settings/settings.dart';
 import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:cine_vault/routing/app_router.dart';
@@ -37,22 +34,15 @@ class _CineVaultAppState extends State<CineVaultApp> {
       child: BlocBuilder<SettingsCubit, AppSettings>(
         builder: (context, settings) {
           return MaterialApp.router(
-            title: 'CineVault',
+            title: AppInfo.name,
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: settings.flutterThemeMode,
             locale: settings.locale, // null → follows system
-            supportedLocales: CoreUiLocalizations.supportedLocales,
+            supportedLocales: AppLocalizations.supportedLocales,
             localizationsDelegates: const [
-              CoreUiLocalizations.delegate,
-              MovieUiLocalizations.delegate,
               AppLocalizations.delegate,
-              HomeLocalizations.delegate,
-              MovieDetailsLocalizations.delegate,
-              SearchLocalizations.delegate,
-              FavoritesLocalizations.delegate,
-              SettingsLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,

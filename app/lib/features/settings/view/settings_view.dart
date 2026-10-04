@@ -1,11 +1,12 @@
 import 'dart:async';
 
+import 'package:cine_vault/core/constants/app_info.dart';
 import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/settings/cubit/settings_cubit.dart';
-import 'package:cine_vault/features/settings/l10n/generated/settings_localizations.dart';
 import 'package:cine_vault/features/settings/view/theme_reveal/theme_reveal_boundary.dart';
 import 'package:cine_vault/features/settings/view/theme_reveal/theme_reveal_controller.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -46,9 +47,6 @@ class _SettingsBody extends StatelessWidget {
     required this.onLanguageSelected,
   });
 
-  // TODO(phase-9): read from the build (package_info) with the constants in step 4.
-  static const String _appVersion = '1.0.0';
-
   final AppSettings settings;
 
   /// Global tap position: the theme reveal grows from there.
@@ -57,7 +55,7 @@ class _SettingsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = SettingsLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
     // Following the device: show the language the app actually resolved to.
     final activeLanguage = settings.languageCode ?? Localizations.localeOf(context).languageCode;
 
@@ -95,7 +93,7 @@ class _SettingsBody extends StatelessWidget {
           _SectionHeader(l10n.moreAbout),
           ListTile(
             leading: const Icon(Icons.info_outline_rounded),
-            title: Text(l10n.moreAboutVersion(_appVersion)),
+            title: Text(l10n.moreAboutVersion(AppInfo.version)),
           ),
           ListTile(leading: const Icon(Icons.movie_outlined), title: Text(l10n.moreAboutTmdb)),
         ],
@@ -134,7 +132,7 @@ class _ThemeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = SettingsLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
     // The whole row takes the tap (with its position); the switch only shows the value.
     return GestureDetector(
       behavior: HitTestBehavior.opaque,

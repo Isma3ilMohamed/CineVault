@@ -2,8 +2,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:cine_vault/core/result/core_result.dart';
 import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/features/movie_details/bloc/movie_details_bloc.dart';
-import 'package:cine_vault/features/movie_details/movie_details.dart';
 import 'package:cine_vault/features/movie_details/view/movie_details_view.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -67,10 +67,9 @@ class _GoldenApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
       locale: locale,
-      supportedLocales: MovieDetailsLocalizations.supportedLocales,
+      supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: const [
-        MovieDetailsLocalizations.delegate,
-        CoreUiLocalizations.delegate,
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,

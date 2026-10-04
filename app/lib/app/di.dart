@@ -1,4 +1,5 @@
 import 'package:cine_vault/app/config/app_config.dart';
+import 'package:cine_vault/core/constants/storage_keys.dart';
 import 'package:cine_vault/data/network/dio_client.dart';
 import 'package:cine_vault/data/network/network_config.dart';
 import 'package:cine_vault/data/repositories/favorites_repository.dart';
@@ -45,7 +46,7 @@ Future<void> configureDependencies(AppConfig config) async {
 /// Opened once at startup, so the data sources can read synchronously.
 Future<void> _registerStorage() async {
   final preferences = await SharedPreferences.getInstance();
-  final favoritesBox = await Hive.openBox<dynamic>(FavoritesLocalDataSourceImpl.boxName);
+  final favoritesBox = await Hive.openBox<dynamic>(StorageKeys.favoritesBox);
   getIt
     ..registerSingleton(preferences)
     ..registerSingleton<Box<dynamic>>(favoritesBox);

@@ -1,11 +1,12 @@
+import 'package:cine_vault/core/constants/app_info.dart';
 import 'package:cine_vault/core/result/core_result.dart';
 import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/core/widgets/movie_ui/movie_ui.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/home/bloc/home_bloc.dart';
-import 'package:cine_vault/features/home/l10n/generated/home_localizations.dart';
 import 'package:cine_vault/features/home/view/widgets/featured_carousel.dart';
 import 'package:cine_vault/features/home/view/widgets/movie_section.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -33,7 +34,7 @@ class HomeView extends StatelessWidget {
       listener: (context, state) {
         final failure = _refreshFailure(state);
         if (failure == null) return;
-        final message = HomeLocalizations.of(context)
+        final message = AppLocalizations.of(context)
             .homeRefreshFailed(failure.localizedMessage(context));
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
       },
@@ -43,7 +44,7 @@ class HomeView extends StatelessWidget {
           HomeLoading() => Center(child: CircularProgressIndicator(color: context.appColors.brand)),
           HomeError(:final failure) => ErrorView(
             message: failure.localizedMessage(context),
-            retryLabel: CoreUiLocalizations.of(context).tryAgain,
+            retryLabel: AppLocalizations.of(context).tryAgain,
             onRetry: () => bloc.add(const HomeEvent.retried()),
           ),
           HomeLoaded(:final sections) => _LoadedBody(
@@ -95,13 +96,13 @@ class _LoadedBody extends StatelessWidget {
           SliverAppBar(
             floating: true,
             title: Text(
-              'CineVault',
+              AppInfo.name,
               style: TextStyle(fontWeight: FontWeight.bold, color: brand, letterSpacing: 1.2),
             ),
             actions: [
               IconButton(
                 icon: const Icon(Icons.search),
-                tooltip: HomeLocalizations.of(context).homeSearch,
+                tooltip: AppLocalizations.of(context).homeSearch,
                 onPressed: onSearch,
               ),
             ],

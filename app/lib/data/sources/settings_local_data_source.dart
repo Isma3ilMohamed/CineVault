@@ -1,3 +1,4 @@
+import 'package:cine_vault/core/constants/storage_keys.dart';
 import 'package:cine_vault/data/storage/storage_call.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,31 +16,32 @@ abstract class SettingsLocalDataSource {
 
 class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
   SettingsLocalDataSourceImpl(this.prefs);
-  static const String _themeModeKey = 'theme_mode';
-  static const String _localeKey = 'locale';
 
   final SharedPreferences prefs;
 
   @override
   Future<AppThemeMode> getThemeMode() => storageCall(
     'read theme mode',
-    () => AppThemeMode.values.asNameMap()[prefs.getString(_themeModeKey)] ?? AppThemeMode.dark,
+    () =>
+        AppThemeMode.values.asNameMap()[prefs.getString(StorageKeys.themeMode)] ??
+        AppThemeMode.dark,
   );
 
   @override
   Future<String?> getLanguageCode() => storageCall('read locale', () {
-    final code = prefs.getString(_localeKey);
+    final code = prefs.getString(StorageKeys.locale);
     return (code == null || code.isEmpty) ? null : code;
   });
 
   @override
   Future<void> saveThemeMode(AppThemeMode mode) =>
-      storageCall('save theme mode', () => prefs.setString(_themeModeKey, mode.name));
+      storageCall('save theme mode', () => prefs.setString(StorageKeys.themeMode, mode.name));
 
   @override
   Future<void> saveLanguageCode(String? languageCode) => storageCall(
     'save locale',
-    () =>
-        languageCode == null ? prefs.remove(_localeKey) : prefs.setString(_localeKey, languageCode),
+    () => languageCode == null
+        ? prefs.remove(StorageKeys.locale)
+        : prefs.setString(StorageKeys.locale, languageCode),
   );
 }

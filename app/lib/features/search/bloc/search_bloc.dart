@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:cine_vault/core/constants/app_durations.dart';
 import 'package:cine_vault/core/result/core_result.dart';
 import 'package:cine_vault/data/repositories/search_repository.dart';
 import 'package:cine_vault/domain/domain.dart';
@@ -18,7 +19,7 @@ part 'search_state.dart';
 ///
 /// Typing is debounced with a cancellable [Timer] before it becomes a request.
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
-  SearchBloc({required this.searchRepository, this._debounce = _defaultDebounce})
+  SearchBloc({required this.searchRepository, this._debounce = AppDurations.searchDebounce})
     : super(const SearchState.idle()) {
     on<SearchStarted>((_, emit) => _emitIdleWithRecents(emit));
     on<SearchQueryChanged>(_onQueryChanged);
@@ -32,7 +33,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<RecentSearchesCleared>(_onRecentSearchesCleared);
   }
 
-  static const _defaultDebounce = Duration(milliseconds: 400);
   static const _minQueryLength = 2;
 
   final SearchRepository searchRepository;

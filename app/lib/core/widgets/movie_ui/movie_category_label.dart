@@ -1,11 +1,11 @@
-import 'package:cine_vault/core/widgets/movie_ui/l10n/generated/movie_ui_localizations.dart';
 import 'package:cine_vault/domain/domain.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/widgets.dart';
 
 extension MovieCategoryLabel on MovieCategory {
   /// Section and screen title for this category, e.g. "Top Rated".
   String label(BuildContext context) {
-    final l10n = MovieUiLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
     return switch (this) {
       MovieCategory.trending => l10n.categoryTrending,
       MovieCategory.popular => l10n.categoryPopular,

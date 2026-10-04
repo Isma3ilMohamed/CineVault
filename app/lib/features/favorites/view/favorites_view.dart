@@ -2,7 +2,7 @@ import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/core/widgets/movie_ui/movie_ui.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/favorites/bloc/favorites_bloc.dart';
-import 'package:cine_vault/features/favorites/l10n/generated/favorites_localizations.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -53,7 +53,7 @@ class _FavoritesBody extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          FavoritesLocalizations.of(context).favoritesTitle,
+          AppLocalizations.of(context).favoritesTitle,
           style: TextStyle(fontWeight: FontWeight.bold, color: brand, letterSpacing: 1.2),
         ),
       ),
@@ -78,7 +78,7 @@ class _EmptyFavorites extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = FavoritesLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
     final onSurface = Theme.of(context).colorScheme.onSurface;
     return Center(
       child: Padding(

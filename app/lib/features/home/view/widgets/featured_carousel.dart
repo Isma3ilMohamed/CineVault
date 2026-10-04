@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cine_vault/core/constants/app_durations.dart';
 import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/domain/domain.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 /// Auto-playing backdrop carousel of the first five [movies].
@@ -33,7 +35,7 @@ class FeaturedCarousel extends StatelessWidget {
         height: 280,
         viewportFraction: 1,
         autoPlay: true,
-        autoPlayInterval: const Duration(seconds: 5),
+        autoPlayInterval: AppDurations.carouselAutoPlay,
       ),
     );
   }
@@ -48,8 +50,7 @@ class _CarouselItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final year =
-        MovieFormat.year(movie.releaseDate) ?? CoreUiLocalizations.of(context).notAvailable;
+    final year = MovieFormat.year(movie.releaseDate) ?? AppLocalizations.of(context).notAvailable;
     return GestureDetector(
       onTap: onTap,
       child: Stack(

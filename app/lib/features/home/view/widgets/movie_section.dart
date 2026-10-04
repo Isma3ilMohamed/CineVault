@@ -1,7 +1,7 @@
 import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/core/widgets/movie_ui/movie_ui.dart';
 import 'package:cine_vault/domain/domain.dart';
-import 'package:cine_vault/features/home/l10n/generated/home_localizations.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 /// Titled horizontal row of movies with a "See all" action.
@@ -39,7 +39,7 @@ class MovieSection extends StatelessWidget {
               TextButton(
                 onPressed: onSeeAll,
                 child: Text(
-                  HomeLocalizations.of(context).homeSeeAll,
+                  AppLocalizations.of(context).homeSeeAll,
                   style: TextStyle(color: context.appColors.brand, fontWeight: FontWeight.w600),
                 ),
               ),

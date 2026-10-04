@@ -3,7 +3,6 @@
 library;
 
 export 'favorite_button_builder.dart';
-export 'l10n/generated/movie_ui_localizations.dart';
 export 'movie_card.dart';
 export 'movie_category_label.dart';
 export 'movie_grid.dart';

@@ -3,6 +3,7 @@ import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/domain/domain.dart';
 import 'package:cine_vault/features/settings/settings.dart';
 import 'package:cine_vault/features/settings/view/settings_view.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -52,10 +53,9 @@ class _GoldenApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       themeMode: settings.flutterThemeMode,
       locale: locale,
-      supportedLocales: SettingsLocalizations.supportedLocales,
+      supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: const [
-        SettingsLocalizations.delegate,
-        CoreUiLocalizations.delegate,
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,

@@ -1,5 +1,5 @@
-import 'package:cine_vault/core/l10n/generated/core_ui_localizations.dart';
 import 'package:cine_vault/core/theme/app_colors.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 /// Back button that stays readable over images.
@@ -15,7 +15,7 @@ class CircleBackButton extends StatelessWidget {
       child: CircleAvatar(
         backgroundColor: context.appColors.scrim,
         child: IconButton(
-          tooltip: CoreUiLocalizations.of(context).back,
+          tooltip: AppLocalizations.of(context).back,
           icon: const BackButtonIcon(),
           color: Colors.white,
           onPressed: onPressed,

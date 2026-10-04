@@ -1,5 +1,5 @@
 import 'package:cine_vault/core/ui.dart';
-import 'package:cine_vault/features/search/l10n/generated/search_localizations.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 /// Borderless search input for the app bar, with a clear button once it has text.
@@ -30,7 +30,7 @@ class SearchField extends StatelessWidget {
       style: TextStyle(color: onSurface, fontSize: 16),
       cursorColor: context.appColors.brand,
       decoration: InputDecoration(
-        hintText: SearchLocalizations.of(context).searchHint,
+        hintText: AppLocalizations.of(context).searchHint,
         hintStyle: TextStyle(color: onSurface.withValues(alpha: 0.4)),
         border: InputBorder.none,
         filled: false,

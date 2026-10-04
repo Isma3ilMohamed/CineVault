@@ -1,3 +1,4 @@
+import 'package:cine_vault/core/constants/api_endpoints.dart';
 import 'package:flutter/services.dart';
 
 enum Flavor { staging, production }
@@ -16,10 +17,7 @@ final class AppConfig {
 
   factory AppConfig.fromEnvironment() {
     const configFlavor = String.fromEnvironment('APP_FLAVOR');
-    const tmdbBaseUrl = String.fromEnvironment(
-      'TMDB_BASE_URL',
-      defaultValue: 'https://api.themoviedb.org/3',
-    );
+    const tmdbBaseUrl = String.fromEnvironment('TMDB_BASE_URL', defaultValue: ApiEndpoints.baseUrl);
     const tmdbAccessToken = String.fromEnvironment('TMDB_ACCESS_TOKEN');
 
     final flavor = Flavor.values.asNameMap()[appFlavor];

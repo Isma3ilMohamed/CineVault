@@ -1,6 +1,7 @@
 import 'package:cine_vault/core/ui.dart';
 import 'package:cine_vault/core/widgets/movie_ui/movie_ui.dart';
 import 'package:cine_vault/domain/domain.dart';
+import 'package:cine_vault/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -20,10 +21,9 @@ Movie _movie(int id) => Movie(
 Widget _app(Widget child, {Locale locale = const Locale('en')}) => MaterialApp(
   theme: AppTheme.darkTheme,
   locale: locale,
-  supportedLocales: MovieUiLocalizations.supportedLocales,
+  supportedLocales: AppLocalizations.supportedLocales,
   localizationsDelegates: const [
-    MovieUiLocalizations.delegate,
-    CoreUiLocalizations.delegate,
+    AppLocalizations.delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalWidgetsLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
