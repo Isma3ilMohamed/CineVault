@@ -1,4 +1,4 @@
-package com.ismail.cine_vault_temp
+package com.ismail.cinevault
 
 import io.flutter.embedding.android.FlutterActivity
 

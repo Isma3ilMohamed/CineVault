@@ -117,8 +117,8 @@ The rationale and the decisions along the way are in
 
 | Flavor | Android app id | iOS bundle id | Network logs |
 |---|---|---|---|
-| staging | `com.ismail.cine_vault_temp.staging` | `com.ismail.cineVaultTemp.staging` | ✅ |
-| production | `com.ismail.cine_vault_temp` | `com.ismail.cineVaultTemp` | ❌ |
+| staging | `com.ismail.cinevault.staging` | `com.ismail.cinevault.staging` | ✅ |
+| production | `com.ismail.cinevault` | `com.ismail.cinevault` | ❌ |
 
 Android Studio users can pick the **staging** / **production** run configurations in `.run/`.
 

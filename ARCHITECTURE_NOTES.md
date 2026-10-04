@@ -537,7 +537,7 @@ test/               نفس شكل lib/
 | Flavors: `staging` · `production` | ✅ متعملة في Phase 0 |
 | analyzer plugin ولا `custom_lint` | ✅ analyzer plugin (Phase 2). شغال مع `dart analyze` والـ IDE، **مش** مع `flutter analyze` |
 | `EventGuard` يفضل ولا يتشال | ✅ يفضل، ويتجرّب فعلياً في `movie_details` (Phase 5) |
-| إعادة تسمية الـ app id (`cine_vault_temp` → ?) | ⏳ مفتوح |
+| إعادة تسمية الـ app id (`cine_vault_temp` → ?) | ✅ `com.ismail.cinevault` على Android وiOS (staging = `.staging`) |
 
 ## 8. Workflow
 - **مفيش commit من غير مراجعة.** كل دفعة بتتسلّم كـ diff، والـ commit بيحصل بعد الموافقة.
